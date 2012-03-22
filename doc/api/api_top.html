@@ -1,0 +1,303 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Reference &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="next" title="arms_init()" href="arms_init.html" />
+    <link rel="prev" title="終了処理" href="../impl/finalize.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="initialize-api">
+<h2>Initialize API<a class="headerlink" href="#initialize-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_init.html">arms_init()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="pull-api">
+<h2>Pull API<a class="headerlink" href="#pull-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_load_config.html">arms_load_config()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_register_authkey.html">arms_register_authkey()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_register_cert.html">arms_register_cert()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_register_description.html">arms_register_description()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_set_pull_trigger.html">arms_set_pull_trigger()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_set_https_proxy.html">arms_set_https_proxy()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_pull.html">arms_pull()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="push-api">
+<h2>Push API<a class="headerlink" href="#push-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_push_method_query.html">arms_push_method_query()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_event_loop.html">arms_event_loop()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="state-cache-api">
+<h2>State Cache API<a class="headerlink" href="#state-cache-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_size_of_state.html">arms_size_of_state()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_dump_state.html">arms_dump_state()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_restore_state.html">arms_restore_state()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="info-api">
+<h2>Info API<a class="headerlink" href="#info-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_rsinfo.html">arms_get_rsinfo()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_rs_url.html">arms_get_rs_url()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_rs_tunnel_url.html">arms_get_rs_tunnel_url()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_proposed_push.html">arms_get_proposed_push_port(), arms_get_proposed_push_timeout()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_connection_info.html">arms_get_connection_info()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_app_event_interval.html">arms_get_app_event_interval()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_set_app_event_interval.html">arms_set_app_event_interval()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_library_ver.html">arms_library_ver_major(), arms_library_ver_minor()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_protocol_ver.html">arms_protocol_ver_major(), arms_protocol_ver_minor()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_library_ver_string.html">arms_library_ver_string()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="end-api">
+<h2>End API<a class="headerlink" href="#end-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_end.html">arms_end()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="callback-api">
+<h2>Callback API<a class="headerlink" href="#callback-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_config_cb_t.html">(*arms_config_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_line_ctrl_cb_t.html">(*arms_line_ctrl_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_read_config_cb_t.html">(*arms_read_config_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_status_cb_t.html">(*arms_get_status_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_command_cb_t.html">(*arms_command_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_state_cb_t.html">(*arms_state_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_log_cb_t.html">(*arms_log_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_app_event_cb_t.html">(*arms_app_event_cb_t)()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_store_statistics_cb_t.html">(*arms_hb_store_statistics_cb_t)()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="heartbeat-info-api">
+<h2>Heartbeat Info API<a class="headerlink" href="#heartbeat-info-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_set_cpu_detail_usage.html">arms_hb_set_cpu_detail_usage()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_set_cpu_usage.html">arms_hb_set_cpu_usage()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_set_disk_usage.html">arms_hb_set_disk_usage()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_set_mem_usage.html">arms_hb_set_mem_usage()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_set_traffic_rate.html">arms_hb_set_traffic_rate()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_set_radiowave.html">arms_hb_set_radiowave()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_get_hbtinfo.html">arms_get_hbtinfo()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="heartbeat-control-api">
+<h2>Heartbeat Control API<a class="headerlink" href="#heartbeat-control-api" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_stop.html">arms_hb_stop()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_start.html">arms_hb_start()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arms_hb_is_running.html">arms_hb_is_running()</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="data-types">
+<h2>Data Types<a class="headerlink" href="#data-types" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct.html">libarms データ構造リファレンス</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#distribution-id-t">distribution_id_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-callback-tbl-t">arms_callback_tbl_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-desc-t">arms_line_desc_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-anonpppoe-t">arms_line_conf_anonpppoe_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-pppoe-t">arms_line_conf_pppoe_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-dhcp-t">arms_line_conf_dhcp_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-anonmobile-t">arms_line_conf_anonmobile_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-mobile-t">arms_line_conf_mobile_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-static-t">arms_line_conf_static_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-line-conf-ra-t">arms_line_conf_ra_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-rs-info-t">arms_rs_info_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-url-t">arms_url_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-hbt-info-t">arms_hbt_info_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-connection-info-t">arms_connection_info_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-ping-arg-t">arms_ping_arg_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-traceroute-arg-t">arms_traceroute_arg_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-ping-report-t">arms_ping_report_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="struct.html#arms-traceroute-info-t">arms_traceroute_info_t</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="error-code">
+<h2>Error Code<a class="headerlink" href="#error-code" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="error_code.html">エラーコード/ログコード体系</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="error_code.html#error-code-label">エラーコード体系</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_code.html#log-code-label">ログコード体系</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Reference</a><ul>
+<li><a class="reference internal" href="#initialize-api">Initialize API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#pull-api">Pull API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#push-api">Push API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#state-cache-api">State Cache API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#info-api">Info API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#end-api">End API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#callback-api">Callback API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#heartbeat-info-api">Heartbeat Info API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#heartbeat-control-api">Heartbeat Control API</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-types">Data Types</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#error-code">Error Code</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="../impl/finalize.html"
+                        title="前の章へ">終了処理</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_init.html"
+                        title="次の章へ">arms_init()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_init.html" title="arms_init()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="../impl/finalize.html" title="終了処理"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

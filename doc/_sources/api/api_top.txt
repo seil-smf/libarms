@@ -1,0 +1,115 @@
+================
+API Reference
+================
+
+Initialize API
+------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   arms_init
+
+Pull API
+--------
+.. toctree::
+   :maxdepth: 1
+
+   arms_load_config
+   arms_register_authkey
+   arms_register_cert
+   arms_register_description
+   arms_set_pull_trigger
+   arms_set_https_proxy
+   arms_pull
+
+Push API
+--------
+.. toctree::
+   :maxdepth: 1
+
+   arms_push_method_query
+   arms_event_loop
+
+State Cache API
+---------------
+.. toctree::
+   :maxdepth: 1
+
+   arms_size_of_state
+   arms_dump_state
+   arms_restore_state
+
+Info API
+--------
+.. toctree::
+   :maxdepth: 1
+
+   arms_get_rsinfo
+   arms_get_rs_url
+   arms_get_rs_tunnel_url
+   arms_get_proposed_push
+   arms_get_connection_info
+   arms_get_app_event_interval
+   arms_set_app_event_interval
+   arms_library_ver
+   arms_protocol_ver
+   arms_library_ver_string
+
+End API
+-------
+.. toctree::
+   :maxdepth: 1
+
+   arms_end
+
+Callback API
+-----------------
+.. toctree::
+   :maxdepth: 1
+
+   arms_config_cb_t
+   arms_line_ctrl_cb_t
+   arms_read_config_cb_t
+   arms_get_status_cb_t
+   arms_command_cb_t
+   arms_state_cb_t
+   arms_log_cb_t
+   arms_app_event_cb_t
+   arms_hb_store_statistics_cb_t
+
+Heartbeat Info API
+------------------
+.. toctree::
+   :maxdepth: 1
+
+   arms_hb_set_cpu_detail_usage
+   arms_hb_set_cpu_usage
+   arms_hb_set_disk_usage
+   arms_hb_set_mem_usage
+   arms_hb_set_traffic_rate
+   arms_hb_set_radiowave
+   arms_get_hbtinfo
+
+Heartbeat Control API
+---------------------
+.. toctree::
+   :maxdepth: 1
+
+   arms_hb_stop
+   arms_hb_start
+   arms_hb_is_running
+
+Data Types
+----------
+.. toctree::
+   :maxdepth: 2
+
+   struct
+
+Error Code
+----------
+.. toctree::
+   :maxdepth: 2
+
+   error_code

@@ -1,0 +1,17 @@
+NEWS -- history of user-visible changes.
+
+Version 5.01 - Feb 1, 2012
+
+* Bug fixes.
+
+Version 5.00 - January 27, 2012
+
+* first public release with open source license.
+
+* build with GNU autoconf.
+
+* integrated SMFv2 heartbeat.
+
+* add support communication via Web proxy server.
+
+* HTML documents (written in Japanese).

@@ -1,0 +1,13 @@
+==============
+アーキテクチャ
+==============
+
+libarms が扱うデータモデル、及びLS/RS と行う通信に関する仕様を解説する。
+
+.. toctree::
+   :maxdepth: 1
+
+   config
+   pull
+   push
+   heartbeat

@@ -1,0 +1,40 @@
+libarms - SMFv2 client library
+copyright 2012 Internet Initiative Japan Inc.
+
+libarms is a client library for SMFv2 system supplied by IIJ.
+
+* Installation
+---------------
+
+The software environment required in order to compile libarms is as follows:
+
+    - expat 2.00 or later
+    - OpenSSL 0.9.6 or later
+
+libarms uses an autoconf. To compile libarms:
+
+  % ./configure
+  % make
+  % su
+  # make install
+
+See the files named INSTALL for more details.
+
+* Documentation
+---------------
+
+See "http://dev.smf.jp/libarms/" for more details.
+
+* License
+----------
+
+libarms follows a BSD license.
+See the files named INSTALL for more details.
+
+* Contact
+----------
+
+libarms is developed by Internet Initiative Japan Inc. SEIL-team.
+
+Contact information:
+  seil-contact at iij.ad.jp

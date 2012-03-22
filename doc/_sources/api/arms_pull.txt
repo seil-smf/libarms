@@ -1,0 +1,85 @@
+=====================
+arms_pull()
+=====================
+
+関数
+----
+
+.. c:function:: int arms_pull(arms_context_t *ctx, time_t timeout, size_t fragment, arms_callback_tbl_t *cb_tbl, arms_line_desc_t *lines, void *udata)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+ARMS プロトコルでLS, RS へ順番にアクセスし、コンフィグを取得する。
+
+説明
+----
+LS, RS へのアクセス中にエラーが発生した場合、 :c:func:`arms_pull` 内でリトラ
+イをおこなうため、 :c:func:`arms_pull` を複数回呼び出す必要はない。
+:c:func:`arms_pull` の返り値が :c:macro:`ARMS_EDONTRETRY` の場合、起動処理ルーチンは起
+動処理を停止するか、SMFv2 システムから切り離した起動処理をおこなわな
+ければならない。
+:c:macro:`ARMS_EDONTRETRY` はLS からSA の停止を命じられたことを意味する。LS
+は、SA に対する契約が解除された場合や、匿名アカウントに関する事故が
+発生した場合にSA の停止を命じることがある。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`time_t` :c:data:`timeout`
+  :c:func:`arms_pull` 全体のタイムアウト時間[秒]
+    * 0 または60秒以上86400秒(24時間)以下。
+      * 0 の場合、デフォルト値として21600秒(6時間)となる。
+:c:type:`size_t` :c:data:`fragment`
+  コンフィグの分割送信のブロック長[bytes]
+    * 0
+       libarms 内に全てバッファリングしてからまとめて渡す。
+    * 1 以上
+       コンフィグを指定された大きさ以下のブロックに分割して渡す。
+:c:type:`arms_callback_tbl_t` :c:data:`*cb_tbl`
+  各種コールバック関数へのポインタが納められた構造体。デバイスドライバの関数テーブルと同じようなイメージ。詳細は :c:type:`arms_callback_tbl_t` を参照。
+:c:type:`arms_line_desc_t` :c:data:`*lines`
+  LS へアクセスするための回線種別と回線用コンフィグのペアを並べた配列。詳細は :c:type:`arms_line_desc_t` を参照。
+    * :c:func:`arms_load_config` 関数で登録した回線情報が、これに優先する。
+    * 回線種別 == ARMS_LINE_NONE で終端する。
+:c:type:`void` :c:data:`*udata`
+  コールバック関数へそのまま渡されるポインタ
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       ライブラリ内で致命的エラーを検出
+     :c:macro:`ARMS_ETIMEOUT`
+       指定したタイムアウト時間が経過した
+     :c:macro:`ARMS_EMAXRETRY`
+       LSへのアクセスでリトライ上限回数に到達した
+     :c:macro:`ARMS_EDONTRETRY`
+       LSからリトライ禁止を通知された
+     :c:macro:`ARMS_ECALLBACK`
+       コールバック関数呼び出しでエラーを検出
+     :c:macro:`ARMS_ESYSTEM`
+       システムエラーを検出(メモリ不足など)
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+コールバック関数からの呼び出し
+------------------------------
+
+不可
+
+ヒストリ
+--------
+
+このAPIはVer1.00で追加された。

@@ -1,0 +1,55 @@
+=========================
+arms_get_rsinfo()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_get_rsinfo(arms_context_t *ctx, arms_rs_info_t *rsp, int size)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+アクセス対象のRS の情報を取得する。
+
+説明
+----
+:c:func:`arms_pull` 実行時に RS から取得した、Push 用 RS のアドレス情報(複数) を
+取得する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`arms_rs_info_t` :c:data:`*rsp`
+  アプリケーション側に領域を用意した、アドレス情報取得用バッファの
+  先頭アドレスを示すポインタ。sizeで指定したバイト数の書き込みが
+  可能となっていなければならない。詳細は :c:type:`arms_rs_info_t` を参照。
+:c:type:`int` :c:data:`size`
+  rsp のバッファサイズ[bytes]
+
+返り値
+------
+
+:c:macro:`-1`
+   パラメータが不適切のため情報取得に失敗。
+   rsp が NULL、あるいは size が sizeof(arms_rs_info_t) 未満。
+:c:macro:`-1以外`
+   libarms が取得し保持している RS 情報のセット数(0 を含む)。
+   実際に書き込んだ数ではない点に注意すること。
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+
+このAPIはVer2.20で追加された。

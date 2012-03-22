@@ -1,0 +1,63 @@
+==================================================================
+arms_get_proposed_push_port(), arms_get_proposed_push_timeout()
+==================================================================
+
+関数
+----
+
+.. c:function:: int arms_get_proposed_push_port(arms_context_t *ctx)
+.. c:function:: int arms_get_proposed_push_timeout(arms_context_t *ctx)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+
+RS から提案されたPush 待ち受けポート番号およびタイムアウト値を取得する。
+
+説明
+----
+
+:c:func:`arms_pull` によりRS からコンフィグを取得する際に、Push で用いるべきポート番号およびタイムアウト値がRS から提案される場合がある。
+
+:c:func:`arms_get_proposed_push_port` では提案の有無と、提案された場合はそのポート番号を取得することができる。
+
+:c:func:`arms_get_proposed_push_timeout` では提案の有無と、提案された場合はそのタイムアウト値を取得することができる。
+
+本関数で取得した番号を :c:func:`arms_event_loop` で指定することにより、RS の提案に従ったポート番号でのPush 待ち受けが実現可能となる。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタの格納アドレス。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+
+返り値
+------
+
+:c:func:`arms_get_proposed_push_port`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+:c:macro:`0`
+   RSからの提案がなかった
+:c:macro:`1以上`
+   RSから提案されたポート番号(1～65535)
+
+:c:func:`arms_get_proposed_push_timeout`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+:c:macro:`0`
+   RSからの提案がなかった
+:c:macro:`1以上`
+   RSから提案されたタイムアウト値[秒]
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer2.20で追加された。

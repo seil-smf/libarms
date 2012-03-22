@@ -1,0 +1,60 @@
+=========================
+arms_get_hbtinfo()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_get_hbtinfo(arms_context_t *ctx, arms_hbt_info_t *info, int size)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+:c:func:`arms_pull` にてRS より送られたheartbeat 情報を取得する
+
+説明
+----
+libarms Ver5.00以降、libarms自身にHeartbeat送信機能が追加されているが、
+それに依らずアプリケーション自身でHeartbeat送信を行う場合に必要な情報を
+取得することができる。
+:c:func:`arms_pull` 呼出し後にRS より情報が渡されlibarms 内部に保持される。
+本API を使うとその内部に保持されたheartbeat 情報を参照できる。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`arms_hbt_info_t` :c:data:`*info`
+  アプリケーション側に領域を用意した、heartbeat 情報格納用メモリ領域。
+  size で指定したバイト数の書き込みが 可能となっていなければならない。
+  詳細は :c:type:`arms_hbt_info_t` を参照。
+  最大で5 つ情報が渡される可能性があるが、情報はsize で指定しただけlibarms内部よりコピーされる。
+:c:type:`int` :c:data:`size`
+  info のバッファサイズ[bytes]
+
+返り値
+------
+
+:c:macro:`-1`
+   パラメータが不適切のため情報取得に失敗。
+   info がNULL、あるいはsize がsizeof(arms_hbt_info_t) 未満
+:c:macro:`-1以外`
+   libarms が取得し保持している heartbeat 情報のセット数(0 を含む)。
+   実際に書き込んだ数ではない点に注意
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer2.10で追加された。
+
+Ver5.00以降では libarms 自身に Heartbeat 送信機能が追加されているため、それを利用する場合本APIの呼び出しは必要無くなった。

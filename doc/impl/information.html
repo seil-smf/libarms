@@ -1,0 +1,243 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>動作情報の取得 &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="SA実装" href="impl_top.html" />
+    <link rel="next" title="終了処理" href="finalize.html" />
+    <link rel="prev" title="Heartbeat" href="heartbeat.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>動作情報の取得<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>libarms から、動作中の情報をAPI を経由して取得・通知することができる。以下にその詳細を示す。</p>
+<div class="section" id="libarms">
+<h2>libarms バージョン情報<a class="headerlink" href="#libarms" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">API 名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_library_ver.html#arms_library_ver_major" title="arms_library_ver_major"><tt class="xref c c-func docutils literal"><span class="pre">arms_library_ver_major()</span></tt></a></td>
+<td>libarms ライブラリのメジャーバージョン番号を取得する</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../api/arms_library_ver.html#arms_library_ver_minor" title="arms_library_ver_minor"><tt class="xref c c-func docutils literal"><span class="pre">arms_library_ver_minor()</span></tt></a></td>
+<td>libarms ライブラリのマイナーバージョン番号を取得する</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="arms">
+<h2>ARMS プロトコルバージョン情報<a class="headerlink" href="#arms" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">API 名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_protocol_ver.html#arms_protocol_ver_major" title="arms_protocol_ver_major"><tt class="xref c c-func docutils literal"><span class="pre">arms_protocol_ver_major()</span></tt></a></td>
+<td>ARMS プロトコルのメジャーバージョン番号を取得する</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../api/arms_protocol_ver.html#arms_protocol_ver_minor" title="arms_protocol_ver_minor"><tt class="xref c c-func docutils literal"><span class="pre">arms_protocol_ver_minor()</span></tt></a></td>
+<td>ARMS プロトコルのマイナーバージョン番号を取得する</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="rs">
+<h2>RS 用情報<a class="headerlink" href="#rs" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">API 名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_get_rsinfo.html#arms_get_rsinfo" title="arms_get_rsinfo"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rsinfo()</span></tt></a></td>
+<td>RSがPushに用いるアドレスを取得する</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../api/arms_get_rs_url.html#arms_get_rs_url" title="arms_get_rs_url"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rs_url()</span></tt></a></td>
+<td>SAからRSにメッセージを送る際の送信先URLを取得する</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_get_rs_tunnel_url.html#arms_get_rs_tunnel_url" title="arms_get_rs_tunnel_url"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rs_tunnel_url()</span></tt></a></td>
+<td>SSLトンネル接続先RSのURLを取得する</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../api/arms_get_proposed_push.html#arms_get_proposed_push_port" title="arms_get_proposed_push_port"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_proposed_push_port()</span></tt></a></td>
+<td>Pushに用いるポート番号の提案値を取得する</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_get_proposed_push.html#arms_get_proposed_push_timeout" title="arms_get_proposed_push_timeout"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_proposed_push_timeout()</span></tt></a></td>
+<td>Pushのタイムアウト時間の提案値を取得する</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../api/arms_get_app_event_interval.html#arms_get_app_event_interval" title="arms_get_app_event_interval"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_app_event_interval()</span></tt></a></td>
+<td><a class="reference internal" href="../api/arms_app_event_cb_t.html#arms_app_event_cb_t" title="arms_app_event_cb_t"><tt class="xref c c-func docutils literal"><span class="pre">arms_app_event_cb_t()</span></tt></a> 呼び出し間隔を取得</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_set_app_event_interval.html#arms_set_app_event_interval" title="arms_set_app_event_interval"><tt class="xref c c-func docutils literal"><span class="pre">arms_set_app_event_interval()</span></tt></a></td>
+<td><a class="reference internal" href="../api/arms_app_event_cb_t.html#arms_app_event_cb_t" title="arms_app_event_cb_t"><tt class="xref c c-func docutils literal"><span class="pre">arms_app_event_cb_t()</span></tt></a> 呼び出し間隔を設定</td>
+</tr>
+</tbody>
+</table>
+<p>これらの関数は、 <a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> によりRS からのPull が完了した後、呼び出すことができる。</p>
+<p><a class="reference internal" href="../api/arms_get_rsinfo.html#arms_get_rsinfo" title="arms_get_rsinfo"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rsinfo()</span></tt></a> 、 <a class="reference internal" href="../api/arms_get_rs_url.html#arms_get_rs_url" title="arms_get_rs_url"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rs_url()</span></tt></a> 、 <a class="reference internal" href="../api/arms_get_rs_tunnel_url.html#arms_get_rs_tunnel_url" title="arms_get_rs_tunnel_url"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rs_tunnel_url()</span></tt></a> を用いて、SA にて適切なフィルタ(RS への接続のみを許可するためのフィルタなど) を構成することが可能となる。</p>
+<p><a class="reference internal" href="../api/arms_get_proposed_push.html#arms_get_proposed_push_port" title="arms_get_proposed_push_port"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_proposed_push_port()</span></tt></a> では、RS から提案される Push 待ち受けポート番号の値を取得することができる。ここで取得した値を <a class="reference internal" href="../api/arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> の port 引数にセットすることが望ましい。</p>
+<p><a class="reference internal" href="../api/arms_get_proposed_push.html#arms_get_proposed_push_timeout" title="arms_get_proposed_push_timeout"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_proposed_push_timeout()</span></tt></a> では、RSから提案される Push のタイムアウト時間の提案値を取得することができる。
+Push されたコマンドによっては、時間を要する場合もあることが想定されるが(ファームウェアのアップデートや、サポート情報の収集など)、その場合でもこのタイムアウト時間の提案値を超えないように終了することが必要。
+タイムアウト時間の提案値はRS管理者が決定するため、もし時間が不足するようであれば管理者に連絡して設定変更を依頼する必要がある。</p>
+<p><a class="reference internal" href="../api/arms_get_app_event_interval.html#arms_get_app_event_interval" title="arms_get_app_event_interval"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_app_event_interval()</span></tt></a> 、 <a class="reference internal" href="../api/arms_set_app_event_interval.html#arms_set_app_event_interval" title="arms_set_app_event_interval"><tt class="xref c c-func docutils literal"><span class="pre">arms_set_app_event_interval()</span></tt></a> ではイベントコールバック関数の呼び出し間隔を取得および設定することができる。なお、標準の呼び出し間隔は60秒となっている。
+イベントコールバック関数は、主にWAN側アドレスの変更や接続状況の変化をlibarmsに伝えるために用いられるが、
+標準ではその検出間隔が60秒となってしまう。これを更に短くしたい場合や長くしたい場合にこのAPIを用いて設定が可能となる。</p>
+</div>
+<div class="section" id="heartbeat">
+<h2>Heartbeat 送信用情報(特定ベンダ向け)<a class="headerlink" href="#heartbeat" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">API 名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_get_hbtinfo.html#arms_get_hbtinfo" title="arms_get_hbtinfo"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_hbtinfo()</span></tt></a></td>
+<td>Heartbeat 送信に必要な情報を取得する</td>
+</tr>
+</tbody>
+</table>
+<p>この関数は、 <a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> によりRS からのPull が完了した後、呼び出すことができる。
+libarms Ver5.00 以降は libarms 自身に Heartbeat 送信機能が含まれており、これを利用する場合は
+このAPIは呼び出し不要となる。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">動作情報の取得</a><ul>
+<li><a class="reference internal" href="#libarms">libarms バージョン情報</a></li>
+<li><a class="reference internal" href="#arms">ARMS プロトコルバージョン情報</a></li>
+<li><a class="reference internal" href="#rs">RS 用情報</a></li>
+<li><a class="reference internal" href="#heartbeat">Heartbeat 送信用情報(特定ベンダ向け)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="heartbeat.html"
+                        title="前の章へ">Heartbeat</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="finalize.html"
+                        title="次の章へ">終了処理</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="finalize.html" title="終了処理"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="heartbeat.html" title="Heartbeat"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="impl_top.html" accesskey="U">SA実装</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

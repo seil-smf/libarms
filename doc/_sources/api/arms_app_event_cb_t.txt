@@ -1,0 +1,58 @@
+=============================
+(\*arms_app_event_cb_t)()
+=============================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_app_event_cb_t)(void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+アプリケーションからライブラリに対してイベント発生を通知する。
+コールバックテーブルへの登録は任意。
+
+説明
+----
+
+libarms は :c:func:`arms_event_loop` 実行中、一定間隔で本関数を呼び出す。
+:c:func:`arms_set_app_event_interval` により呼び出し間隔を設定できる。
+設定しない場合は60 秒間隔となる。
+アプリケーションはlibarms に通知すべき外部環境の変更、たとえば PPPoE のアドレス変更といったイベントが発生したことを調査し、
+SMF 上のアクションを必要とする場合に返り値として通知することができる。
+
+引数
+----
+
+:c:type:`void` :c:data:`*data`
+   :c:func:`arms_pull` で指定したポインタ
+
+返り値
+------
+
+:c:macro:`0`
+  イベントなし
+
+:c:macro:`非0`
+  イベントあり
+    :c:macro:`ARMS_EPUSH`
+       Push 待ち受けの再処理が必要なイベントの通知。
+
+       この値が通知されるとlibarms は、 :c:func:`arms_event_loop` 呼び出し直後と同様にPush の待ち受け開始を再度RS に通知する。
+       これにより、アドレス変更への追従が可能となる。
+
+    :c:macro:`ARMS_EPULL`
+       この値が通知されるとlibarms は、ただちに :c:func:`arms_event_loop`
+       の終了処理に移り、速やかに :c:macro:`ARMS_EPULL` をリターン値と
+       して arms_event_loop が終了する。
+       アプリケーションからのPush 待ち受けを明示的に終了させる場合に用いる。
+
+ヒストリ
+--------
+このAPIはVer2.20で追加された。

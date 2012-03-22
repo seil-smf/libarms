@@ -1,0 +1,65 @@
+===========================
+arms_hb_set_traffic_rate()
+===========================
+
+関数
+----
+
+.. c:function:: int arms_hb_set_traffic_rate(arms_context_t *ctx, uint16_t ifidx, uint64_t in_octet, uint64_t out_octet, uint64_t in_packet, uint64_t out_packet, uint64_t in_error, uint64_t out_error)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+インタフェースのトラフィック量(秒毎の平均)をHeartbeat情報として追加設定する。
+
+説明
+----
+Heartbeat情報収集コールバック関数 :c:func:`arms_hb_store_statistics_cb_t` の中で、インタフェースのトラフィック量を収集しサーバに通知する際に使用する。トラフィック量は前回呼出時を0として今回呼出までの総量を、呼出間隔の時間を使って1秒平均を計算する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`uint16_t` :c:data:`ifindex`
+  インタフェース番号。
+:c:type:`uint64_t` :c:data:`in_octet`
+  入力オクテット数の平均値。単位はバイト/秒。
+:c:type:`uint64_t` :c:data:`out_octet`
+  出力オクテット数の平均値。単位はバイト/秒。
+:c:type:`uint64_t` :c:data:`in_packet`
+  入力パケット数の平均値。単位はパケット数/秒。
+:c:type:`uint64_t` :c:data:`out_packet`
+  出力パケット数の平均値。単位はパケット数/秒。
+:c:type:`uint64_t` :c:data:`in_error`
+  入力エラーパケット数の平均値。単位はパケット数/秒。
+:c:type:`uint64_t` :c:data:`out_error`
+  出力エラーパケット数の平均値。単位はパケット数/秒。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       致命的エラー
+     :c:macro:`ARMS_EEXIST`
+       同一インタフェース番号の値をすでに設定済
+     :c:macro:`ARMS_ESIZE`
+       サイズが不足している(Heartbeat情報の上限を超えている)
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer5.00で追加された。

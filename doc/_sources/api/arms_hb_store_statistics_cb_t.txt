@@ -1,0 +1,59 @@
+====================================
+(\*arms_hb_store_statistics_cb_t)()
+====================================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_hb_store_statistics_cb_t)(arms_context_t *ctx, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+Heartbeat情報を定期的に収集する。
+コールバックテーブルへの登録は任意。登録されると、libarmsはRSから指定された間隔に基づいてHeartbeatを送信するようになる。
+
+説明
+----
+
+libarms は :c:func:`arms_event_loop` 実行中、一定間隔で本関数を呼び出す。
+呼び出し間隔は :c:func:`arms_pull` 実行時にRSより通知された値となる。
+アプリケーションはHeartbeat情報としてサーバに送信するデータ、たとえばCPU利用率やメモリ使用量、通信トラフィック情報を適宜APIにて設定する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+
+:c:type:`void` :c:data:`*data`
+   :c:func:`arms_pull` で指定したポインタ
+
+返り値
+------
+
+:c:macro:`0`
+  正常終了
+
+:c:macro:`非0`
+  異常終了
+
+関連
+----
+
+:c:func:`arms_hb_set_cpu_usage` ,
+:c:func:`arms_hb_set_cpu_detail_usage` ,
+:c:func:`arms_hb_set_mem_usage` ,
+:c:func:`arms_hb_set_disk_usage` ,
+:c:func:`arms_hb_set_traffic_rate` ,
+:c:func:`arms_hb_set_radiowave`
+
+ヒストリ
+--------
+このAPIはVer5.00で追加された。

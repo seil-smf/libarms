@@ -1,0 +1,172 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pull &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="SA実装" href="impl_top.html" />
+    <link rel="next" title="Push" href="push.html" />
+    <link rel="prev" title="初期化処理" href="initialize.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pull">
+<h1>Pull<a class="headerlink" href="#pull" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>LS/RS からコンフィグを取得する処理は、 <a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 関数1 つに集約されている。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">API 名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a></td>
+<td>初期化された情報を用いてPull を行う</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> は、LS およびRS への接続処理を適切に行い、Service-Config の取得/反映までを実行する関数である。
+回線やサーバの通信タイムアウトなどが発生した場合は、この関数内で予め指定された回数のリトライを行う。</p>
+<div class="section" id="ls-skip">
+<h2>LS-Skip について<a class="headerlink" href="#ls-skip" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> は、特に指定しない限り通常はLS に対する接続から開始するが、
+LS から取得したLocation-Config をメモリ上にダンプするAPI が提供されている。
+これを <a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 実行前に libarms に読み込ませることで、LS への接続をskip し、
+RS への接続から開始するようにできる。これらを実行するためのAPI は以下の通りである。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="37%" />
+<col width="63%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">API 名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../api/arms_dump_state.html#arms_dump_state" title="arms_dump_state"><tt class="xref c c-func docutils literal"><span class="pre">arms_dump_state()</span></tt></a></td>
+<td>取得したLocation-Config をメモリ上にダンプする</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../api/arms_restore_state.html#arms_restore_state" title="arms_restore_state"><tt class="xref c c-func docutils literal"><span class="pre">arms_restore_state()</span></tt></a></td>
+<td>事前にダンプされたLocation-Config を読み込む</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pull</a><ul>
+<li><a class="reference internal" href="#ls-skip">LS-Skip について</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="initialize.html"
+                        title="前の章へ">初期化処理</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="push.html"
+                        title="次の章へ">Push</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="push.html" title="Push"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="initialize.html" title="初期化処理"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="impl_top.html" accesskey="U">SA実装</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

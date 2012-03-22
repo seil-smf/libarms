@@ -1,0 +1,55 @@
+=========================
+arms_get_rs_tunnel_url()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_get_rs_tunnel_url(arms_context_t *ctx, arms_url_t *urlp, int size)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+SSLトンネルの情報を取得する。(SA->RS方向)
+
+説明
+----
+:c:func:`arms_push_method_query` により RS との間で通信方式について
+情報交換を行った際に受信した、SSL トンネル接続に用いる
+RS の IP アドレスおよびポート番号を URL 形式で取得する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`arms_url_t` :c:data:`*urlp`
+  アプリケーション側に領域を用意した、アドレス情報取得用バッファの
+  先頭アドレスを示すポインタ。size で指定したバイト数の書き込みが
+  可能となっていなければならない。詳細は :c:type:`arms_url_t` を参照。
+:c:type:`int` :c:data:`size`
+  urlp のバッファサイズ[bytes]
+
+返り値
+------
+
+:c:macro:`-1`
+   パラメータが不適切のため情報取得に失敗。
+   urlp が NULL、あるいは size が sizeof(arms_url_t) 未満。
+:c:macro:`-1以外`
+   libarms が取得し保持しているトンネル情報のセット数(0 を含む)。
+   実際に書き込んだ数ではない点に注意すること。
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer3.00で追加された。

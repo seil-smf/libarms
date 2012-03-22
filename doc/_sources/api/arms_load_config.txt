@@ -1,0 +1,62 @@
+===================
+arms_load_config()
+===================
+
+関数
+----
+
+.. c:function:: int arms_load_config(arms_context_t *ctx, const char *encrypted_config, size_t len)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+特定ベンダ向け初期コンフィグの投入。
+
+説明
+----
+LS のアドレス情報や、LS へ到達するための匿名PPPoE アカウント情報などを
+アップデートする際に利用する。各種情報は暗号化ファイルの形式で提供され、
+その内容をバッファへとりこんで本API へ渡す。
+
+通常は、LSに接続するための情報はlibarms内に埋め込まれているため、本APIを呼び出す必要は無い。匿名PPPoEアカウントを利用する必要がある場合、IIJより提供される暗号化ファイルの内容を本APIを用いて登録することで利用可能となる。
+
+なお、その際は専用の復号鍵を埋め込んでコンパイルされた専用のlibarmsが必要となるため、オープンソース版のlibarmsでは実質的に利用できない。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`const char` :c:data:`*encrypted_config`
+  暗号化されたコンフィグ情報の格納されたバッファ
+:c:type:`size_t` :c:data:`len`
+  バッファ長
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       ライブラリ内で致命的エラーを検出
+     :c:macro:`ARMS_ESYSTEM`
+       システムエラーを検出(メモリ不足など)
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+
+このAPIはVer1.00で追加された。

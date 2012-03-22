@@ -1,0 +1,579 @@
+==============================
+libarms データ構造リファレンス
+==============================
+
+distribution_id_t
+----------------------
+
+.. c:type:: struct distribution_id_t
+
+  ::
+
+    typedef struct arms_distribution_id {
+        uint16_t version;
+        uint32_t vendor_code;
+        uint16_t sa_type;
+        uint64_t sa_code;
+    } distribution_id_t;
+
+  .. c:member:: uint16_t version
+
+    Distribution ID の VERSION 値。
+
+  .. c:member:: uint32_t vendor_code
+
+    Distribution ID の VENDOR CODE 値。
+
+  .. c:member:: uint16_t sa_type
+
+    Distribution ID の SA TYPE 値。
+
+  .. c:member:: uint64_t sa_code
+  
+    Distribution ID の SA CODE 値。
+
+Distribution ID の構造
+^^^^^^^^^^^^^^^^^^^^^^
+  ::
+
+    format
+    0       2               6       8                              16(octet)
+    +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+    |VERSION| VENDOR CODE   |SA TYPE|           SA CODE             |
+    +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+    |<---------------------- distribution ID ---------------------->|
+
+  VERSION
+    システムのversion情報を識別する2octetの整数。
+      * 0x0000 予約
+      * 0x0001 SMFv2
+      * 0xFFFF 予約
+
+  VENDOR CODE
+    サービスアダプタ供給元を識別する4octetの整数。
+      * 0x00000000 予約
+      * 0xFFFFFFFF 予約
+
+  SA TYPE
+    サービスアダプタの種類を識別する2octetの整数。
+      * 0x0000 予約
+      * 0x0001～0x007F 予約
+      * 0xFFFF 予約
+
+  SA CODE
+    サービスアダプタを識別する8octetの整数。発行元は各ベンダ。
+
+  SA CODE フィールドは、ベンダごとに一意であればよい。
+  MAC アドレスやシリアル番号を利用して生成する方法が考えられる。
+  他のフィールドはシステム全体で一意になるようにIIJ にて割り当てをおこなう。
+
+arms_callback_tbl_t
+-------------------
+
+.. c:type:: struct arms_callback_tbl_t
+
+   ::
+
+     typedef struct arms_callback_tbl {
+         int version;
+         arms_config_cb_t config_cb;
+         arms_line_ctrl_cb_t line_ctrl_cb;
+         arms_state_cb_t state_cb;
+         arms_log_cb_t log_cb;
+         arms_read_config_cb_t read_config_cb;
+         arms_get_status_cb_t get_status_cb;
+         arms_command_cb_t command_cb;
+         arms_app_event_cb_t app_event_cb;
+         arms_hb_store_statistics_t hb_store_statistics_cb;
+     } arms_callback_tbl_t;
+
+   .. c:member:: int version
+
+      開発環境のバージョンをライブラリに知らせる。常に ARMS_API_VERSIONを指定する。
+
+   .. c:member:: arms_config_cb_t config_cb
+
+      コンフィグコールバック関数を指定する。
+
+   .. c:member:: arms_line_ctrl_cb_t line_ctrl_cb
+   
+      回線制御コールバック関数を指定する。
+
+   .. c:member:: arms_state_cb_t state_cb
+
+      ステートコールバック関数を指定する。
+
+   .. c:member:: arms_log_cb_t log_cb
+
+      ログコールバック関数を指定する。
+
+   .. c:member:: arms_read_config_cb_t read_config_cb
+
+      コンフィグ読み出しコールバック関数を指定する。
+
+   .. c:member:: arms_get_status_cb_t get_status_cb
+
+      ステータス取得コールバック関数を指定する。
+   
+   .. c:member:: arms_command_cb_t command_cb
+
+      コマンド実行コールバック関数を指定する。
+
+   .. c:member:: arms_app_event_cb_t app_event_cb
+
+      イベントコールバック関数を指定する。
+
+   .. c:member:: arms_hb_store_statistics_cb_t hb_store_statistics_cb
+
+      Heartbeat情報収集コールバック関数を指定する。
+
+arms_line_desc_t
+----------------
+
+.. c:type:: struct arms_line_desc_t
+
+  ::
+
+    typedef struct arms_line_description {
+        int type;
+        void *line_conf;
+    } arms_line_desc_t;
+
+  .. c:member:: int type
+
+       回線種別。値の一覧は以下の通り。
+
+       :c:macro:`ARMS_LINE_NONE`
+           終端を示す。
+       :c:macro:`ARMS_LINE_ANONPPPOE`
+           匿名PPPoE回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+           line_conf には :c:type:`arms_line_conf_anonpppoe_t` を指定する。
+       :c:macro:`ARMS_LINE_PPPOE`
+           PPPoE回線を利用する。
+           line_conf には :c:type:`arms_line_conf_pppoe_t` を指定する。
+       :c:macro:`ARMS_LINE_DHCP`
+           DHCP回線を利用する。
+           line_conf には :c:type:`arms_line_conf_dhcp_t` を指定する。
+       :c:macro:`ARMS_LINE_ANONMOBILE`
+           匿名モバイルPPP回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+           line_conf には :c:type:`arms_line_conf_anonmobile_t` を指定する。
+       :c:macro:`ARMS_LINE_MOBILE`
+           モバイルPPP回を利用する。
+           line_conf には :c:type:`arms_line_conf_mobile_t` を指定する。
+       :c:macro:`ARMS_LINE_STATIC`
+           静的アドレス設定を利用する。
+           line_conf には :c:type:`arms_line_conf_static_t` を指定する。
+       :c:macro:`ARMS_LINE_RA`
+           Router Advertisement (RA)回線を利用する。
+           line_conf には :c:type:`arms_line_conf_ra_t` を指定する。
+
+  .. c:member:: void *line_conf
+
+      回線情報。typeの値によってそれぞれ内容が異なる。
+
+arms_line_conf_anonpppoe_t
+--------------------------
+
+.. c:type:: struct arms_line_conf_anonpppoe_t
+
+  ::
+
+    typedef struct arms_line_conf_anonpppoe {
+        int ifindex;
+    } arms_line_conf_anonpppoe_t;
+
+  .. c:member:: int ifindex
+  
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+  
+  匿名回線を利用する接続を指定する。
+  PPPoE のアカウント情報はライブラリ内で保持しており、指定する必要はな
+  い。制御コールバックを呼ぶ時点で自動的にセットされる。制御コールバッ
+  クが呼ばれる際のパラメータは以下の通り::
+  
+    line_type = ARMS_LINE_PPPOE
+    line_conf.ifindex = 指定したifindex
+    line_conf.id = 匿名アカウント用ID
+    line_conf.pass = 匿名アカウント用Passphrase
+
+  制御コールバックが、ARMS_LINE_ANONPPPOE で呼ばれることはない。
+
+arms_line_conf_pppoe_t
+----------------------
+
+.. c:type:: struct arms_line_conf_pppoe_t
+
+  ::
+
+    typedef struct arms_line_conf_pppoe {
+            int ifindex;
+            char id[MAX_PPP_ID];
+            char pass[MAX_PPP_PASS];
+    } arms_line_conf_pppoe_t;
+
+  .. c:member:: int ifindex
+
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+
+  .. c:member:: char id[MAX_PPP_ID]
+
+    PPPのID。
+
+  .. c:member:: char pass[MAX_PPP_PASS]
+
+    PPPのパスワード。
+
+arms_line_conf_dhcp_t
+----------------------
+
+.. c:type:: struct arms_line_conf_dhcp_t
+
+  ::
+
+    typedef struct arms_line_conf_dhcp {
+            int ifindex;
+    } arms_line_conf_dhcp_t;
+
+  .. c:member:: int ifindex
+
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+
+arms_line_conf_anonmobile_t
+-----------------------------
+
+.. c:type:: struct arms_line_conf_anonmobile_t
+
+  ::
+
+    typedef struct arms_line_conf_anonmobile {
+        int ifindex;
+    } arms_line_conf_anonmobile_t;
+
+  .. c:member:: int ifindex
+  
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+  
+  匿名モバイル回線を利用する接続を指定する。
+  PPP のアカウント情報はライブラリ内で保持しており、指定する必要はな
+  い。制御コールバックを呼ぶ時点で自動的にセットされる。制御コールバッ
+  クが呼ばれる際のパラメータは以下の通り::
+  
+    line_type = ARMS_LINE_MOBILE
+    line_conf.ifindex = 指定したifindex
+    line_conf.telno = 接続先電話番号
+    line_conf.cid = 使用するCID 番号
+    line_conf.apn = 接続先APN 名称
+    line_conf.pdp = 接続先PDP 種別
+    line_conf.id = 匿名アカウント用ID
+    line_conf.pass = 匿名アカウント用Passphrase
+
+  制御コールバックが、ARMS_LINE_ANONMOBILE で呼ばれることはない。
+
+arms_line_conf_mobile_t
+-------------------------
+
+.. c:type:: struct arms_line_conf_mobile_t
+
+  ::
+
+    typedef struct arms_line_conf_mobile {
+            int ifindex;
+            char telno[MAX_MOBILE_TEL_LEN];
+            int cid;
+            char apn[MAX_MOBILE_APN_LEN];
+            char pdp[MAX_MOBILE_PDP_LEN];
+            char id[MAX_PPP_ID];
+            char pass[MAX_PPP_PASS];
+            char ipaddr[48];
+    } arms_line_conf_mobile_t;
+
+  .. c:member:: int ifindex
+
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+
+  .. c:member:: char telno[MAX_MOBILE_TEL_LEN]
+
+    電話番号。
+
+  .. c:member:: int cid
+
+    CID。
+
+  .. c:member:: char apn[MAX_MOBILE_APN_LEN]
+
+    APN。
+
+  .. c:member:: char pdp[MAX_MOBILE_PDP_LEN]
+
+    PDP-Type。
+
+  .. c:member:: char id[MAX_MOBILE_PPP_ID]
+
+    PPPのID。
+
+  .. c:member:: char pass[MAX_MOBILE_PPP_PASS]
+
+    PPPのパスワード。
+
+  .. c:member:: char ipaddr[48]
+
+    IPアドレス。
+
+arms_line_conf_static_t
+------------------------
+
+.. c:type:: struct arms_line_conf_static_t
+
+  ::
+
+    typedef struct arms_line_conf_static {
+            int ifindex;
+            char ipaddr[48];
+    } arms_line_conf_static_t;
+
+  .. c:member:: int ifindex
+
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+
+  .. c:member:: char ipaddr[48]
+
+    IPアドレス。
+
+arms_line_conf_ra_t
+----------------------
+
+.. c:type:: struct arms_line_conf_ra_t
+
+  ::
+
+    typedef struct arms_line_conf_ra {
+            int ifindex;
+    } arms_line_conf_ra_t;
+
+  .. c:member:: int ifindex
+
+    SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+    この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。
+
+arms_rs_info_t
+--------------
+
+.. c:type:: struct arms_rs_info_t
+
+  ::
+
+    typedef struct arms_rs_info {
+        const char *host;
+    } arms_rs_info_t;
+
+  .. c:member:: const char *host
+
+    IP アドレスで表され"192.168.0.1" などとなっている。
+    最大で5 つ情報が渡される可能性があるが、情報はsize で指定しただけ
+    libarms 内部よりコピーされる。
+    開放の必要はない。
+
+arms_url_t
+--------------
+
+.. c:type:: struct arms_url_t
+
+  ::
+
+    typedef struct arms_url {
+        const char *url;
+    } arms_url_t;
+
+  .. c:member:: const char *url
+
+    最大で5 つ情報が渡される可能性があるが、情報はsize で指定しただけlibarms 内部よりコピーされる。開放の必要はない。
+
+arms_hbt_info_t
+-----------------
+.. c:type:: struct arms_hbt_info_t
+
+  ::
+
+    typedef struct arms_hbt_info {
+        const char *host;
+        int port;
+        const char *passphrase;
+        int interval;
+        int numalg;
+        const char *algorithm[MAX_HBT_ALGORITHMS];
+    } arms_hbt_info_t;
+
+  .. c:member:: const char *host
+  
+    Heartbeat送信先ホスト名。
+
+  .. c:member:: int port
+  
+    Heartbeat送信先ポート番号。
+
+  .. c:member:: const char *passphrase
+  
+    Heartbeatパスフレーズ。
+
+  .. c:member:: int interval
+
+    Heartbeat送信インターバル[秒]。
+  
+  .. c:member:: int numalg
+
+    Heartbeatハッシュアルゴリズムの数。最大で3つまで渡される。
+
+  .. c:member:: const char *algorithm[MAX_HBT_ALGORITHMS]
+
+    Heartbeatハッシュアルゴリズムの文字配列。
+
+arms_connection_info_t
+-----------------------
+
+.. c:type:: struct arms_connection_info_t
+
+  ::
+
+    typedef struct arms_connection_info {
+        int method;
+        int af;
+        union {
+                /* simple info */
+                struct {
+                        char sa_address[128];
+                        int sa_port;
+                } simple_info;
+                /* tunnel info */
+                int tunnel_info[MAX_RS_INFO];
+        } un;
+    } arms_connection_info_t;
+
+  .. c:member:: int method
+
+    現在接続中のメソッド。次のいずれか。
+      :c:macro:`ARMS_PUSH_METHOD_SIMPLE`
+        シンプル接続
+      :c:macro:`ARMS_PUSH_METHOD_TUNNEL`
+        トンネル接続
+
+  .. c:member:: int af
+
+    接続における通信プロトコル。アドレスファミリ。次のいずれか。
+      :c:macro:`AF_INET`
+        IPv4
+      :c:macro:`AF_INET6`
+        IPv6
+
+  .. c:member:: char sa_address[128]
+
+    シンプル接続においてサーバに通知している、
+    サービスアダプタのIPアドレス文字列。
+
+  .. c:member:: int sa_port
+
+    シンプル接続においてサーバに通知している、
+    サービスアダプタのポート番号
+
+  .. c:member:: tunnel_info[MAX_RS_INFO]
+
+    トンネル接続における、各トンネルの情報。次のいずれか。
+      :c:macro:`ARMS_TUNNEL_ACTIVE`
+        トンネル接続中
+      :c:macro:`ARMS_TUNNEL_INACTIVE`
+        トンネル接続されていない
+
+arms_ping_arg_t
+----------------
+
+.. c:type:: struct arms_ping_arg_t
+
+  ::
+  
+    typedef struct arms_ping_arg {
+        const char
+        int count;
+        int size;
+    } arms_ping_arg_t;
+
+  .. c:member:: const char *dst
+
+     pingの送信先アドレス。
+
+  .. c:member:: int count
+  
+     ping送信回数。 
+   
+  .. c:member:: int size
+
+     pingパケットサイズ[bytes]。
+
+arms_traceroute_arg_t
+----------------------
+
+.. c:type:: struct arms_traceroute_arg_t
+
+  ::
+
+    typedef struct arms_traceroute_arg {
+        const char *addr;
+        int count;
+        int maxhop;
+    } arms_traceroute_arg_t;
+
+  .. c:member:: const char *addr
+
+     traceroute送信先アドレス。
+
+  .. c:member:: int count
+
+     ホップ毎に送信するプローブ回数。
+
+  .. c:member:: int maxhop
+
+     プローブパケットのTime-To-Liveの最大値。1～255を指定する。
+
+arms_ping_report_t
+-------------------
+
+.. c:type:: struct arms_ping_report_t
+
+  ::
+
+    typedef struct arms_ping_report {
+        int success;
+        int failure;
+    } arms_ping_report_t;
+
+  .. c:member:: int success 
+
+     pingが正常に成功した回数。
+  
+  .. c:member:: int failure
+
+     pingが失敗した回数。
+
+arms_traceroute_info_t
+-----------------------
+
+.. c:type:: struct arms_traceroute_info_t
+
+  ::
+  
+    typedef struct arms_traceroute_info {
+        int hop;
+        char addr[ARMS_TR_STRSIZE];
+    } arms_traceroute_info_t;
+
+  .. c:member:: int hop
+
+     結果のホップ数。
+
+  .. c:member:: char addr[ARMS_TR_STRSIZE]
+
+     検出したアドレスの配列。

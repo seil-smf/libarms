@@ -1,0 +1,338 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>エラーコード/ログコード体系 &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="使用するライブラリ関数一覧" href="../appendix/appendix_top.html" />
+    <link rel="prev" title="libarms データ構造リファレンス" href="struct.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>エラーコード/ログコード体系<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="error-code-label">
+<span id="id2"></span><h2>エラーコード体系<a class="headerlink" href="#error-code-label" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>各API でエラーコードは以下の形式をもつint 値である:</p>
+<div class="highlight-python"><pre>format
+0       1       2       3       4(octet)
++-------+-------+-------+-------+
+| 予約(0 fill)  | Level | Type  |
++-------+-------+-------+-------+
+|&lt;--------- Error Code --------&gt;|</pre>
+</div>
+<p>Level はエラーの深刻度を示し、Type はエラーの具体的な種別を分類するために利用する。
+エラー回復処理ではほとんどの場合、Level のみに注目する。
+Type はログ出力やデバッグなどの目的に利用することができる。</p>
+<p>エラーコードから、レベルおよびタイプを抜き出す際には以下のマクロを利用する。</p>
+<dl class="macro">
+<dt id="ARMS_ERR_LVL">
+<tt class="descname">ARMS_ERR_LVL</tt><big>(</big>code<big>)</big><a class="headerlink" href="#ARMS_ERR_LVL" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="ARMS_ERR_TYPE">
+<tt class="descname">ARMS_ERR_TYPE</tt><big>(</big>code<big>)</big><a class="headerlink" href="#ARMS_ERR_TYPE" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<div class="section" id="id3">
+<h3>レベル一覧<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ELVL_LOW</span></tt></dt>
+<dd>リトライで短時間での回復が期待できる</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ELVL_MID</span></tt></dt>
+<dd>リトライにより回復が期待できるが、時間がかかる</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ELVL_HIGH</span></tt></dt>
+<dd>リトライによる回復は期待できない</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ELVL_FATAL</span></tt></dt>
+<dd>ライブラリを停止すべき</dd>
+</dl>
+</div>
+<div class="section" id="id4">
+<h3>エラーコード一覧<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EFATAL</span></tt></dt>
+<dd>ライブラリ内部で致命的エラーが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ETIMEOUT</span></tt></dt>
+<dd>タイムアウトが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EMAXRETRY</span></tt></dt>
+<dd>再送回数が上限に到達した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EDONTRETRY</span></tt></dt>
+<dd>サーバから再送禁止を指示された</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ECALLBACK</span></tt></dt>
+<dd>コールバック関数でエラーが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ESYSTEM</span></tt></dt>
+<dd>メモリ不足など、動作環境が原因のエラーが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EINVAL</span></tt></dt>
+<dd>不正な引数を指定された</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="log-code-label">
+<span id="id5"></span><h2>ログコード体系<a class="headerlink" href="#log-code-label" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>INFO-API でやりとりするログコードは以下の形式をもつint 値である:</p>
+<div class="highlight-python"><pre>format
+0       1       2       3       4(octet)
++-------+-------+-------+-------+
+|予約(0)|old_st |new_st | Type  |
++-------+-------+-------+-------+
+|&lt;---------- Log Code ---------&gt;|</pre>
+</div>
+<p>old_st およびnew_st はライブラリの状態遷移にともなうログメッセージで利用する。
+old_st は今までの状態で、new_st は新しく遷移した状態である。
+状態遷移が発生しなかった場合や、自己遷移が発生した場合には両方が0 となる。
+Type はログの種別を意味する。</p>
+<p>ログコードから、状態およびタイプを抜き出す際には以下のマクロを利用する。</p>
+<dl class="macro">
+<dt id="ARMS_LOG_OLD_ST">
+<tt class="descname">ARMS_LOG_OLD_ST</tt><big>(</big>code<big>)</big><a class="headerlink" href="#ARMS_LOG_OLD_ST" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="ARMS_LOG_NEW_ST">
+<tt class="descname">ARMS_LOG_NEW_ST</tt><big>(</big>code<big>)</big><a class="headerlink" href="#ARMS_LOG_NEW_ST" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="ARMS_LOG_TYPE">
+<tt class="descname">ARMS_LOG_TYPE</tt><big>(</big>code<big>)</big><a class="headerlink" href="#ARMS_LOG_TYPE" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<div class="section" id="id6">
+<h3>状態一覧<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_INITIAL</span></tt></dt>
+<dd>起動直後</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_LSPULL</span></tt></dt>
+<dd>LS へアクセス中</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_RSPULL</span></tt></dt>
+<dd>RS へアクセス中</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_PULLDONE</span></tt></dt>
+<dd>PULL 動作終了(成功)</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_BOOT_FAIL</span></tt></dt>
+<dd>PULL 動作終了(失敗)</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_PUSH_INITIAL</span></tt></dt>
+<dd>Push 待ち受け処理開始直後</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_PUSH_SENDREADY</span></tt></dt>
+<dd>RS へPush 可能になったことを通知</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_PUSH_WAIT</span></tt></dt>
+<dd>Push 待ち受け可能</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ST_PUSH_REBOOT</span></tt></dt>
+<dd>RS からreboot を指示された</dd>
+</dl>
+</div>
+<div class="section" id="id7">
+<h3>タイプ一覧<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_FAILURE</span></tt></dt>
+<dd>プロトコルエラーを検出した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_FALLBACK</span></tt></dt>
+<dd>一つ前の状態へ戻った</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_LS_ACCESSS</span></tt></dt>
+<dd>LS へのアクセスを開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_LS_ERROR</span></tt></dt>
+<dd>LS との通信に失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_RS_ACCESS</span></tt></dt>
+<dd>RS へのアクセスを開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_RS_ERROR</span></tt></dt>
+<dd>RS との通信に失敗した</dd>
+</dl>
+</div>
+<div class="section" id="id8">
+<h3>ログコード一覧<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_EFALLBACK</span></tt></dt>
+<dd>異常を検知し、一つ前の状態へ戻った</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILS_ACCESS_START</span></tt></dt>
+<dd>LSへのアクセスを開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILS_ACCESS_END</span></tt></dt>
+<dd>LSへのアクセスが正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILS_ACCESS_FAIL</span></tt></dt>
+<dd>LSへのアクセスに失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IRS_ACCESS_START</span></tt></dt>
+<dd>RSへのアクセスを開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IRS_ACCESS_END</span></tt></dt>
+<dd>RSへのアクセスが正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IRS_ACCESS_FAIL</span></tt></dt>
+<dd>RSへのアクセスに失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_CONNECT_START</span></tt></dt>
+<dd>回線の接続を開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_CONNECT_END</span></tt></dt>
+<dd>回線の接続が正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ELINE_AUTH_FAIL</span></tt></dt>
+<dd>回線接続処理中に認証エラーが発生</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ELINE_TIMEOUT</span></tt></dt>
+<dd>回線接続処理中にタイムアウトが発生</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_DISCONNECT_START</span></tt></dt>
+<dd>回線の切断を開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_DISCONNECT_END</span></tt></dt>
+<dd>回線の切断が正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_CONNECT_START</span></tt></dt>
+<dd>コンフィグの取得を開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_CONNECT_END</span></tt></dt>
+<dd>コンフィグの取得が正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_LISTEN_START</span></tt></dt>
+<dd>PUSH待ち受けを開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_ACCEPT</span></tt></dt>
+<dd>PUSHリクエストを受け付けた</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_CLOSE</span></tt></dt>
+<dd>PUSH処理が終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_RETRY</span></tt></dt>
+<dd>リトライ処理を開始した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_EURL</span></tt></dt>
+<dd>不正なURLを指定された</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_EHOST</span></tt></dt>
+<dd>不正なホストを指定された</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ESOCKET</span></tt></dt>
+<dd>ソケットへの読み書きに失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ECONNECT</span></tt></dt>
+<dd>IP/TCP/SSL いずれかのレベルで接続に失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_EHTTP</span></tt></dt>
+<dd>HTTPのレベルで接続に失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ECERTIFICATE</span></tt></dt>
+<dd>サーバ証明書の検証に失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ENETNOMEM</span></tt></dt>
+<dd>ネットワーク処理でメモリ不足を検出</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ENETTIMEOUT</span></tt></dt>
+<dd>通信中にタイムアウトが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ECALLBACK</span></tt></dt>
+<dd>コールバック関数の呼び出しでエラーを検出した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ESSL</span></tt></dt>
+<dd>OpenSSLライブラリ内でエラーを検出</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_EROLLBACK</span></tt></dt>
+<dd>ロールバック処理に失敗した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ERETRY</span></tt></dt>
+<dd>リトライ回数の上限に達した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_INFO</span></tt></dt>
+<dd>汎用の通常レベルのログ</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ERROR</span></tt></dt>
+<dd>汎用のエラーレベルのログ</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_DEBUG</span></tt></dt>
+<dd>より詳細なログ</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">エラーコード/ログコード体系</a><ul>
+<li><a class="reference internal" href="#error-code-label">エラーコード体系</a><ul>
+<li><a class="reference internal" href="#id3">レベル一覧</a></li>
+<li><a class="reference internal" href="#id4">エラーコード一覧</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#log-code-label">ログコード体系</a><ul>
+<li><a class="reference internal" href="#id6">状態一覧</a></li>
+<li><a class="reference internal" href="#id7">タイプ一覧</a></li>
+<li><a class="reference internal" href="#id8">ログコード一覧</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="struct.html"
+                        title="前の章へ">libarms データ構造リファレンス</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="../appendix/appendix_top.html"
+                        title="次の章へ">使用するライブラリ関数一覧</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../appendix/appendix_top.html" title="使用するライブラリ関数一覧"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="struct.html" title="libarms データ構造リファレンス"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

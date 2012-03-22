@@ -1,0 +1,206 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>arms_push_method_query() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="arms_event_loop()" href="arms_event_loop.html" />
+    <link rel="prev" title="arms_pull()" href="arms_pull.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-push-method-query">
+<h1>arms_push_method_query()<a class="headerlink" href="#arms-push-method-query" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_push_method_query">
+int <tt class="descname">arms_push_method_query</tt><big>(</big>arms_context_t<em>&nbsp;*ctx</em>, <a class="reference internal" href="struct.html#arms_callback_tbl_t" title="arms_callback_tbl_t">arms_callback_tbl_t</a><em>&nbsp;*cb_tbl</em>, void<em>&nbsp;*udata</em><big>)</big><a class="headerlink" href="#arms_push_method_query" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>アプリケーション-&gt;libarms</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Push の通信方式をネゴシエーションする。</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> によりPull 動作を完了し、取得したコンフィグの反映を
+終えた後、Push の通信方式をRS との間でネゴシエーションする。</p>
+</div>
+<div class="section" id="id5">
+<h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">arms_context_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*ctx</span></tt></dt>
+<dd>内部ステートを保持するコンテキスト構造体ポインタ。
+<a class="reference internal" href="arms_init.html#arms_init" title="arms_init"><tt class="xref c c-func docutils literal"><span class="pre">arms_init()</span></tt></a> により取得したポインタをそのまま指定する。</dd>
+<dt><a class="reference internal" href="struct.html#arms_callback_tbl_t" title="arms_callback_tbl_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_callback_tbl_t</span></tt></a> <tt class="xref c c-data docutils literal"><span class="pre">*cb_tbl</span></tt></dt>
+<dd>各種コールバック関数へのポインタが納められた構造体。デバイスドライバの関数テーブルと同じようなイメージ。詳細は <a class="reference internal" href="struct.html#arms_callback_tbl_t" title="arms_callback_tbl_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_callback_tbl_t</span></tt></a> を参照。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*udata</span></tt></dt>
+<dd>コールバック関数へそのまま渡されるポインタ</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>返り値<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">0</span></tt></dt>
+<dd>正常終了</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">非0</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>異常終了( <a class="reference internal" href="error_code.html#error-code-label"><em>エラーコード体系</em></a> 参照)</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EDONTRETRY</span></tt></dt>
+<dd>LSからリトライ禁止を通知された</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EREBOOT</span></tt></dt>
+<dd>RSよりリブート要求を受信し制御を終了</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EPULL</span></tt></dt>
+<dd>Pull 処理より再実行を行う必要がある。
+RS からPull 先としてLS もしくはRS が指定されるがこれは <a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 関数内部で適切に処理される</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ESYSTEM</span></tt></dt>
+<dd>システムエラーを検出(メモリ不足など)</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EINVAL</span></tt></dt>
+<dd>引数の異常</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>RSへの通信が発生するため、フィルタリングにより通信路を確保
+する必要がある場合は予め <a class="reference internal" href="arms_get_rs_url.html#arms_get_rs_url" title="arms_get_rs_url"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rs_url()</span></tt></a> を使って通信先情報を
+取得し適切にフィルタを設定すること。</p>
+<p>SMF-NAT 対応の通信方式がネゴシエーション結果として採用される場合、
+<a class="reference internal" href="arms_get_rs_tunnel_url.html#arms_get_rs_tunnel_url" title="arms_get_rs_tunnel_url"><tt class="xref c c-func docutils literal"><span class="pre">arms_get_rs_tunnel_url()</span></tt></a> にて一つ以上のURL 情報が得られる。</p>
+</div>
+<div class="section" id="id7">
+<h2>コールバック関数からの呼び出し<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>不可</p>
+</div>
+<div class="section" id="id8">
+<h2>ヒストリ<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer3.00で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">arms_push_method_query()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">引数</a></li>
+<li><a class="reference internal" href="#id6">返り値</a></li>
+<li><a class="reference internal" href="#id7">コールバック関数からの呼び出し</a></li>
+<li><a class="reference internal" href="#id8">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_pull.html"
+                        title="前の章へ">arms_pull()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_event_loop.html"
+                        title="次の章へ">arms_event_loop()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_event_loop.html" title="arms_event_loop()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_pull.html" title="arms_pull()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

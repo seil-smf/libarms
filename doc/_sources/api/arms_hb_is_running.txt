@@ -1,0 +1,53 @@
+=============================
+arms_hb_is_running()
+=============================
+
+関数
+----
+
+.. c:function:: void arms_hb_is_running(arms_context_t *ctx)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+
+Heartbeat情報のサーバへの送信動作の有無を確認する。
+
+説明
+----
+
+libarms は :c:func:`arms_event_loop` 実行中、一定間隔で :c:func:`arms_hb_store_statistic_t` コールバックを呼び出し、Heartbeat情報を収集したのちサーバに送信するが、本関数を使うと現在Heartbeat情報をサーバに送信する状態か送信しない状態かを確認できる。
+
+送信する条件は下記をすべて満たしている場合。
+
+  * :c:func:`arms_event_loop` 呼び出し中
+  * push-confirmationが完了している
+  * configure実行中でない
+  * :c:func:`arms_hb_stop` による一時停止状態ではない
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+
+返り値
+------
+:c:macro:`0`
+  送信しない
+:c:macro:`非0`
+  送信する
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer5.00で追加された。

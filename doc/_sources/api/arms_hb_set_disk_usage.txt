@@ -1,0 +1,57 @@
+=========================
+arms_hb_set_disk_usage()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_hb_set_disk_usage(arms_context_t *ctx, uint16_t idx, uint64_t used, uint64_t free)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+現在のディスク使用状況をHeartbeat情報として追加設定する。
+
+説明
+----
+Heartbeat情報収集コールバック関数 :c:func:`arms_hb_store_statistics_cb_t` の中でディスク使用状況の情報を収集しサーバに通知する際に使用する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`uint16_t` :c:data:`index`
+  ディスク番号。
+:c:type:`uint64_t` :c:data:`used`
+  使用容量。単位はバイト。
+:c:type:`uint64_t` :c:data:`free`
+  空き容量。単位はバイト。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       致命的エラー
+     :c:macro:`ARMS_EEXIST`
+       同一ディスク番号の値をすでに設定済
+     :c:macro:`ARMS_ESIZE`
+       サイズが不足している(Heartbeat情報の上限を超えている)
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer5.00で追加された。

@@ -1,0 +1,234 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>(*arms_line_ctrl_cb_t)() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="(*arms_read_config_cb_t)()" href="arms_read_config_cb_t.html" />
+    <link rel="prev" title="(*arms_config_cb_t)()" href="arms_config_cb_t.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-line-ctrl-cb-t">
+<h1>(*arms_line_ctrl_cb_t)()<a class="headerlink" href="#arms-line-ctrl-cb-t" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_line_ctrl_cb_t">
+typedef int <tt class="descname">(*arms_line_ctrl_cb_t)</tt><big>(</big>int<em>&nbsp;line_action</em>, int<em>&nbsp;line_type</em>, void<em>&nbsp;*line_conf</em>, void<em>&nbsp;*udata</em><big>)</big><a class="headerlink" href="#arms_line_ctrl_cb_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms-&gt;アプリケーション</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>回線の接続、切断、状態調査をおこなう。コールバックテーブルへの登録は必須。</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>回線の処理に利用する。line_conf には回線の制御に必要なパラメータが入る。
+回線種別ごとに構造体を定義するので、キャストして利用する。</p>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">line_type が <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_PPPOE</span></tt> もしくは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_MOBILE</span></tt> の場合、line_conf にはPPPアカウントの情報が入る。
+この場合、line_conf の内容をログ等で外部に出力しないよう注意すること。</p>
+</div>
+<p>line_actionで指定された処理をアプリケーション側で実行し、その結果をlibarmsに返す。</p>
+</div>
+<div class="section" id="id5">
+<h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">line_action</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>libarmsから指示されるアクション。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ACT_CONNECT</span></tt></dt>
+<dd>アプリケーション側で回線の接続処理を行う。即座に接続が成功し、LS/RSへの通信が可能な状況となった場合には <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_CONNECTED</span></tt> を返す。もしPPPoEやDHCPなどでアドレス取得に時間を要する場合には <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_NEEEDPOLL</span></tt> を返す。この場合、libarmsは一定間隔でポーリングを行う。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ACT_DISCONNECT</span></tt></dt>
+<dd>アプリケーション側で回線の切断処理を行う。即座に切断が成功した場合には <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_DISCONNECTED</span></tt> を返す。もし切断処理に時間を要する場合には <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_NEEEDPOLL</span></tt> を返す。この場合、libarmsは一定間隔でポーリングを行う。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ACT_STATUS</span></tt></dt>
+<dd>アプリケーション側で回線のステータス調査を確認する。
+接続/切断処理を行った際、 <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_NEEDPOLL</span></tt> を返した後、libarms からポーリングを行うために使われる。</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">line_type</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>回線種別ID。値の一覧は以下の通り。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ANONPPPOE</span></tt></dt>
+<dd>匿名PPPoE回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_anonpppoe_t" title="arms_line_conf_anonpppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_anonpppoe_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_PPPOE</span></tt></dt>
+<dd>PPPoE回線を利用する。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_pppoe_t" title="arms_line_conf_pppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_pppoe_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_DHCP</span></tt></dt>
+<dd>DHCP回線を利用する。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_dhcp_t" title="arms_line_conf_dhcp_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_dhcp_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ANONMOBILE</span></tt></dt>
+<dd>匿名モバイルPPP回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_anonmobile_t" title="arms_line_conf_anonmobile_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_anonmobile_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_MOBILE</span></tt></dt>
+<dd>モバイルPPP回線を利用する。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_mobile_t" title="arms_line_conf_mobile_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_mobile_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_STATIC</span></tt></dt>
+<dd>静的アドレス設定を利用する。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_static_t" title="arms_line_conf_static_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_static_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_RA</span></tt></dt>
+<dd>Router Advertisement (RA)回線を利用する。
+line_conf には <a class="reference internal" href="struct.html#arms_line_conf_ra_t" title="arms_line_conf_ra_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_ra_t</span></tt></a> を指定する。</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">line_conf</span></tt></dt>
+<dd>line_typeに対する回線設定。回線種別毎に、上記に従ってキャストして利用する。ステータス調査( <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ACT_STATUS</span></tt> )の場合はNULL。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*udata</span></tt></dt>
+<dd><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> あるいは <a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> で指定したポインタ</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>返り値<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt>負数</dt>
+<dd>致命的エラーが発生した(ECALLBACK で終了する)</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_NEEDPOLL</span></tt></dt>
+<dd>接続に時間がかかるので、ポーリングが必要</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_TIMEOUT</span></tt></dt>
+<dd>タイムアウトが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_AUTHFAIL</span></tt></dt>
+<dd>認証エラーが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_CONNECTED</span></tt></dt>
+<dd>接続状態にある</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_DISCONNECTED</span></tt></dt>
+<dd>切断状態にある</dd>
+</dl>
+</div>
+<div class="section" id="id7">
+<h2>ヒストリ<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer1.00で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">(*arms_line_ctrl_cb_t)()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">引数</a></li>
+<li><a class="reference internal" href="#id6">返り値</a></li>
+<li><a class="reference internal" href="#id7">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_config_cb_t.html"
+                        title="前の章へ">(*arms_config_cb_t)()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_read_config_cb_t.html"
+                        title="次の章へ">(*arms_read_config_cb_t)()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_read_config_cb_t.html" title="(*arms_read_config_cb_t)()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_config_cb_t.html" title="(*arms_config_cb_t)()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

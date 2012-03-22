@@ -1,0 +1,80 @@
+=============================
+(\*arms_get_status_cb_t)()
+=============================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_get_status_cb_t)(uint32_t id, const char *buff, size_t buff_len, char *result_buff, size_t result_len, int *next, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+SA の動作状態を取得する。コールバックテーブルへの登録は必須ではない。
+
+説明
+----
+
+指定されたモジュール ID のステータス情報を取得する。
+
+引数
+----
+
+:c:type:`uint32_t` :c:data:`id`
+  モジュールID。ID 自体は SA の機種ごとに定義される。
+:c:type:`const char` :c:data:`*buff`
+  リクエストバッファ。状態取得時にRS にて指定された追加パラメータ情報が格納される
+  バッファを示すポインタであり、NULL が渡される可能性はない。
+  バッファの内容は文字列あるいはバイナリデータ。buff_len で
+  示されるサイズ分のデータが文字列あるいはバイナリ形式で格納され、
+  その直後にNUL 文字が格納される。
+:c:type:`size_t` :c:data:`buff_len`
+  リクエストバッファに格納されたパラメータ情報のバイト数。0 が渡される可能性がある。
+:c:type:`char` :c:data:`*result_buff`
+  動作状態情報を格納すべきlibarms 内のバッファ。バッファとしてNULL が渡される可能性はない。
+:c:type:`size_t` :c:data:`result_len`
+  バッファ長。バッファ長には0 が渡される可能性はない。
+:c:type:`int` :c:data:`*next`
+  呼ばれたときには、ポインタが指す領域に下記の値が入っている。
+
+    :c:macro:`ARMS_FRAG_FIRST`
+      そのモジュールにおいて最初の呼び出し
+    :c:macro:`ARMS_FRAG_CONTINUE`
+      そのモジュールにおいて二度目以降の呼び出し
+
+  コールバック関数では、渡されたバッファ長が実際の内容を収めるには小さく、
+  分割取得を利用する場合、ブロックの情報(フラグ) を書き込む必要がある。
+
+    :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_FINISHED)`
+      最初のブロックで、続くブロックはない
+    :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_CONTINUE)`
+      最初のブロックで、続くブロックがある
+    :c:macro:`ARMS_FRAG_CONTINUE`
+      最初以外のブロックで、続くブロックがある
+    :c:macro:`ARMS_FRAG_FINISHED`
+       続くブロックはない
+:c:type:`void` :c:data:`*udata`
+  :c:func:`arms_event_loop` で指定したポインタ
+
+返り値
+------
+
+:c:macro:`0`
+  ステータス情報の取得が正常に終了(US-ASCII 文字列)
+:c:macro:`ARMS_RESULT_BYTES` (バイト数)
+  ステータス情報の取得が正常に終了(格納データの有効なバイト数)
+上記以外の値
+  異常終了(エラーコード)
+
+.. note::
+  バイト数を返すときに、result_len で指定されたバイト数よりも大きな値
+  あるいはマイナスの値を指定した場合の動作は未定義。
+
+ヒストリ
+--------
+このAPIはVer2.10で追加された。

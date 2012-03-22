@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>(*arms_app_event_cb_t)() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="(*arms_hb_store_statistics_cb_t)()" href="arms_hb_store_statistics_cb_t.html" />
+    <link rel="prev" title="(*arms_log_cb_t)()" href="arms_log_cb_t.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-app-event-cb-t">
+<h1>(*arms_app_event_cb_t)()<a class="headerlink" href="#arms-app-event-cb-t" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_app_event_cb_t">
+typedef int <tt class="descname">(*arms_app_event_cb_t)</tt><big>(</big>void<em>&nbsp;*udata</em><big>)</big><a class="headerlink" href="#arms_app_event_cb_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms-&gt;アプリケーション</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>アプリケーションからライブラリに対してイベント発生を通知する。
+コールバックテーブルへの登録は任意。</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms は <a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> 実行中、一定間隔で本関数を呼び出す。
+<a class="reference internal" href="arms_set_app_event_interval.html#arms_set_app_event_interval" title="arms_set_app_event_interval"><tt class="xref c c-func docutils literal"><span class="pre">arms_set_app_event_interval()</span></tt></a> により呼び出し間隔を設定できる。
+設定しない場合は60 秒間隔となる。
+アプリケーションはlibarms に通知すべき外部環境の変更、たとえば PPPoE のアドレス変更といったイベントが発生したことを調査し、
+SMF 上のアクションを必要とする場合に返り値として通知することができる。</p>
+</div>
+<div class="section" id="id5">
+<h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*data</span></tt></dt>
+<dd><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> で指定したポインタ</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>返り値<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">0</span></tt></dt>
+<dd>イベントなし</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">非0</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>イベントあり</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EPUSH</span></tt></dt>
+<dd><p class="first">Push 待ち受けの再処理が必要なイベントの通知。</p>
+<p class="last">この値が通知されるとlibarms は、 <a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> 呼び出し直後と同様にPush の待ち受け開始を再度RS に通知する。
+これにより、アドレス変更への追従が可能となる。</p>
+</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EPULL</span></tt></dt>
+<dd>この値が通知されるとlibarms は、ただちに <a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a>
+の終了処理に移り、速やかに <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EPULL</span></tt> をリターン値と
+して arms_event_loop が終了する。
+アプリケーションからのPush 待ち受けを明示的に終了させる場合に用いる。</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="id7">
+<h2>ヒストリ<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer2.20で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">(*arms_app_event_cb_t)()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">引数</a></li>
+<li><a class="reference internal" href="#id6">返り値</a></li>
+<li><a class="reference internal" href="#id7">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_log_cb_t.html"
+                        title="前の章へ">(*arms_log_cb_t)()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_hb_store_statistics_cb_t.html"
+                        title="次の章へ">(*arms_hb_store_statistics_cb_t)()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_hb_store_statistics_cb_t.html" title="(*arms_hb_store_statistics_cb_t)()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_log_cb_t.html" title="(*arms_log_cb_t)()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

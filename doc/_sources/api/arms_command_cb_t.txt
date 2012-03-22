@@ -1,0 +1,122 @@
+=============================
+(\*arms_command_cb_t)()
+=============================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_command_cb_t)(uint32_t id, int action, const char *buff, size_t buff_len, char *result_buff, size_t result_len, int *next, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+汎用のコマンド実行指示を処理する。
+コールバックテーブルへの登録は必須ではない。
+
+説明
+----
+
+モジュールID ごとに定義されたコマンド実行を指示する。
+処理内容があらかじめ定義されている共通アクションと、
+機器固有のコマンドを実行する汎用アクションが用意されている。
+
+引数
+----
+
+:c:type:`uint32_t` :c:data:`id`
+  モジュールID。ID 自体はSA の機種ごとに定義される。
+
+  モジュールID を使用しないaction もある。action の項で個別に記載する。
+:c:type:`int` :c:data:`action`
+  モジュールID ごとに定義されたアクション。SA の機種に依存しない共通のアクションが定義されている。値の一覧は次のとおり。
+    :c:macro:`ARMS_PUSH_CLEAR_STATUS`
+      モジュールの状態を初期状態に戻す。
+      buff にはモジュールへの付加情報が文字列あるいはバイナリで格納される。
+      必要があれば実行結果を result_buff に格納する。
+      
+      id を使用する。指定されたモジュールに対する操作となる。
+    :c:macro:`ARMS_PUSH_PING`
+      buff で指定された対象に ICMP ECHO パケットを送信し、それに対する応答となる
+      ICMP ECHO REPLY パケットを待ち、その結果を result_buff に格納する。
+
+      id を使用しない。0 が渡されるが無視してよい。
+    :c:macro:`ARMS_PUSH_TRACEROUTE`
+      buff で指定された対象にtraceroute 処理を実行し、その結果をresult_buff に格納する。
+
+      id を使用しない。0 が渡されるが無視してよい。
+    :c:macro:`ARMS_PUSH_MD_COMMAND`
+      汎用アクションを実行する。
+      buff には機種依存のコマンドが文字列あるいはバイナリで格納される。
+      この実行結果をresult_buff に格納する。
+
+      id を使用する。指定されたモジュールに対する操作となる。
+    :c:macro:`ARMS_PUSH_DUMP_DEBUG`
+      ログやコンフィグなど、デバッグ情報をresult_buff に格納する。
+
+      id を使用しない。0 が渡されるが無視してよい。
+:c:type:`const char` :c:data:`*buff`
+  action ごとの個別パラメータを格納すべきlibarms 内のバッファ。
+  バッファとしてNULL が渡される可能性はない。
+  action が :c:macro:`ARMS_PUSH_CLEAR_STATUS` の場合、
+  buff はサーバから送られたリクエスト情報(テキストあるいはバイナリ) そのものとなる。
+  そのとき buff_len で示されるサイズ分のデータが文字列あるいはバイナリ形式で格納され、その直後にNUL 文字が格納される。
+
+  action が :c:macro:`ARMS_PUSH_PING` の場合、buff を :c:type:`arms_ping_arg_t` * にキャストする必要がある。
+
+  action が :c:macro:`ARMS_PUSH_TRACEROUTE` の場合、buff を :c:type:`arms_traceroute_arg_t` * にキャストする必要がある。
+:c:type:`size_t` :c:data:`buff_len`
+  バッファ長。0 が渡されることもある。
+
+  :c:macro:`ARMS_PUSH_CLEAR_STATUS` 以外の場合、バッファ長には0 が渡される可能性はない。
+  buff に収められているデータのバイト数を表す。
+:c:type:`char` :c:data:`*result_buff`
+  action ごとの処理結果情報を格納すべきlibarms 内のバッファ。
+  バッファとしてNULL が渡される可能性はない。
+
+  action が :c:macro:`ARMS_PUSH_PING` の場合、result_buff を :c:type:`arms_ping_report_t` * にキャストする必要がある。
+
+  action が :c:macro:`ARMS_PUSH_TRACEROUTE` の場合、result_buff を :c:type:`arms_traceroute_info_t` * にキャストする必要がある。
+:c:type:`size_t` :c:data:`result_len`
+  バッファ長。
+  result_buff として確保されたバッファ領域のバイト数を表す。
+  バッファ長には0 が渡される可能性はない。
+:c:type:`int` :c:data:`*next`
+  コンフィグの分割送信を利用する場合のブロックの情報(フラグ)
+  渡されたバッファ長がコールバックの実行結果を収めるには小さく、実行結果の分割取得を利用する場合、ブロックの情報(フラグ) を書き込む必要がある。
+
+  :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_FINISHED)`
+    最初のブロックで、続くブロックはない
+  :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_CONTINUE)`
+    最初のブロックで、続くブロックがある
+  :c:macro:`ARMS_FRAG_CONTINUE`
+    最初以外のブロックで、続くブロックがある
+  :c:macro:`ARMS_FRAG_FINISHED`
+    続くブロックはない。
+    action に :c:macro:`ARMS_PUSH_MD_COMMAND` 以外が指定された場合、NULL が渡される。
+    その場合分割取得は行わないため書き込み処理は不要である。
+:c:type:`void` :c:data:`*udata`
+  :c:func:`arms_event_loop` で指定したポインタ
+
+返り値
+------
+
+:c:macro:`0`
+  指定アクションの処理が正常に終了(result_buff は US-ASCII 文字列)
+:c:macro:`ARMS_RESULT_BYTES` (バイト数)
+  :c:macro:`ARMS_PUSH_MD_COMMAND` あるいは :c:macro:`ARMS_PUSH_DUMP_DEBUG` が正常に終了。result_buff に格納したデータが US-ASCII 文字列でない場合に格納したバイト数を示す。
+上記以外の非0
+  異常終了(エラーコード)
+    :c:macro:`ARMS_ESYSTEM`
+      メモリ不足など、動作環境が原因のエラーが発生した
+
+.. note::
+  バイト数を返すときに、result_len で指定されたバイト数よりも大きな値あるいはマイナスの値を指定した場合の動作は未定義。
+
+ヒストリ
+--------
+このAPIはVer2.10で追加された。

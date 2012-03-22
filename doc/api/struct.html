@@ -1,0 +1,882 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>libarms データ構造リファレンス &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="エラーコード/ログコード体系" href="error_code.html" />
+    <link rel="prev" title="arms_hb_is_running()" href="arms_hb_is_running.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="libarms">
+<h1>libarms データ構造リファレンス<a class="headerlink" href="#libarms" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="distribution-id-t">
+<h2>distribution_id_t<a class="headerlink" href="#distribution-id-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="distribution_id_t">
+struct <tt class="descname">distribution_id_t</tt><a class="headerlink" href="#distribution_id_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_distribution_id {
+    uint16_t version;
+    uint32_t vendor_code;
+    uint16_t sa_type;
+    uint64_t sa_code;
+} distribution_id_t;</pre>
+</div>
+<dl class="member">
+<dt id="distribution_id_t.version">
+uint16_t <tt class="descname">version</tt><a class="headerlink" href="#distribution_id_t.version" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Distribution ID の VERSION 値。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="distribution_id_t.vendor_code">
+uint32_t <tt class="descname">vendor_code</tt><a class="headerlink" href="#distribution_id_t.vendor_code" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Distribution ID の VENDOR CODE 値。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="distribution_id_t.sa_type">
+uint16_t <tt class="descname">sa_type</tt><a class="headerlink" href="#distribution_id_t.sa_type" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Distribution ID の SA TYPE 値。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="distribution_id_t.sa_code">
+uint64_t <tt class="descname">sa_code</tt><a class="headerlink" href="#distribution_id_t.sa_code" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Distribution ID の SA CODE 値。</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="distribution-id">
+<h3>Distribution ID の構造<a class="headerlink" href="#distribution-id" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<blockquote>
+<div><div class="highlight-python"><pre>format
+0       2               6       8                              16(octet)
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|VERSION| VENDOR CODE   |SA TYPE|           SA CODE             |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|&lt;---------------------- distribution ID ----------------------&gt;|</pre>
+</div>
+<dl class="docutils">
+<dt>VERSION</dt>
+<dd><dl class="first last docutils">
+<dt>システムのversion情報を識別する2octetの整数。</dt>
+<dd><ul class="first last simple">
+<li>0x0000 予約</li>
+<li>0x0001 SMFv2</li>
+<li>0xFFFF 予約</li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>VENDOR CODE</dt>
+<dd><dl class="first last docutils">
+<dt>サービスアダプタ供給元を識別する4octetの整数。</dt>
+<dd><ul class="first last simple">
+<li>0x00000000 予約</li>
+<li>0xFFFFFFFF 予約</li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>SA TYPE</dt>
+<dd><dl class="first last docutils">
+<dt>サービスアダプタの種類を識別する2octetの整数。</dt>
+<dd><ul class="first last simple">
+<li>0x0000 予約</li>
+<li>0x0001～0x007F 予約</li>
+<li>0xFFFF 予約</li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>SA CODE</dt>
+<dd>サービスアダプタを識別する8octetの整数。発行元は各ベンダ。</dd>
+</dl>
+<p>SA CODE フィールドは、ベンダごとに一意であればよい。
+MAC アドレスやシリアル番号を利用して生成する方法が考えられる。
+他のフィールドはシステム全体で一意になるようにIIJ にて割り当てをおこなう。</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="arms-callback-tbl-t">
+<h2>arms_callback_tbl_t<a class="headerlink" href="#arms-callback-tbl-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_callback_tbl_t">
+struct <tt class="descname">arms_callback_tbl_t</tt><a class="headerlink" href="#arms_callback_tbl_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_callback_tbl {
+    int version;
+    arms_config_cb_t config_cb;
+    arms_line_ctrl_cb_t line_ctrl_cb;
+    arms_state_cb_t state_cb;
+    arms_log_cb_t log_cb;
+    arms_read_config_cb_t read_config_cb;
+    arms_get_status_cb_t get_status_cb;
+    arms_command_cb_t command_cb;
+    arms_app_event_cb_t app_event_cb;
+    arms_hb_store_statistics_t hb_store_statistics_cb;
+} arms_callback_tbl_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_callback_tbl_t.version">
+int <tt class="descname">version</tt><a class="headerlink" href="#arms_callback_tbl_t.version" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>開発環境のバージョンをライブラリに知らせる。常に ARMS_API_VERSIONを指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.config_cb">
+<a class="reference internal" href="arms_config_cb_t.html#arms_config_cb_t" title="arms_config_cb_t">arms_config_cb_t</a> <tt class="descname">config_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.config_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>コンフィグコールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.line_ctrl_cb">
+<a class="reference internal" href="arms_line_ctrl_cb_t.html#arms_line_ctrl_cb_t" title="arms_line_ctrl_cb_t">arms_line_ctrl_cb_t</a> <tt class="descname">line_ctrl_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.line_ctrl_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>回線制御コールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.state_cb">
+<a class="reference internal" href="arms_state_cb_t.html#arms_state_cb_t" title="arms_state_cb_t">arms_state_cb_t</a> <tt class="descname">state_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.state_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ステートコールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.log_cb">
+<a class="reference internal" href="arms_log_cb_t.html#arms_log_cb_t" title="arms_log_cb_t">arms_log_cb_t</a> <tt class="descname">log_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.log_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ログコールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.read_config_cb">
+<a class="reference internal" href="arms_read_config_cb_t.html#arms_read_config_cb_t" title="arms_read_config_cb_t">arms_read_config_cb_t</a> <tt class="descname">read_config_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.read_config_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>コンフィグ読み出しコールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.get_status_cb">
+<a class="reference internal" href="arms_get_status_cb_t.html#arms_get_status_cb_t" title="arms_get_status_cb_t">arms_get_status_cb_t</a> <tt class="descname">get_status_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.get_status_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ステータス取得コールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.command_cb">
+<a class="reference internal" href="arms_command_cb_t.html#arms_command_cb_t" title="arms_command_cb_t">arms_command_cb_t</a> <tt class="descname">command_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.command_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>コマンド実行コールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.app_event_cb">
+<a class="reference internal" href="arms_app_event_cb_t.html#arms_app_event_cb_t" title="arms_app_event_cb_t">arms_app_event_cb_t</a> <tt class="descname">app_event_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.app_event_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>イベントコールバック関数を指定する。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_callback_tbl_t.hb_store_statistics_cb">
+<a class="reference internal" href="arms_hb_store_statistics_cb_t.html#arms_hb_store_statistics_cb_t" title="arms_hb_store_statistics_cb_t">arms_hb_store_statistics_cb_t</a> <tt class="descname">hb_store_statistics_cb</tt><a class="headerlink" href="#arms_callback_tbl_t.hb_store_statistics_cb" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Heartbeat情報収集コールバック関数を指定する。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-desc-t">
+<h2>arms_line_desc_t<a class="headerlink" href="#arms-line-desc-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_desc_t">
+struct <tt class="descname">arms_line_desc_t</tt><a class="headerlink" href="#arms_line_desc_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_description {
+    int type;
+    void *line_conf;
+} arms_line_desc_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_desc_t.type">
+int <tt class="descname">type</tt><a class="headerlink" href="#arms_line_desc_t.type" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>回線種別。値の一覧は以下の通り。</p>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_NONE</span></tt></dt>
+<dd>終端を示す。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ANONPPPOE</span></tt></dt>
+<dd>匿名PPPoE回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+line_conf には <a class="reference internal" href="#arms_line_conf_anonpppoe_t" title="arms_line_conf_anonpppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_anonpppoe_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_PPPOE</span></tt></dt>
+<dd>PPPoE回線を利用する。
+line_conf には <a class="reference internal" href="#arms_line_conf_pppoe_t" title="arms_line_conf_pppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_pppoe_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_DHCP</span></tt></dt>
+<dd>DHCP回線を利用する。
+line_conf には <a class="reference internal" href="#arms_line_conf_dhcp_t" title="arms_line_conf_dhcp_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_dhcp_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ANONMOBILE</span></tt></dt>
+<dd>匿名モバイルPPP回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+line_conf には <a class="reference internal" href="#arms_line_conf_anonmobile_t" title="arms_line_conf_anonmobile_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_anonmobile_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_MOBILE</span></tt></dt>
+<dd>モバイルPPP回を利用する。
+line_conf には <a class="reference internal" href="#arms_line_conf_mobile_t" title="arms_line_conf_mobile_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_mobile_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_STATIC</span></tt></dt>
+<dd>静的アドレス設定を利用する。
+line_conf には <a class="reference internal" href="#arms_line_conf_static_t" title="arms_line_conf_static_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_static_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_RA</span></tt></dt>
+<dd>Router Advertisement (RA)回線を利用する。
+line_conf には <a class="reference internal" href="#arms_line_conf_ra_t" title="arms_line_conf_ra_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_ra_t</span></tt></a> を指定する。</dd>
+</dl>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_line_desc_t.line_conf">
+void *<tt class="descname">line_conf</tt><a class="headerlink" href="#arms_line_desc_t.line_conf" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>回線情報。typeの値によってそれぞれ内容が異なる。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-anonpppoe-t">
+<h2>arms_line_conf_anonpppoe_t<a class="headerlink" href="#arms-line-conf-anonpppoe-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_anonpppoe_t">
+struct <tt class="descname">arms_line_conf_anonpppoe_t</tt><a class="headerlink" href="#arms_line_conf_anonpppoe_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_anonpppoe {
+    int ifindex;
+} arms_line_conf_anonpppoe_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_anonpppoe_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_anonpppoe_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+<p>匿名回線を利用する接続を指定する。
+PPPoE のアカウント情報はライブラリ内で保持しており、指定する必要はな
+い。制御コールバックを呼ぶ時点で自動的にセットされる。制御コールバッ
+クが呼ばれる際のパラメータは以下の通り:</p>
+<div class="highlight-python"><pre>line_type = ARMS_LINE_PPPOE
+line_conf.ifindex = 指定したifindex
+line_conf.id = 匿名アカウント用ID
+line_conf.pass = 匿名アカウント用Passphrase</pre>
+</div>
+<p>制御コールバックが、ARMS_LINE_ANONPPPOE で呼ばれることはない。</p>
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-pppoe-t">
+<h2>arms_line_conf_pppoe_t<a class="headerlink" href="#arms-line-conf-pppoe-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_pppoe_t">
+struct <tt class="descname">arms_line_conf_pppoe_t</tt><a class="headerlink" href="#arms_line_conf_pppoe_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_pppoe {
+        int ifindex;
+        char id[MAX_PPP_ID];
+        char pass[MAX_PPP_PASS];
+} arms_line_conf_pppoe_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_pppoe_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_pppoe_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char id[MAX_PPP_ID]</tt></dt>
+<dd><p>PPPのID。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char pass[MAX_PPP_PASS]</tt></dt>
+<dd><p>PPPのパスワード。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-dhcp-t">
+<h2>arms_line_conf_dhcp_t<a class="headerlink" href="#arms-line-conf-dhcp-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_dhcp_t">
+struct <tt class="descname">arms_line_conf_dhcp_t</tt><a class="headerlink" href="#arms_line_conf_dhcp_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_dhcp {
+        int ifindex;
+} arms_line_conf_dhcp_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_dhcp_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_dhcp_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-anonmobile-t">
+<h2>arms_line_conf_anonmobile_t<a class="headerlink" href="#arms-line-conf-anonmobile-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_anonmobile_t">
+struct <tt class="descname">arms_line_conf_anonmobile_t</tt><a class="headerlink" href="#arms_line_conf_anonmobile_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_anonmobile {
+    int ifindex;
+} arms_line_conf_anonmobile_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_anonmobile_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_anonmobile_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+<p>匿名モバイル回線を利用する接続を指定する。
+PPP のアカウント情報はライブラリ内で保持しており、指定する必要はな
+い。制御コールバックを呼ぶ時点で自動的にセットされる。制御コールバッ
+クが呼ばれる際のパラメータは以下の通り:</p>
+<div class="highlight-python"><pre>line_type = ARMS_LINE_MOBILE
+line_conf.ifindex = 指定したifindex
+line_conf.telno = 接続先電話番号
+line_conf.cid = 使用するCID 番号
+line_conf.apn = 接続先APN 名称
+line_conf.pdp = 接続先PDP 種別
+line_conf.id = 匿名アカウント用ID
+line_conf.pass = 匿名アカウント用Passphrase</pre>
+</div>
+<p>制御コールバックが、ARMS_LINE_ANONMOBILE で呼ばれることはない。</p>
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-mobile-t">
+<h2>arms_line_conf_mobile_t<a class="headerlink" href="#arms-line-conf-mobile-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_mobile_t">
+struct <tt class="descname">arms_line_conf_mobile_t</tt><a class="headerlink" href="#arms_line_conf_mobile_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_mobile {
+        int ifindex;
+        char telno[MAX_MOBILE_TEL_LEN];
+        int cid;
+        char apn[MAX_MOBILE_APN_LEN];
+        char pdp[MAX_MOBILE_PDP_LEN];
+        char id[MAX_PPP_ID];
+        char pass[MAX_PPP_PASS];
+        char ipaddr[48];
+} arms_line_conf_mobile_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_mobile_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_mobile_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char telno[MAX_MOBILE_TEL_LEN]</tt></dt>
+<dd><p>電話番号。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_line_conf_mobile_t.cid">
+int <tt class="descname">cid</tt><a class="headerlink" href="#arms_line_conf_mobile_t.cid" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>CID。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char apn[MAX_MOBILE_APN_LEN]</tt></dt>
+<dd><p>APN。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char pdp[MAX_MOBILE_PDP_LEN]</tt></dt>
+<dd><p>PDP-Type。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char id[MAX_MOBILE_PPP_ID]</tt></dt>
+<dd><p>PPPのID。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char pass[MAX_MOBILE_PPP_PASS]</tt></dt>
+<dd><p>PPPのパスワード。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char ipaddr[48]</tt></dt>
+<dd><p>IPアドレス。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-static-t">
+<h2>arms_line_conf_static_t<a class="headerlink" href="#arms-line-conf-static-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_static_t">
+struct <tt class="descname">arms_line_conf_static_t</tt><a class="headerlink" href="#arms_line_conf_static_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_static {
+        int ifindex;
+        char ipaddr[48];
+} arms_line_conf_static_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_static_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_static_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char ipaddr[48]</tt></dt>
+<dd><p>IPアドレス。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-line-conf-ra-t">
+<h2>arms_line_conf_ra_t<a class="headerlink" href="#arms-line-conf-ra-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_line_conf_ra_t">
+struct <tt class="descname">arms_line_conf_ra_t</tt><a class="headerlink" href="#arms_line_conf_ra_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_line_conf_ra {
+        int ifindex;
+} arms_line_conf_ra_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_line_conf_ra_t.ifindex">
+int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf_ra_t.ifindex" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>SAが複数のインターフェイスを持つ場合に、インターフェイスを識別するために利用するインターフェイスインデックス番号。
+この番号はコールバック関数にそのまま渡され、ライブラリでは使用されない。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-rs-info-t">
+<h2>arms_rs_info_t<a class="headerlink" href="#arms-rs-info-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_rs_info_t">
+struct <tt class="descname">arms_rs_info_t</tt><a class="headerlink" href="#arms_rs_info_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_rs_info {
+    const char *host;
+} arms_rs_info_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_rs_info_t.host">
+const char *<tt class="descname">host</tt><a class="headerlink" href="#arms_rs_info_t.host" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>IP アドレスで表され&#8221;192.168.0.1&#8221; などとなっている。
+最大で5 つ情報が渡される可能性があるが、情報はsize で指定しただけ
+libarms 内部よりコピーされる。
+開放の必要はない。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-url-t">
+<h2>arms_url_t<a class="headerlink" href="#arms-url-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_url_t">
+struct <tt class="descname">arms_url_t</tt><a class="headerlink" href="#arms_url_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_url {
+    const char *url;
+} arms_url_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_url_t.url">
+const char *<tt class="descname">url</tt><a class="headerlink" href="#arms_url_t.url" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>最大で5 つ情報が渡される可能性があるが、情報はsize で指定しただけlibarms 内部よりコピーされる。開放の必要はない。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-hbt-info-t">
+<h2>arms_hbt_info_t<a class="headerlink" href="#arms-hbt-info-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_hbt_info_t">
+struct <tt class="descname">arms_hbt_info_t</tt><a class="headerlink" href="#arms_hbt_info_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_hbt_info {
+    const char *host;
+    int port;
+    const char *passphrase;
+    int interval;
+    int numalg;
+    const char *algorithm[MAX_HBT_ALGORITHMS];
+} arms_hbt_info_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_hbt_info_t.host">
+const char *<tt class="descname">host</tt><a class="headerlink" href="#arms_hbt_info_t.host" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Heartbeat送信先ホスト名。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_hbt_info_t.port">
+int <tt class="descname">port</tt><a class="headerlink" href="#arms_hbt_info_t.port" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Heartbeat送信先ポート番号。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_hbt_info_t.passphrase">
+const char *<tt class="descname">passphrase</tt><a class="headerlink" href="#arms_hbt_info_t.passphrase" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Heartbeatパスフレーズ。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_hbt_info_t.interval">
+int <tt class="descname">interval</tt><a class="headerlink" href="#arms_hbt_info_t.interval" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Heartbeat送信インターバル[秒]。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_hbt_info_t.numalg">
+int <tt class="descname">numalg</tt><a class="headerlink" href="#arms_hbt_info_t.numalg" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Heartbeatハッシュアルゴリズムの数。最大で3つまで渡される。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">const char *algorithm[MAX_HBT_ALGORITHMS]</tt></dt>
+<dd><p>Heartbeatハッシュアルゴリズムの文字配列。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-connection-info-t">
+<h2>arms_connection_info_t<a class="headerlink" href="#arms-connection-info-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_connection_info_t">
+struct <tt class="descname">arms_connection_info_t</tt><a class="headerlink" href="#arms_connection_info_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_connection_info {
+    int method;
+    int af;
+    union {
+            /* simple info */
+            struct {
+                    char sa_address[128];
+                    int sa_port;
+            } simple_info;
+            /* tunnel info */
+            int tunnel_info[MAX_RS_INFO];
+    } un;
+} arms_connection_info_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_connection_info_t.method">
+int <tt class="descname">method</tt><a class="headerlink" href="#arms_connection_info_t.method" title="この定義へのパーマリンク">¶</a></dt>
+<dd><dl class="docutils">
+<dt>現在接続中のメソッド。次のいずれか。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_METHOD_SIMPLE</span></tt></dt>
+<dd>シンプル接続</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_METHOD_TUNNEL</span></tt></dt>
+<dd>トンネル接続</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_connection_info_t.af">
+int <tt class="descname">af</tt><a class="headerlink" href="#arms_connection_info_t.af" title="この定義へのパーマリンク">¶</a></dt>
+<dd><dl class="docutils">
+<dt>接続における通信プロトコル。アドレスファミリ。次のいずれか。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">AF_INET</span></tt></dt>
+<dd>IPv4</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">AF_INET6</span></tt></dt>
+<dd>IPv6</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char sa_address[128]</tt></dt>
+<dd><p>シンプル接続においてサーバに通知している、
+サービスアダプタのIPアドレス文字列。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_connection_info_t.sa_port">
+int <tt class="descname">sa_port</tt><a class="headerlink" href="#arms_connection_info_t.sa_port" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>シンプル接続においてサーバに通知している、
+サービスアダプタのポート番号</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">tunnel_info[MAX_RS_INFO]</tt></dt>
+<dd><dl class="docutils">
+<dt>トンネル接続における、各トンネルの情報。次のいずれか。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_TUNNEL_ACTIVE</span></tt></dt>
+<dd>トンネル接続中</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_TUNNEL_INACTIVE</span></tt></dt>
+<dd>トンネル接続されていない</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-ping-arg-t">
+<h2>arms_ping_arg_t<a class="headerlink" href="#arms-ping-arg-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_ping_arg_t">
+struct <tt class="descname">arms_ping_arg_t</tt><a class="headerlink" href="#arms_ping_arg_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_ping_arg {
+    const char
+    int count;
+    int size;
+} arms_ping_arg_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_ping_arg_t.dst">
+const char *<tt class="descname">dst</tt><a class="headerlink" href="#arms_ping_arg_t.dst" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>pingの送信先アドレス。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_ping_arg_t.count">
+int <tt class="descname">count</tt><a class="headerlink" href="#arms_ping_arg_t.count" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ping送信回数。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_ping_arg_t.size">
+int <tt class="descname">size</tt><a class="headerlink" href="#arms_ping_arg_t.size" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>pingパケットサイズ[bytes]。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-traceroute-arg-t">
+<h2>arms_traceroute_arg_t<a class="headerlink" href="#arms-traceroute-arg-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_traceroute_arg_t">
+struct <tt class="descname">arms_traceroute_arg_t</tt><a class="headerlink" href="#arms_traceroute_arg_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_traceroute_arg {
+    const char *addr;
+    int count;
+    int maxhop;
+} arms_traceroute_arg_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_traceroute_arg_t.addr">
+const char *<tt class="descname">addr</tt><a class="headerlink" href="#arms_traceroute_arg_t.addr" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>traceroute送信先アドレス。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_traceroute_arg_t.count">
+int <tt class="descname">count</tt><a class="headerlink" href="#arms_traceroute_arg_t.count" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ホップ毎に送信するプローブ回数。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_traceroute_arg_t.maxhop">
+int <tt class="descname">maxhop</tt><a class="headerlink" href="#arms_traceroute_arg_t.maxhop" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>プローブパケットのTime-To-Liveの最大値。1～255を指定する。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-ping-report-t">
+<h2>arms_ping_report_t<a class="headerlink" href="#arms-ping-report-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_ping_report_t">
+struct <tt class="descname">arms_ping_report_t</tt><a class="headerlink" href="#arms_ping_report_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_ping_report {
+    int success;
+    int failure;
+} arms_ping_report_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_ping_report_t.success">
+int <tt class="descname">success</tt><a class="headerlink" href="#arms_ping_report_t.success" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>pingが正常に成功した回数。</p>
+</dd></dl>
+
+<dl class="member">
+<dt id="arms_ping_report_t.failure">
+int <tt class="descname">failure</tt><a class="headerlink" href="#arms_ping_report_t.failure" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>pingが失敗した回数。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arms-traceroute-info-t">
+<h2>arms_traceroute_info_t<a class="headerlink" href="#arms-traceroute-info-t" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="type">
+<dt id="arms_traceroute_info_t">
+struct <tt class="descname">arms_traceroute_info_t</tt><a class="headerlink" href="#arms_traceroute_info_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd><div class="highlight-python"><pre>typedef struct arms_traceroute_info {
+    int hop;
+    char addr[ARMS_TR_STRSIZE];
+} arms_traceroute_info_t;</pre>
+</div>
+<dl class="member">
+<dt id="arms_traceroute_info_t.hop">
+int <tt class="descname">hop</tt><a class="headerlink" href="#arms_traceroute_info_t.hop" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>結果のホップ数。</p>
+</dd></dl>
+
+<dl class="member">
+<dt>
+<tt class="descname">char addr[ARMS_TR_STRSIZE]</tt></dt>
+<dd><p>検出したアドレスの配列。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">libarms データ構造リファレンス</a><ul>
+<li><a class="reference internal" href="#distribution-id-t">distribution_id_t</a><ul>
+<li><a class="reference internal" href="#distribution-id">Distribution ID の構造</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#arms-callback-tbl-t">arms_callback_tbl_t</a></li>
+<li><a class="reference internal" href="#arms-line-desc-t">arms_line_desc_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-anonpppoe-t">arms_line_conf_anonpppoe_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-pppoe-t">arms_line_conf_pppoe_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-dhcp-t">arms_line_conf_dhcp_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-anonmobile-t">arms_line_conf_anonmobile_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-mobile-t">arms_line_conf_mobile_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-static-t">arms_line_conf_static_t</a></li>
+<li><a class="reference internal" href="#arms-line-conf-ra-t">arms_line_conf_ra_t</a></li>
+<li><a class="reference internal" href="#arms-rs-info-t">arms_rs_info_t</a></li>
+<li><a class="reference internal" href="#arms-url-t">arms_url_t</a></li>
+<li><a class="reference internal" href="#arms-hbt-info-t">arms_hbt_info_t</a></li>
+<li><a class="reference internal" href="#arms-connection-info-t">arms_connection_info_t</a></li>
+<li><a class="reference internal" href="#arms-ping-arg-t">arms_ping_arg_t</a></li>
+<li><a class="reference internal" href="#arms-traceroute-arg-t">arms_traceroute_arg_t</a></li>
+<li><a class="reference internal" href="#arms-ping-report-t">arms_ping_report_t</a></li>
+<li><a class="reference internal" href="#arms-traceroute-info-t">arms_traceroute_info_t</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_hb_is_running.html"
+                        title="前の章へ">arms_hb_is_running()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="error_code.html"
+                        title="次の章へ">エラーコード/ログコード体系</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="error_code.html" title="エラーコード/ログコード体系"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_hb_is_running.html" title="arms_hb_is_running()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

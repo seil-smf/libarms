@@ -1,0 +1,92 @@
+==========================
+(\*arms_line_ctrl_cb_t)()
+==========================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_line_ctrl_cb_t)(int line_action, int line_type, void *line_conf, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+回線の接続、切断、状態調査をおこなう。コールバックテーブルへの登録は必須。
+
+説明
+----
+
+回線の処理に利用する。line_conf には回線の制御に必要なパラメータが入る。
+回線種別ごとに構造体を定義するので、キャストして利用する。
+
+.. warning::
+  line_type が :c:macro:`ARMS_LINE_PPPOE` もしくは :c:macro:`ARMS_LINE_MOBILE` の場合、line_conf にはPPPアカウントの情報が入る。
+  この場合、line_conf の内容をログ等で外部に出力しないよう注意すること。
+
+line_actionで指定された処理をアプリケーション側で実行し、その結果をlibarmsに返す。
+
+引数
+----
+
+:c:type:`int` :c:data:`line_action`
+  libarmsから指示されるアクション。
+    :c:macro:`ARMS_LINE_ACT_CONNECT`
+	アプリケーション側で回線の接続処理を行う。即座に接続が成功し、LS/RSへの通信が可能な状況となった場合には :c:macro:`ARMS_LINE_CONNECTED` を返す。もしPPPoEやDHCPなどでアドレス取得に時間を要する場合には :c:macro:`ARMS_LINE_NEEEDPOLL` を返す。この場合、libarmsは一定間隔でポーリングを行う。
+    :c:macro:`ARMS_LINE_ACT_DISCONNECT`
+	アプリケーション側で回線の切断処理を行う。即座に切断が成功した場合には :c:macro:`ARMS_LINE_DISCONNECTED` を返す。もし切断処理に時間を要する場合には :c:macro:`ARMS_LINE_NEEEDPOLL` を返す。この場合、libarmsは一定間隔でポーリングを行う。
+    :c:macro:`ARMS_LINE_ACT_STATUS`
+	アプリケーション側で回線のステータス調査を確認する。
+        接続/切断処理を行った際、 :c:macro:`ARMS_LINE_NEEDPOLL` を返した後、libarms からポーリングを行うために使われる。
+
+:c:type:`int` :c:data:`line_type`
+  回線種別ID。値の一覧は以下の通り。
+   :c:macro:`ARMS_LINE_ANONPPPOE`
+       匿名PPPoE回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+       line_conf には :c:type:`arms_line_conf_anonpppoe_t` を指定する。
+   :c:macro:`ARMS_LINE_PPPOE`
+       PPPoE回線を利用する。
+       line_conf には :c:type:`arms_line_conf_pppoe_t` を指定する。
+   :c:macro:`ARMS_LINE_DHCP`
+       DHCP回線を利用する。
+       line_conf には :c:type:`arms_line_conf_dhcp_t` を指定する。
+   :c:macro:`ARMS_LINE_ANONMOBILE`
+       匿名モバイルPPP回線を利用する。IIJから提供された専用libarmsに限り利用可能。
+       line_conf には :c:type:`arms_line_conf_anonmobile_t` を指定する。
+   :c:macro:`ARMS_LINE_MOBILE`
+       モバイルPPP回線を利用する。
+       line_conf には :c:type:`arms_line_conf_mobile_t` を指定する。
+   :c:macro:`ARMS_LINE_STATIC`
+       静的アドレス設定を利用する。
+       line_conf には :c:type:`arms_line_conf_static_t` を指定する。
+   :c:macro:`ARMS_LINE_RA`
+       Router Advertisement (RA)回線を利用する。
+       line_conf には :c:type:`arms_line_conf_ra_t` を指定する。
+
+:c:type:`void` :c:data:`line_conf`
+  line_typeに対する回線設定。回線種別毎に、上記に従ってキャストして利用する。ステータス調査( :c:macro:`ARMS_LINE_ACT_STATUS` )の場合はNULL。
+:c:type:`void` :c:data:`*udata`
+  :c:func:`arms_pull` あるいは :c:func:`arms_event_loop` で指定したポインタ
+
+返り値
+------
+
+負数
+  致命的エラーが発生した(ECALLBACK で終了する)
+:c:macro:`ARMS_LINE_NEEDPOLL`
+  接続に時間がかかるので、ポーリングが必要
+:c:macro:`ARMS_LINE_TIMEOUT`
+  タイムアウトが発生した
+:c:macro:`ARMS_LINE_AUTHFAIL`
+  認証エラーが発生した
+:c:macro:`ARMS_LINE_CONNECTED`
+  接続状態にある
+:c:macro:`ARMS_LINE_DISCONNECTED`
+  切断状態にある
+
+ヒストリ
+--------
+このAPIはVer1.00で追加された。

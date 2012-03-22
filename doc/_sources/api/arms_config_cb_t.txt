@@ -1,0 +1,189 @@
+======================
+(\*arms_config_cb_t)()
+======================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_config_cb_t)(uint32_t id, const char *version, const char *infostring, int action, const char *buff, size_t buff_len, int next, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+RS から受信したコンフィグをSA 固有のコンフィグ処理ルーチンへ引き渡す。
+コールバックテーブルへの登録は必須。
+
+説明
+----
+
+コンフィグの分割受信を行う場合、一つのコンフィグに対して複数回呼ばれることがある。
+コンフィグの妥当性判定(後述) を行う場合で、妥当ではないと判定した場合には返り値に非0 を渡すことで、SMFv2 システムにコンフィグの異常を通知できる。
+コンフィグの異常はオペレータの介入により解消することが期待できるため、
+ライブラリは異常検出後も(間隔の長い) リトライをおこなう。
+コンフィグの妥当性判定とは、
+
+1. 文法的な誤りがない
+2. 矛盾する設定や相反する設定を含まない
+
+のどちらか、または両方を想定している。コンフィグの実際の動作への反映は想定していない。
+したがって、ライブラリからみてコールバック関数呼び出しの前後でSA の動作が変更された場合、以降の動作は保証できない。
+利用方法としては、以下の3 種を想定している。
+
+(1) validate なし、fragment = 0
+
+  * ○: 実装がとても簡単
+  * Ｘ: コンフィグがおかしくても現地調査しないと気づかない
+  * Ｘ: コンフィグのサイズ分だけライブラリ内でメモリを使う
+
+  実装例::
+
+    int
+    vendor_config_cb(uint32_t id, const char *version,
+          const char *infostring, int action,
+    	  const char *buff, size_t buff_len,
+  	  int next, void *udata)
+    {
+	FILE *config_file;
+	config_file = fopen(PATH_CONFIG_FILE, "w");
+	fwrite(buff, buff_len, 1, config_file);
+	fclose(config_file);
+	return 0;
+    }
+
+(2) validate あり、fragment = 0
+
+  * ○: 実装がやや複雑
+  * ○: コンフィグがおかしい場合、RS のログにより管理者が気づく
+  * Ｘ: コンフィグのサイズ分だけライブラリ内でメモリを使う
+
+  実装例::
+
+    int
+    vendor_config_cb(uint32_t id, const char *version,
+		const char *infostring, int action
+		const char *buff, size_t buff_len,
+		int next, void *udata)
+    {
+	FILE *config_file;
+	int error;
+	if ( (error = validate_config(buff, buff_len)) != 0) {
+		log("config validation failed. error = %d", error);
+		return ERR_CODE;
+	}
+	config_file = fopen(PATH_CONFIG_FILE, "w");
+	fwrite(buff, buff_len, 1, config_file);
+	fclose(config_file);
+	return 0;
+    }
+
+(3) validate あり、framgment = 非0
+
+  * Ｘ: 実装が複雑
+  * ○: コンフィグがおかしい場合、RS のログやAlert で管理者が気づく
+  * ○: ライブラリ内でのメモリ消費をコントロール可能
+
+注意点
+------
+
+本関数は、RSとの通信に失敗した場合も呼ばれる場合がある。
+これは、コンフィグ情報を取得後にもプロトコルエラーが発生する可能性があるためである。
+したがって、起動処理が成功したかどうかの判定は、本関数により適切なコンフィグが得られたかどうか、および :c:func:`arms_pull` の返り値が成功を示しているかどうかの2 点により判断しなければならない。
+分割受信処理を利用する場合、コンフィグ情報の受信中にエラーが発生する可能性があるため、コンフィグ受信中のエラーへの対処が必要となる。
+この場合、エラー発生時には本関数にFINISH フラグの付いたコンフィグブロックが渡され、 :c:func:`arms_pull` はリトライ処理をおこなうか、エラーを返す。
+リトライ処理の場合、再度本関数が呼び出される。
+したがって、本関数が複数回呼び出された場合、コンフィグ受信中にエラーが発生したものとして処理する必要がある。
+
+引数
+----
+
+:c:type:`uint32_t` :c:data:`id`
+  モジュールID。ID 自体はSA の機種ごとに定義される。
+  SA 内で複数モジュールを用いてコンフィグを扱う場合に利用する。
+
+  モジュールIDの指定はRS が行う。複数のコンフィグをRSから受信する
+  こともある。この場合、コンフィグの数だけコールバックが行われる。
+
+:c:type:`const char` :c:data:`*version`
+  コンフィグ適用バージョンを識別する情報文字列。値はSA の機種およびコンフィグ
+  種別ごとに自由に定義してよい。
+
+  SA 内でコンフィグのバージョンを識別する必要がある場合に利用する。
+
+  コンフィグ適用バージョンの指定はRS が行う。
+:c:type:`const char` :c:data:`*infostring`
+  コンフィグと結びつく追加情報文字列。SA の機種、コンフィグ種別およびバージョンごとに自由に定義してよい。 追加情報文字列の指定はRS が行う。
+:c:type:`int` :c:data:`action`
+  コンフィグ受信に関する動作種別を示す値。次のいずれかとなる。
+
+  :c:macro:`ARMS_PULL_STORE_CONFIG`
+    サーバから送られてきたコンフィグがbuff に渡され、コンフィグの長さはbuff_len に渡される。
+    送られてきたコンフィグを実際の動作に反映させる。
+    以前の設定はバックアップとして、 :c:macro:`ARMS_PULL_STORE_CONFIG` もしくは :c:macro:`ARMS_PUSH_EXEC_STORED_CONFIG` を指示されるまで保持しておく。
+    コールバック関数は渡されたコンフィグをそのまま、あるいは内部形式に変換し保存する。 :c:func:`arms_pull` の内部処理から呼ばれる。
+    動作に反映させたコンフィグは :c:macro:`ARMS_CONFIG_RUNNING` として参照される。
+  :c:macro:`ARMS_PUSH_STORE_CONFIG`
+    サーバから送られてきたコンフィグがbuff に渡され、コンフィグの長さはbuff_len に渡される。
+    コールバック関数は渡されたコンフィグをそのまま、あるいは内部形式に変換し保存する。
+    実際の動作への反映は :c:macro:`ARMS_PUSH_EXEC_STORED_CONFIG` で行う。 :c:func:`arms_event_loop` の内部処理から呼ばれる。
+    このコンフィグは :c:macro:`ARMS_CONFIG_CANDIDATE` として参照される。
+  :c:macro:`ARMS_PUSH_EXEC_STORED_CONFIG`
+    一回のPush 処理においてすべてのコンフィグを受信完了したあとに、
+    コンフィグが複数の場合でも一度だけ呼ばれる。
+    送り込んだコンフィグの設定を実際の動作に反映させる。
+    複数のコンフィグの間で反映の依存関係がある場合はコールバック関数側で適切な順序で反映させること。
+    以前の設定はバックアップとして、再び :c:macro:`ARMS_PUSH_EXEC_STORED_CONFIG` を指示されるまで保持しておく。
+    このアクションではbuff およびbuff_len を使用しない。
+    :c:func:`arms_event_loop` の内部処理から呼ばれる。
+    動作に反映させたコンフィグは :c:macro:`ARMS_CONFIG_RUNNING` として参照される。
+  :c:macro:`ARMS_PUSH_REVERT_CONFIG`
+    :c:macro:`ARMS_PUSH_EXEC_STORED_CONFIG` によって実際の動作に反映された後に libarms がサーバとの通信を確認し、失敗したときに呼ばれる。
+    バックアップとして保持しておいたコンフィグの内容を反映させ、新しい設定を破棄する。
+    :c:func:`arms_event_loop` の内部処理から呼ばれる。
+    このアクションではbuff およびbuff_len を使用しない。
+    バックアップしたコンフィグは :c:macro:`ARMS_CONFIG_BACKUP` として参照される。
+  :c:macro:`ARMS_REMOVE_MODULE`
+    該当する機能を停止する際に呼ばれる。必要に応じて機能の停止処理を行う。
+    :c:func:`arms_event_loop` の内部処理から呼ばれる。
+    このアクションではbuff およびbuff_len を使用しない。
+:c:type:`const char` :c:data:`*buff`
+   コンフィグを格納しているlibarms のバッファ。
+   バッファとしてNULL が渡される可能性もある。
+   これは、コンフィグの取得を行ったが、サーバにコンフィグが登録されていない場合や、分割受信処理で最終ブロックに入れるべきデータがなかった場合、コンフィグ受信中にエラーが発生した場合などがこのケースに相当する。
+   したがって、必ずNULL チェックをおこなう必要がある。
+   バッファとしてNULL が渡されても必ずしもエラーを意味するわけではない。
+   NULL でない場合、buff_len で示されるサイズ分のデータが文字列あるいはバイナリ形式で格納され、その直後にNUL 文字が格納される。
+:c:type:`size_t` :c:data:`buff_len`
+  バッファ内のデータサイズ。buff に収められたデータのバイト数。
+  バッファ長には0 が渡される可能性もある。
+:c:type:`int` :c:data:`next`
+  コンフィグの分割送信を利用する場合のブロックの情報(フラグ)。
+    :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_FINISHED)`
+      最初のブロックで、続くブロックはない。
+    :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_CONTINUE)`
+      最初のブロックで、続くブロックがある。
+    :c:macro:`ARMS_FRAG_CONTINUE`
+      最初以外のブロックで、続くブロックがある。
+    :c:macro:`ARMS_FRAG_FINISHED`
+      続くブロックはない。
+      :c:func:`arms_pull` でfragment に0 を指定した場合は常に :c:macro:`(ARMS_FRAG_FIRST | ARMS_FRAG_FINISHED)` となる。
+:c:type:`void` :c:data:`*udata`
+  :c:func:`arms_pull` あるいは :c:func:`arms_event_loop` で指定したポインタ。
+
+返り値
+------
+
+:c:macro:`0`
+   コンフィグの受信が正常に終了
+:c:macro:`非0`
+   異常終了(エラーコード)
+     :c:macro:`-1`
+	コンフィグが受け付けられない
+
+ヒストリ
+--------
+このAPIはVer1.00で追加された。

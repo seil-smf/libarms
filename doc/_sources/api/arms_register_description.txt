@@ -1,0 +1,59 @@
+=============================
+arms_register_description()
+=============================
+
+関数
+----
+
+.. c:function:: int arms_register_description(arms_context_t *ctx, const char *description, const char *version)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+SAに関する付加情報の登録を行う。
+
+説明
+----
+ここで指定された文字列をサーバにそのまま送る。文字列はサーバ側のログに記録される。
+機種名などを記述するとログ解析の手助けとなる。ライブラリは文字列の内容については一切関知しない。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`const char` :c:data:`*description`
+  SAの説明文字列(NULL 終端)。
+    * 最大32文字(NULLを含まない)。
+:c:type:`const char` :c:data:`*version`
+  SAのファームウェアのバージョン情報(NULL終端)。
+    * 最大32文字(NULLを含まない)。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       ライブラリ内で致命的エラーを検出
+     :c:macro:`ARMS_ESYSTEM`
+       システムエラーを検出(メモリ不足など)
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+
+このAPIはVer1.00で追加された。

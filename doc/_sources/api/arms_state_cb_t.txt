@@ -1,0 +1,114 @@
+=============================
+(\*arms_state_cb_t)()
+=============================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_state_cb_t)(int old_state, int new_state, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+ARMS プロトコルの状態遷移を知らせる。コールバックテーブルへの登録は任意。
+
+説明
+----
+
+ARMS の状態が遷移したことを通知する。状態の一覧は以下の通り。
+
+* :c:macro:`ARMS_ST_INITIAL`
+    起動直後
+
+* :c:macro:`ARMS_ST_LSPULL`
+    LS へアクセス中
+
+* :c:macro:`ARMS_ST_RSPULL`
+    RS へアクセス中
+
+* :c:macro:`ARMS_ST_PULLDONE`
+    正常終了
+
+* :c:macro:`ARMS_ST_BOOT_FAIL`
+    異常終了
+
+* :c:macro:`ARMS_ST_PUSH_INITIAL`
+    Push 待ち受け処理開始直後
+
+* :c:macro:`ARMS_ST_PUSH_SENDREADY`
+    RS へPush 可能になったことを通知
+
+* :c:macro:`ARMS_ST_PUSH_WAIT`
+    Push 待ち受け可能
+
+* :c:macro:`ARMS_ST_PUSH_REBOOT`
+    RS からreboot を指示された
+
+:c:func:`arms_pull` による状態遷移は以下の通り::
+
+  [INITIAL]---START-->[LSPULL]---SUCCESS-->[RSPULL]---SUCCESS-->[PULLDONE]
+                         |   <--FAILURE---         <--FAILURE---
+                         |
+                    FATAL_ERROR
+                         |
+                         V
+                    [BOOT_FAIL]
+
+.. note::
+  接頭辞の :c:macro:`ARMS_ST_` は除いてある
+
+:c:func:`arms_event_loop` による状態遷移は以下の通り::
+
+  [PULLDONE]--SUCCESS-->[SENDREADY]--SUCCESS-->[WAIT]
+                                   --FAILURE-->[BOOT_FAIL]
+
+.. note::
+  接頭辞の :c:macro:`ARMS_ST_` および :c:macro:`ARMS_ST_PUSH_` は除いてある
+
+Push 待ち受け状態で、RS から指示を受けた後の状態遷移は以下の通り::
+
+  [WAIT]--START-->-+----SUCCESS-->[WAIT]
+                   |  --FAILURE-->
+                   |
+                   +----REBOOT--->[REBOOT]
+                   |
+                   +----PULL----->[REBOOT]
+
+FATAL_ERROR は以下の条件で発生する。
+
+* :c:func:`arms_pull` で指定したタイムアウト時間が経過した
+* サーバから停止を命じられた
+* リトライ処理の回数がARMS プロトコルで定める上限に到達した
+
+REBOOT はRS からの指示によって発生する。
+Pull はRS からの指示によって発生する。
+
+引数
+----
+
+:c:type:`int` :c:data:`old_state`
+  遷移前のステート
+
+:c:type:`int` :c:data:`new_state`
+  遷移後のステート
+
+:c:type:`void` :c:data:`*data`
+  :c:func:`arms_pull` で指定したポインタ
+
+返り値
+------
+
+:c:macro:`0`
+  正常終了
+
+:c:macro:`-1`
+  コールバック関数内で異常が発生した
+
+ヒストリ
+--------
+このAPIはVer1.00で追加された。

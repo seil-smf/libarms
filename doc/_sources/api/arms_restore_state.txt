@@ -1,0 +1,59 @@
+=========================
+arms_restore_state()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_restore_state(arms_context_t *ctx, const char *state, size_t size)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+指定されたメモリ領域の内容を読み込み、内部ステートを再設定する。
+
+説明
+----
+:c:func:`arms_dump_state` で書き出した内容を本関数で復帰させることにより、
+書き出しを実行したときの :c:func:`arms_pull` による内部状態を再現する。
+:c:func:`arms_restore_state` を呼び内部状態が復帰した後に :c:func:`arms_pull`
+を呼び出すと、LS へのアクセスを省略しRS から直接コンフィグ取得を行う。
+メモリ領域の内容は、必ず :c:func:`arms_dump_state` にて書き出された内容である必要がある。
+不適切なメモリ領域を指定した場合libarms の動作は保証できない。
+libarms のバージョンアップに伴い内部ステート情報の合計サイズが増加する場合があるため、 :c:func:`arms_restore_state` を呼び出す前に :c:func:`arms_size_of_state` で取得したサイズと復帰すべきメモリ領域のサイズとを比較、検証すること。
+本関数がエラーにより失敗した場合、本関数呼び出し前の状態が維持されているため、そのまま :c:func:`arms_pull` を実行することで正常にLS からのPull 動作を実行できる。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`const char` :c:data:`*state`
+  内部ステート保存領域のアドレス。 :c:func:`arms_size_of_state` で得られるサイズ以上の保存領域を用意する必要がある。また、 :c:func:`arms_dump_state` により得られたデータを指すポインタである必要がある。
+:c:type:`size_t` :c:data:`size`
+  内部ステート保存領域のサイズ。 :c:func:`arms_size_of_state` の値か、あるいはそれ以上である必要がある。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_ESIZE`
+       サイズが不足している
+
+コールバック関数からの呼び出し
+------------------------------
+
+不可
+
+ヒストリ
+--------
+
+このAPIはVer2.12で追加された。

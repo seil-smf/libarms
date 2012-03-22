@@ -1,0 +1,72 @@
+=========================
+arms_hb_set_radiowave()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_hb_set_radiowave(arms_context_t *ctx, uint16_t ifidx, uint8_t status, uint8_t max, uint8_t min, uint8_t avg)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+現在の電波状況をHeartbeat情報として追加設定する。
+
+説明
+----
+Heartbeat情報収集コールバック関数 :c:func:`arms_hb_store_statistics_cb_t` の中で電波状況の情報を収集しサーバに通知する際に使用する。電波強度は前回呼出時より今回呼び出し時までの値をサンプリングし算出する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`uint16_t` :c:data:`ifindex`
+  インタフェース番号。
+:c:type:`uint8_t` :c:data:`status`
+  デバイス情報。下記のいずれかを指定する。
+    :c:macro:`ARMS_HB_MOBILE_RUNNING`
+      正常動作中
+    :c:macro:`ARMS_HB_MOBILE_NOSIGNAL`
+      電波圏外
+    :c:macro:`ARMS_HB_MOBILE_INVALIDDATA`
+      デバイスから取得したデータが不正値
+    :c:macro:`ARMS_HB_MOBILE_NODEVICE`
+      デバイス無し
+    :c:macro:`ARMS_HB_MOBILE_ERROR`
+      デバイスからのデータ取得に失敗
+
+:c:type:`uint8_t` :c:data:`max`
+  最大電波強度。0〜100。
+:c:type:`uint8_t` :c:data:`min`
+  最小電波強度。0〜100。
+:c:type:`uint8_t` :c:data:`avg`
+  平均電波強度。0〜100。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       致命的エラー
+     :c:macro:`ARMS_EEXIST`
+       同一メモリ番号の値をすでに設定済
+     :c:macro:`ARMS_ESIZE`
+       サイズが不足している(Heartbeat情報の上限を超えている)
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer5.00で追加された。

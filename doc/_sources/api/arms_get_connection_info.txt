@@ -1,0 +1,53 @@
+===========================
+arms_get_connection_info()
+===========================
+
+関数
+----
+
+.. c:function:: int arms_get_connection_info(arms_context_t *ctx, arms_connection_info_t *infop, int size)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+現在のサーバとの接続情報を取得する。
+
+説明
+----
+PUSH 待ち受け中において対象となる RS との間の接続情報を取得する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`arms_connection_info_t` :c:data:`*infop`
+  アプリケーション側に領域を用意した、接続情報取得用バッファの
+  先頭アドレスを示すポインタ。size で指定したバイト数の書き込みが
+  可能となっていなければならない。
+  詳細は :c:type:`arms_connection_info_t` を参照。
+:c:type:`int` :c:data:`size`
+  infop のバッファサイズ[bytes]
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`-1`
+   パラメータが不適切のため情報取得に失敗。
+   infop がNULL、あるいはsize がsizeof(arms_connection_info_t) 未満
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer4.00で追加された。

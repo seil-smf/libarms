@@ -1,0 +1,70 @@
+=========================
+arms_push_method_query()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_push_method_query(arms_context_t *ctx, arms_callback_tbl_t *cb_tbl, void *udata)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+Push の通信方式をネゴシエーションする。
+
+説明
+----
+:c:func:`arms_pull` によりPull 動作を完了し、取得したコンフィグの反映を
+終えた後、Push の通信方式をRS との間でネゴシエーションする。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`arms_callback_tbl_t` :c:data:`*cb_tbl`
+  各種コールバック関数へのポインタが納められた構造体。デバイスドライバの関数テーブルと同じようなイメージ。詳細は :c:type:`arms_callback_tbl_t` を参照。
+:c:type:`void` :c:data:`*udata`
+  コールバック関数へそのまま渡されるポインタ
+
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EDONTRETRY`
+       LSからリトライ禁止を通知された
+     :c:macro:`ARMS_EREBOOT`
+       RSよりリブート要求を受信し制御を終了
+     :c:macro:`ARMS_EPULL`
+       Pull 処理より再実行を行う必要がある。
+       RS からPull 先としてLS もしくはRS が指定されるがこれは :c:func:`arms_pull` 関数内部で適切に処理される
+     :c:macro:`ARMS_ESYSTEM`
+       システムエラーを検出(メモリ不足など)
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+RSへの通信が発生するため、フィルタリングにより通信路を確保
+する必要がある場合は予め :c:func:`arms_get_rs_url` を使って通信先情報を
+取得し適切にフィルタを設定すること。
+
+SMF-NAT 対応の通信方式がネゴシエーション結果として採用される場合、
+:c:func:`arms_get_rs_tunnel_url` にて一つ以上のURL 情報が得られる。
+
+コールバック関数からの呼び出し
+------------------------------
+
+不可
+
+ヒストリ
+--------
+
+このAPIはVer3.00で追加された。

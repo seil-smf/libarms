@@ -1,0 +1,194 @@
+============================
+エラーコード/ログコード体系
+============================
+
+.. _error-code-label:
+
+エラーコード体系
+================
+
+各API でエラーコードは以下の形式をもつint 値である::
+
+  format
+  0       1       2       3       4(octet)
+  +-------+-------+-------+-------+
+  | 予約(0 fill)  | Level | Type  |
+  +-------+-------+-------+-------+
+  |<--------- Error Code -------->|
+
+Level はエラーの深刻度を示し、Type はエラーの具体的な種別を分類するために利用する。
+エラー回復処理ではほとんどの場合、Level のみに注目する。
+Type はログ出力やデバッグなどの目的に利用することができる。
+
+エラーコードから、レベルおよびタイプを抜き出す際には以下のマクロを利用する。
+
+.. c:macro:: ARMS_ERR_LVL(code)
+.. c:macro:: ARMS_ERR_TYPE(code)
+
+レベル一覧
+-----------
+
+:c:macro:`ARMS_ELVL_LOW`
+  リトライで短時間での回復が期待できる
+:c:macro:`ARMS_ELVL_MID`
+  リトライにより回復が期待できるが、時間がかかる
+:c:macro:`ARMS_ELVL_HIGH`
+  リトライによる回復は期待できない
+:c:macro:`ARMS_ELVL_FATAL`
+  ライブラリを停止すべき
+
+エラーコード一覧
+----------------
+
+:c:macro:`ARMS_EFATAL`
+ ライブラリ内部で致命的エラーが発生した
+:c:macro:`ARMS_ETIMEOUT`
+ タイムアウトが発生した
+:c:macro:`ARMS_EMAXRETRY`
+ 再送回数が上限に到達した
+:c:macro:`ARMS_EDONTRETRY`
+ サーバから再送禁止を指示された
+:c:macro:`ARMS_ECALLBACK`
+ コールバック関数でエラーが発生した
+:c:macro:`ARMS_ESYSTEM`
+ メモリ不足など、動作環境が原因のエラーが発生した
+:c:macro:`ARMS_EINVAL`
+ 不正な引数を指定された
+
+.. _log-code-label:
+
+ログコード体系
+==============
+
+INFO-API でやりとりするログコードは以下の形式をもつint 値である::
+
+  format
+  0       1       2       3       4(octet)
+  +-------+-------+-------+-------+
+  |予約(0)|old_st |new_st | Type  |
+  +-------+-------+-------+-------+
+  |<---------- Log Code --------->|
+
+
+old_st およびnew_st はライブラリの状態遷移にともなうログメッセージで利用する。
+old_st は今までの状態で、new_st は新しく遷移した状態である。
+状態遷移が発生しなかった場合や、自己遷移が発生した場合には両方が0 となる。
+Type はログの種別を意味する。
+
+ログコードから、状態およびタイプを抜き出す際には以下のマクロを利用する。
+
+.. c:macro:: ARMS_LOG_OLD_ST(code)
+.. c:macro:: ARMS_LOG_NEW_ST(code)
+.. c:macro:: ARMS_LOG_TYPE(code)
+
+状態一覧
+--------
+
+:c:macro:`ARMS_ST_INITIAL`
+  起動直後
+:c:macro:`ARMS_ST_LSPULL`
+  LS へアクセス中
+:c:macro:`ARMS_ST_RSPULL`
+  RS へアクセス中
+:c:macro:`ARMS_ST_PULLDONE`
+  PULL 動作終了(成功)
+:c:macro:`ARMS_ST_BOOT_FAIL`
+  PULL 動作終了(失敗)
+:c:macro:`ARMS_ST_PUSH_INITIAL`
+  Push 待ち受け処理開始直後
+:c:macro:`ARMS_ST_PUSH_SENDREADY`
+  RS へPush 可能になったことを通知
+:c:macro:`ARMS_ST_PUSH_WAIT`
+  Push 待ち受け可能
+:c:macro:`ARMS_ST_PUSH_REBOOT`
+  RS からreboot を指示された
+
+タイプ一覧
+-----------
+
+:c:macro:`ARMS_LOG_FAILURE`
+  プロトコルエラーを検出した
+:c:macro:`ARMS_LOG_FALLBACK`
+  一つ前の状態へ戻った
+:c:macro:`ARMS_LOG_LS_ACCESSS`
+  LS へのアクセスを開始した
+:c:macro:`ARMS_LOG_LS_ERROR`
+  LS との通信に失敗した
+:c:macro:`ARMS_LOG_RS_ACCESS`
+  RS へのアクセスを開始した
+:c:macro:`ARMS_LOG_RS_ERROR`
+  RS との通信に失敗した
+
+
+ログコード一覧
+--------------
+
+:c:macro:`ARMS_LOG_EFALLBACK`
+  異常を検知し、一つ前の状態へ戻った
+:c:macro:`ARMS_LOG_ILS_ACCESS_START`
+  LSへのアクセスを開始した
+:c:macro:`ARMS_LOG_ILS_ACCESS_END`
+  LSへのアクセスが正常に終了した
+:c:macro:`ARMS_LOG_ILS_ACCESS_FAIL`
+  LSへのアクセスに失敗した
+:c:macro:`ARMS_LOG_IRS_ACCESS_START`
+  RSへのアクセスを開始した
+:c:macro:`ARMS_LOG_IRS_ACCESS_END`
+  RSへのアクセスが正常に終了した
+:c:macro:`ARMS_LOG_IRS_ACCESS_FAIL`
+  RSへのアクセスに失敗した
+:c:macro:`ARMS_LOG_ILINE_CONNECT_START`
+  回線の接続を開始した
+:c:macro:`ARMS_LOG_ILINE_CONNECT_END`
+  回線の接続が正常に終了した
+:c:macro:`ARMS_LOG_ELINE_AUTH_FAIL`
+  回線接続処理中に認証エラーが発生
+:c:macro:`ARMS_LOG_ELINE_TIMEOUT`
+  回線接続処理中にタイムアウトが発生
+:c:macro:`ARMS_LOG_ILINE_DISCONNECT_START`
+  回線の切断を開始した
+:c:macro:`ARMS_LOG_ILINE_DISCONNECT_END`
+  回線の切断が正常に終了した
+:c:macro:`ARMS_LOG_IHTTP_CONNECT_START`
+  コンフィグの取得を開始した
+:c:macro:`ARMS_LOG_IHTTP_CONNECT_END`
+  コンフィグの取得が正常に終了した
+:c:macro:`ARMS_LOG_IHTTP_LISTEN_START`
+  PUSH待ち受けを開始した
+:c:macro:`ARMS_LOG_IHTTP_ACCEPT`
+  PUSHリクエストを受け付けた
+:c:macro:`ARMS_LOG_IHTTP_CLOSE`
+  PUSH処理が終了した
+:c:macro:`ARMS_LOG_IHTTP_RETRY`
+  リトライ処理を開始した
+:c:macro:`ARMS_LOG_EURL`
+  不正なURLを指定された
+:c:macro:`ARMS_LOG_EHOST`
+  不正なホストを指定された
+:c:macro:`ARMS_LOG_ESOCKET`
+  ソケットへの読み書きに失敗した
+:c:macro:`ARMS_LOG_ECONNECT`
+  IP/TCP/SSL いずれかのレベルで接続に失敗した
+:c:macro:`ARMS_LOG_EHTTP`
+  HTTPのレベルで接続に失敗した
+:c:macro:`ARMS_LOG_ECERTIFICATE`
+  サーバ証明書の検証に失敗した
+:c:macro:`ARMS_LOG_ENETNOMEM`
+  ネットワーク処理でメモリ不足を検出
+:c:macro:`ARMS_LOG_ENETTIMEOUT`
+  通信中にタイムアウトが発生した
+:c:macro:`ARMS_LOG_ECALLBACK`
+  コールバック関数の呼び出しでエラーを検出した
+:c:macro:`ARMS_LOG_ESSL`
+  OpenSSLライブラリ内でエラーを検出
+:c:macro:`ARMS_LOG_EROLLBACK`
+  ロールバック処理に失敗した
+:c:macro:`ARMS_LOG_ERETRY`
+  リトライ回数の上限に達した
+:c:macro:`ARMS_LOG_INFO`
+  汎用の通常レベルのログ
+:c:macro:`ARMS_LOG_ERROR`
+  汎用のエラーレベルのログ
+:c:macro:`ARMS_LOG_DEBUG`
+  より詳細なログ
+

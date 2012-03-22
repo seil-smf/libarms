@@ -1,0 +1,261 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>コンフィグ &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="アーキテクチャ" href="arch_top.html" />
+    <link rel="next" title="Pull動作における通信" href="pull.html" />
+    <link rel="prev" title="アーキテクチャ" href="arch_top.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>コンフィグ<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>libarms は、LS/RS との通信を行うため、状況に応じていくつかのコンフィグを切り替えて利用する。
+ここでは各コンフィグの役割と内容について解説する。</p>
+<div class="section" id="initial-config">
+<h2>Initial-Config<a class="headerlink" href="#initial-config" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">このセクションの内容は、オープンソース版libarmsを利用する場合必要ありません。</p>
+</div>
+<p>最初にLS に対してPull を行うために用いるコンフィグを、Initial-Config と呼ぶ。
+このコンフィグは、IIJ から暗号化形式のファイルとして提供される。
+コンフィグに定義されている内容は</p>
+<ul class="simple">
+<li>LS のURL</li>
+<li>回線接続用匿名アカウント</li>
+<li>LS 接続のリトライ回数、インターバル</li>
+</ul>
+<p>といった内容である。この内容はlibarms の内部で処理され、LS アクセスの際に自動的に利用される。実際の設定値は以下のようになっている。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="8%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">項目</th>
+<th class="head">設定値</th>
+<th class="head">備考</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>LS のURL</td>
+<td>非公開</td>
+<td>IIJ で運用するサーバ</td>
+</tr>
+<tr class="row-odd"><td>匿名アカウント</td>
+<td>非公開</td>
+<td>PPPoE 環境/モバイル環境等で匿名アカウントが必要な場合に利用される</td>
+</tr>
+<tr class="row-even"><td>LS 接続リトライ回数</td>
+<td>1500 回</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>LS 接続インターバル</td>
+<td>60 秒</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>なお、オープンソース版libarmsを利用する場合、LSのURLや接続パラメータはデフォルト値がlibarms自体に埋め込まれているため、Initial-Configを用意する必要はない。ただし、パラメータの変更や匿名アカウントの利用は不可となる。</p>
+</div>
+<div class="section" id="location-config">
+<h2>Location-Config<a class="headerlink" href="#location-config" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Location-Config は、SMF SDKを用いて独自RSを構築している事業者のみ設定可能です。SACMなどのサービスを直接利用する場合には本セクションの内容は無視してください。</p>
+</div>
+<p>LS から取得し、RS へのPull を行うために用いるコンフィグを、Location-Config と呼ぶ。
+このコンフィグは、LS システムで用意されるWebUI を用いて設定を行う。
+Location-Config で提供される情報は、以下の通りである。</p>
+<ul class="simple">
+<li>RS のURL</li>
+<li>RS 接続リトライ回数</li>
+<li>RS 接続インターバル</li>
+<li>RS-Info</li>
+<li>RS へアクセスするための回線情報</li>
+<li>RS の証明書を検証するためのRootCA 証明書</li>
+</ul>
+<p>このうち、RS-Info(回線情報と、RootCA 証明書) は、LS システム上に以下の書式で記述する必要がある:</p>
+<div class="highlight-python"><pre>--------------------------------
+line-&lt;line_type&gt; {
+        &lt;回線パラメータ&gt;
+};
+rs-certificate {
+        &lt;証明書情報(PEM)&gt;
+};
+--------------------------------</pre>
+</div>
+<p>回線情報は、以下の4種類のうちいずれか1つとなる。</p>
+<p>PPPoE:</p>
+<div class="highlight-python"><pre>line-pppoe {
+    ifindex &lt;n&gt;;
+    account &lt;account&gt;;
+    password &lt;password&gt;;
+};</pre>
+</div>
+<p>DHCP:</p>
+<div class="highlight-python"><pre>line-dhcp {
+    ifindex &lt;n&gt;;
+};</pre>
+</div>
+<p>モバイル:</p>
+<div class="highlight-python"><pre>line-mobile {
+    ifindex &lt;n&gt;;
+    cid &lt;cid&gt;;
+    apn &lt;apn&gt;;
+    pdp-type &lt;type&gt;;
+    telno &lt;telno&gt;;
+    ipaddress &lt;ipaddress&gt;;
+    account &lt;account&gt;;
+    password &lt;password&gt;;
+};</pre>
+</div>
+<p>RA:</p>
+<div class="highlight-python"><pre>line-ra {
+    ifindex: 0;
+};</pre>
+</div>
+<p>静的IPアドレス割当:</p>
+<div class="highlight-python"><pre>line-static {
+    ifindex &lt;n&gt;;
+    ipaddress &lt;ipaddress&gt;;
+};</pre>
+</div>
+<p>ifindex はSA のインタフェースを識別するために利用する。
+これはSA の機種依存部にそのまま渡され、libarms は内容には関与しない。
+範囲は機種ごとのint で表現可能な範囲である。
+account およびpassword はPPPoE のアカウント情報となる表示可能文字列である。
+最大36 文字までをサポートする。“;” は利用できない。
+モバイルにおいて、cid, apn, pdp-type は3G 端末における接続のための情報となる表示可能文字列である。
+pdp-type については”ip” あるいは”ppp” のいずれかを指定する。telno は接続先電話番号である。
+モバイル端末のタイプによって、cid, apn, pdp-type とtelno は使い分けができ、
+不要なパラメータについては指定行を省略できる。
+モバイルおよび静的IP アドレスにおけるipaddress は、
+直接IP アドレスの割当が可能となる際に指定するIP アドレス文字列である。
+不要な場合については指定行を省略できる。</p>
+</div>
+<div class="section" id="service-config">
+<h2>Service-Config<a class="headerlink" href="#service-config" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms がRS に接続して取得し、最終的にSA に反映される設定情報となるコンフィグを、Service-Config と呼ぶ。
+libarms は、Service-Config の内容には一切関知せず、コンフィグ反映コールバック関数でSA に反映するだけである。
+Service-Config の内容は機種依存となるため、特に定められた書式は無い。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">コンフィグ</a><ul>
+<li><a class="reference internal" href="#initial-config">Initial-Config</a></li>
+<li><a class="reference internal" href="#location-config">Location-Config</a></li>
+<li><a class="reference internal" href="#service-config">Service-Config</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arch_top.html"
+                        title="前の章へ">アーキテクチャ</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="pull.html"
+                        title="次の章へ">Pull動作における通信</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="pull.html" title="Pull動作における通信"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arch_top.html" title="アーキテクチャ"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="arch_top.html" accesskey="U">アーキテクチャ</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

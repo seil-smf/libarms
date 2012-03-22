@@ -1,0 +1,55 @@
+=====================
+arms_register_cert()
+=====================
+
+関数
+----
+
+.. c:function:: int arms_register_cert(arms_context_t *ctx, const char *root_ca_cert)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+ARMS プロトコルでの通信に必要な証明書を登録する。
+
+説明
+----
+SSL の認証に利用するPEM 形式の証明書を指定する。呼び出しは必須。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`const char` :c:data:`*root_ca_cert`
+  PEM 形式のSMFv2 Root CA 証明書を格納したバッファ(NULL 終端)。
+    * 最大で5120byte(NULLを含まない)。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EFATAL`
+       ライブラリ内で致命的エラーを検出
+     :c:macro:`ARMS_ESYSTEM`
+       システムエラーを検出(メモリ不足など)
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+
+このAPIはVer1.00で追加された。

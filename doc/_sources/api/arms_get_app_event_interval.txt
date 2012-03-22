@@ -1,0 +1,49 @@
+==================================================================
+arms_get_app_event_interval()
+==================================================================
+
+関数
+----
+
+.. c:function:: const struct timerval *arms_get_app_event_interval(arms_context_t *ctx)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+
+アプリケーションイベントコールバック関数の呼び出し間隔を取得する。
+
+説明
+----
+
+:c:func:`arms_event_loop` を呼び出してPUSH 待ち状態の間、定期的に
+呼び出される :c:func:`arms_app_event_cb_t` の、呼び出し間隔を
+struct timeval 構造体として取得する。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタの格納アドレス。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+
+返り値
+------
+
+:c:macro:`NULL`
+  パラメータ不正によるエラー
+:c:macro:`NULL 以外`
+  現在の :c:func:`arms_app_event_cb_t` 呼び出し間隔(struct timeval \*)
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+このAPIはVer3.30で追加された。

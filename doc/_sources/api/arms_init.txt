@@ -1,0 +1,55 @@
+==================
+arms_init()
+==================
+
+関数
+----
+
+.. c:function:: int arms_init(distribution_id_t *distid, arms_context_t **ctx)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+
+ライブラリの初期化を行う。他の関数の呼び出し前に必ずこの関数を呼ぶこと。
+
+説明
+----
+
+Distribution ID については :c:type:`distribution_id_t` を参照。
+
+引数
+----
+
+:c:type:`distribution_id_t` :c:data:`*dist_id`
+  Distrilbution ID(一意のSA個体識別ID)。128bit長。
+:c:type:`arms_context_t` :c:data:`**ctx`
+  内部ステートを保持するコンテキスト構造体ポインタの格納アドレス。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照)
+     :c:macro:`ARMS_EFATAL`
+       ライブラリ内で致命的エラーを検出
+     :c:macro:`ARMS_ESYSTEM`
+       システムエラーを検出(メモリ不足など)
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+コールバック関数からの呼び出し
+------------------------------
+
+不可
+
+ヒストリ
+--------
+
+このAPIはVer1.00で追加された。

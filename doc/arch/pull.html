@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pull動作における通信 &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="アーキテクチャ" href="arch_top.html" />
+    <link rel="next" title="Push動作における通信" href="push.html" />
+    <link rel="prev" title="コンフィグ" href="config.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pull">
+<h1>Pull動作における通信<a class="headerlink" href="#pull" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>libarms の <a class="reference internal" href="../api/arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 関数を実行すると、コンフィグ取得動作を開始する。</p>
+<ol class="arabic simple">
+<li>LS に対するRS 探索要求(rs-solicitation)</li>
+</ol>
+<blockquote>
+<div>サービスアダプタからLS に対してHTTPS 接続を行い、RS 接続情報を取得する。
+通信はSSLによって暗号化されるほか、認証キー(LS-SA key) によって認証が行われる。</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>RS に対するコンフィグ要求(config-solicitation)</li>
+</ol>
+<blockquote>
+<div>サービスアダプタからRS に対してHTTPS 接続を行い、設定情報を取得する。通信はSSL によって暗号化されるほか、
+認証キー(RS-SA key) によって認証が行われる。</div></blockquote>
+<img alt="../_images/libarms-pull.png" src="../_images/libarms-pull.png" />
+<div class="section" id="id1">
+<h2>冗長化への対応<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>RS がLS に複数台(最大で5 台まで) 登録されている場合、Pull の冗長化動作が可能である。
+この場合、Pull 動作は以下のようになる。</p>
+<ul>
+<li><p class="first">初回起動時の動作</p>
+<p>LS から取得したRS アドレスのリストの先頭から常に接続を試みる。
+失敗した場合、[RS1 台目] → [RS2 台目] → [RS3 台目] →... のように、順に接続先を変更する。</p>
+</li>
+<li><p class="first">rs-solicitation とconfig-solcitation の切り替え</p>
+<p>前回のconfig-solicitation 時にどのRS で成功したか覚えておき、
+コンフィグ再取得要求(RS) によるconfig-solicitation 時はそのRS から接続を試みる。
+コンフィグ再取得要求(LS) などにより rs-solicitation を実行するとRS 情報を再取得するため、
+成功した情報はリセットされ、取得した RS アドレスのリストの先頭から常に接続を試みる。</p>
+</li>
+<li><p class="first">再起動時の動作</p>
+<p>接続に成功したサーバ情報は、libarms 内部ステート情報に保存される。
+このため、 <a class="reference internal" href="../api/arms_dump_state.html#arms_dump_state" title="arms_dump_state"><tt class="xref c c-func docutils literal"><span class="pre">arms_dump_state()</span></tt></a> を使って保存した情報を <a class="reference internal" href="../api/arms_restore_state.html#arms_restore_state" title="arms_restore_state"><tt class="xref c c-func docutils literal"><span class="pre">arms_restore_state()</span></tt></a> を用いて読み込んだ場合、その後のコンフィグ取得動作時には以前成功したサーバから接続を試みることができる。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>リトライ動作<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>LS から取得したRS アドレスのリストに対する接続が全て失敗すると、
+所定の間隔、回数(LS にて設定するパラメータ) でリトライを行う。
+RS アドレスのリストが2 台で、リトライ回数が5 回だとすると、2 × 5 で、計10 回の接続を試みることになる。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pull動作における通信</a><ul>
+<li><a class="reference internal" href="#id1">冗長化への対応</a></li>
+<li><a class="reference internal" href="#id2">リトライ動作</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="config.html"
+                        title="前の章へ">コンフィグ</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="push.html"
+                        title="次の章へ">Push動作における通信</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="push.html" title="Push動作における通信"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="config.html" title="コンフィグ"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="arch_top.html" accesskey="U">アーキテクチャ</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

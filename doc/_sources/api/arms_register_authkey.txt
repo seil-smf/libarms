@@ -1,0 +1,52 @@
+=========================
+arms_register_authkey()
+=========================
+
+関数
+----
+
+.. c:function:: int arms_register_authkey(arms_context_t *ctx, const char *key)
+
+呼び出し方向
+------------
+
+アプリケーション->libarms
+
+目的
+----
+SA ごとに発行されるLS-SA 認証キーを登録する。
+
+説明
+----
+key で指定された文字列をLS-SA 認証キーとしてライブラリ内に登録する。
+文字列はLS へのアクセスの際の認証キーとして用いられる。
+
+引数
+----
+
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
+:c:type:`const char` :c:data:`*key`
+  SA の正当性を認証するためのLS-SA 認証キー文字列(NULL 終端)。
+    * 最大64byte(NULLを含まない)。
+
+返り値
+------
+
+:c:macro:`0`
+   正常終了
+:c:macro:`非0`
+   異常終了( :ref:`error-code-label` 参照) 
+     :c:macro:`ARMS_EINVAL`
+       引数の異常
+
+コールバック関数からの呼び出し
+------------------------------
+
+可能
+
+ヒストリ
+--------
+
+このAPIはVer2.10で追加された。

@@ -1,0 +1,49 @@
+=============================
+(\*arms_log_cb_t)()
+=============================
+
+関数
+----
+
+.. c:function:: typedef int (*arms_log_cb_t)(int log_code, const char *str, void *udata)
+
+呼び出し方向
+------------
+
+libarms->アプリケーション
+
+目的
+----
+
+libarmsからログ情報を渡す。コールバックテーブルへの登録は任意。
+
+説明
+----
+
+libarms 内で発生したイベントのログを通知する。ログコードについては、 :ref:`log-code-label` を参照。
+
+引数
+----
+
+:c:type:`int` :c:data:`log_code`
+   遷移前のステート
+
+:c:type:`const char` :c:data:`*str`
+   ログ文字列(NULL終端)
+   ARMS標準のログ文字列
+
+:c:type:`void` :c:data:`*data`
+   :c:func:`arms_pull` で指定したポインタ
+
+返り値
+------
+
+:c:macro:`0`
+  正常終了
+
+:c:macro:`-1`
+  コールバック関数内で異常が発生した
+
+ヒストリ
+--------
+このAPIはVer1.00で追加された。

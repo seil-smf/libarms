@@ -1,0 +1,336 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>はじめに &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="next" title="アーキテクチャ" href="../arch/arch_top.html" />
+    <link rel="prev" title="libarmsドキュメント" href="../contents.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>はじめに<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>libarms は、SMFv2 システムで利用されるARMS プロトコルを用いて、コンフィグ自動取得、集中管理といった機能を実現するためのライブラリである。
+本文書では、libarms が提供する機能、動作するために必要な条件および libarms API の詳細仕様を解説する。</p>
+<div class="section" id="id2">
+<h2>提供方法<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms は用途に合わせて2種類の提供方法が用意されている。</p>
+<div class="section" id="id3">
+<h3>オープンソース版<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>ソースコードからコンパイルすることで利用可能なライブラリ。
+利用条件は特に無く、自由にダウンロードして使うことができる。
+ただし、匿名PPPoEアカウントを用いたサーバ接続を利用することはできない。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">オープンソース版の提供は Ver5.00 から開始された。それ以前のバージョンでは特定ベンダ向けバイナリ版のみの提供を行っていた。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>特定ベンダ向けバイナリ版<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>IIJにて特定ベンダ向けのクロスコンパイル環境等を用いてコンパイルした上で
+提供されるライブラリ。ベンダごとに専用の鍵を用いて暗号化された秘匿情報を持たせてあり、匿名PPPoEアカウントを利用することができる。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>提供条件<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms を利用するために必要なハードウェアおよびソフトウェアの仕様、libarms を提供可能なネットワーク環境を示す。</p>
+<div class="section" id="id6">
+<h3>ハードウェア条件<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>組込先ハードウェアとして必要な構成および仕様は以下の通りである。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">&nbsp;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>CPU</td>
+<td>特に制限なし(POSIX準拠相当のOSが動作すること)</td>
+</tr>
+<tr class="row-odd"><td>メモリ</td>
+<td>libarms単体ではテキストエリア等で約200KB、
+ワークエリア等は別途必要。その他クライアント
+プログラムや関連ライブラリを追加する場合は
+それに伴い使用量が増加</td>
+</tr>
+<tr class="row-even"><td>外部ストレージ</td>
+<td>SSL証明書の保存などに必要</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id7">
+<h3>ソフトウェア条件<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>libarmsをコンパイルするために必要なソフトウェア環境は以下の通りである。</p>
+<ul>
+<li><p class="first">オペレーティングシステム</p>
+<p>特定のOS には依存しない。POSIX 準拠OS であればほぼ全ての環境でlibarmsをコンパイルすることが可能。(Linux, FreeBSD, OpenBSD, NetBSD など)</p>
+</li>
+<li><p class="first">ライブラリ</p>
+<p>libarmsでは、以下に示すライブラリを利用する。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="16%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><p class="first last">ライブラリ名</p>
+</th>
+<th class="head"><p class="first last">バージョン</p>
+</th>
+<th class="head"><p class="first last">利用目的</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">libc</p>
+</td>
+<td><p class="first last">－</p>
+</td>
+<td><p class="first last">メモリ操作、文字列操作、ソケット入出力など</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">expat</p>
+</td>
+<td><p class="first last">2.00以降</p>
+</td>
+<td><p class="first last">XML操作ライブラリ(メモリ操作のみ)</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">OpenSSL</p>
+</td>
+<td><p class="first last">0.9.6以降</p>
+</td>
+<td><p class="first last">LS/RSとのSSL通信</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>なお、これらのライブラリで利用する関数の一覧は <a class="reference internal" href="../appendix/appendix_top.html#func-list-label"><em>使用するライブラリ関数一覧</em></a> を参照。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h3>ネットワーク条件<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>libarms を利用するにあたり、以下のネットワーク環境が用意されている必要がある。</p>
+<ul>
+<li><p class="first">インターネット接続</p>
+<p>libarmsは、インターネット上に設置されたLS、RS と通信を行う。このため、以下に示した手段のいずれかの方法でインターネット通信が可能となっていなければならない。</p>
+<ul>
+<li><p class="first">PPPoEが利用可能なフレッツ回線環境</p>
+<p>libarmsを組み込む機器が、直接PPPoEを用いてインターネットへの通信が可能な環境であること。</p>
+</li>
+<li><p class="first">IIJmobile対応のモバイル通信環境</p>
+<p>libarms を組み込む機器が、直接IIJmobile 対応のモバイル通信端末を用いてインターネットへの通信が可能な環境であること。</p>
+</li>
+<li><p class="first">DHCPによりグローバルアドレスの払い出しが受けられる環境</p>
+<p>libarms を組み込む機器が、DHCP により直接グローバルアドレスの払い出しを受けることができ、インターネットへの通信が可能な環境であること。</p>
+</li>
+<li><p class="first">DHCP によりプライベートアドレスの払い出しを受けられる環境</p>
+<p>libarms を組み込む機器が、DHCP によりプライベートアドレスの払い出しを受け、NAT 経由でインターネットへの通信が可能な環境であること。ただし、この環境での動作はlibarms ver3.00以降が必要となる。</p>
+</li>
+<li><p class="first">RA(ルータ広告)によりIPv6アドレスの払い出しを受けられる環境</p>
+<p>libarms を組み込む機器が、RAによりIPv6アドレスの払い出しを受けることができ、インターネットへの通信が可能な環境であること。</p>
+</li>
+<li><p class="first">静的IP アドレスが事前に付与されている環境</p>
+<p>libarms を組み込む機器が、何らかの方法により事前にグローバルアドレスを付与されている環境であること。</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>システム構成<a class="headerlink" href="#id9" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms を組みこむ際の、全体のシステム構成と動作の概要について以下に解説する。
+以下の図は、システムが一般的なUNIX 環境で構築されている場合にlibarms を組み込む際の構成図である。なお、システムやOS の仕様によって組込モデルは変わる可能性があるため注意すること。</p>
+<img alt="../_images/libarms-system.png" src="../_images/libarms-system.png" />
+<p>既存のシステムにおける各要素(kernel, userland 等の各プログラム) を変更する必要は通常は無い。
+ただし、以下のプログラム/ファイルを追加する必要がある。</p>
+<ul>
+<li><p class="first">arms client daemon</p>
+<p>libarms のAPI を呼び出し、各種制御を実行するためのプログラムである。
+libarms のライブラリ本体や各種ライブラリ(OpenSSL,expat 等) をリンクする必要がある。
+サービスアダプタがPushに非対応の場合は、Pull が終了後にプログラムが終了してしまっても構わないが、
+Push に対応する場合はdaemon としてバックグラウンドで動作し続ける必要がある。</p>
+</li>
+<li><p class="first">Initial-Config</p>
+<p>LS に接続するための各種情報を格納するための領域。
+libarmsオープンソース版を用いる場合、必要な情報はlibarms自体に埋め込まれているため不要となる。匿名PPPoEアカウントを利用して接続を行う場合、専用にコンパイルされたlibarmsを用意し、IIJから提供されるInitial-Configを用いる必要がある。</p>
+</li>
+<li><p class="first">SSL 証明書/Distribution ID</p>
+<p>LS/RS に接続するためのSSL 証明書、およびDistribution ID。これらはlibarms の初期化情報として利用される。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="libarmssa">
+<h2>libarmsのSAへの組み込み<a class="headerlink" href="#libarmssa" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id10">
+<h3>外部ライブラリのコンパイル方法<a class="headerlink" href="#id10" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>libarms を用いる場合、OpenSSL およびexpat ライブラリが必要となる。
+ここで示すコンパイルオプションを変更すると、予期しないエラーが発生する可能性があるため、注意すること。
+なお、動作環境がコンパイル環境と異なる場合は別途クロスコンパイル環境を構築する必要がある。</p>
+<p>OpenSSL:</p>
+<div class="highlight-python"><pre>http://www.openssl.org/</pre>
+</div>
+<p>から最新版を取得して展開する。展開したディレクトリ内で以下のコマンドを実行する:</p>
+<div class="highlight-python"><pre>% ./config -shared --prefix=&lt;install directory&gt;
+% make
+% make test
+% su
+# make install</pre>
+</div>
+<p>expat:</p>
+<div class="highlight-python"><pre>http://expat.sourceforge.net/</pre>
+</div>
+<p>から最新版を取得して展開する。展開したディレクトリ内で以下のコマンドを実行する:</p>
+<div class="highlight-python"><pre>% ./configure --prefix=&lt;install directory&gt;
+% make
+% su
+# make install</pre>
+</div>
+</div>
+<div class="section" id="libarms">
+<h3>libarmsのコンパイル方法<a class="headerlink" href="#libarms" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>libarmsのコンパイル、インストールは以下のようにして行う:</p>
+<div class="highlight-python"><pre>% ./configure
+% make
+% su
+# make install</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">はじめに</a><ul>
+<li><a class="reference internal" href="#id2">提供方法</a><ul>
+<li><a class="reference internal" href="#id3">オープンソース版</a></li>
+<li><a class="reference internal" href="#id4">特定ベンダ向けバイナリ版</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">提供条件</a><ul>
+<li><a class="reference internal" href="#id6">ハードウェア条件</a></li>
+<li><a class="reference internal" href="#id7">ソフトウェア条件</a></li>
+<li><a class="reference internal" href="#id8">ネットワーク条件</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id9">システム構成</a></li>
+<li><a class="reference internal" href="#libarmssa">libarmsのSAへの組み込み</a><ul>
+<li><a class="reference internal" href="#id10">外部ライブラリのコンパイル方法</a></li>
+<li><a class="reference internal" href="#libarms">libarmsのコンパイル方法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="../contents.html"
+                        title="前の章へ">libarmsドキュメント</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="../arch/arch_top.html"
+                        title="次の章へ">アーキテクチャ</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../arch/arch_top.html" title="アーキテクチャ"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="../contents.html" title="libarmsドキュメント"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

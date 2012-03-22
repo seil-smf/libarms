@@ -1,0 +1,188 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>arms_get_rs_url() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="arms_get_rs_tunnel_url()" href="arms_get_rs_tunnel_url.html" />
+    <link rel="prev" title="arms_get_rsinfo()" href="arms_get_rsinfo.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-get-rs-url">
+<h1>arms_get_rs_url()<a class="headerlink" href="#arms-get-rs-url" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_get_rs_url">
+int <tt class="descname">arms_get_rs_url</tt><big>(</big>arms_context_t<em>&nbsp;*ctx</em>, <a class="reference internal" href="struct.html#arms_url_t" title="arms_url_t">arms_url_t</a><em>&nbsp;*urlp</em>, int<em>&nbsp;size</em><big>)</big><a class="headerlink" href="#arms_get_rs_url" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>アプリケーション-&gt;libarms</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>アクセス対象のRS の情報を取得する。(SA-&gt;RS方向)</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 実行時にRS から取得した、SA-&gt;RS方向の通信で使われる
+RSのIPアドレスおよびポート番号をURL形式で取得する。</p>
+</div>
+<div class="section" id="id5">
+<h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">arms_context_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*ctx</span></tt></dt>
+<dd>内部ステートを保持するコンテキスト構造体ポインタ。
+<a class="reference internal" href="arms_init.html#arms_init" title="arms_init"><tt class="xref c c-func docutils literal"><span class="pre">arms_init()</span></tt></a> により取得したポインタをそのまま指定する。</dd>
+<dt><a class="reference internal" href="struct.html#arms_url_t" title="arms_url_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_url_t</span></tt></a> <tt class="xref c c-data docutils literal"><span class="pre">*urlp</span></tt></dt>
+<dd>アプリケーション側に領域を用意した、アドレス情報取得用バッファの
+先頭アドレスを示すポインタ。size で指定したバイト数の書き込みが
+可能となっていなければならない。詳細は <a class="reference internal" href="struct.html#arms_url_t" title="arms_url_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_url_t</span></tt></a> を参照。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">size</span></tt></dt>
+<dd>urlp のバッファサイズ[bytes]</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>返り値<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">-1</span></tt></dt>
+<dd>パラメータが不適切のため情報取得に失敗。
+urlp が NULL、あるいは size が sizeof(arms_url_t) 未満。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">-1以外</span></tt></dt>
+<dd>libarms が取得し保持している RS 情報のセット数(0 を含む)。
+実際に書き込んだ数ではない点に注意すること。</dd>
+</dl>
+</div>
+<div class="section" id="id7">
+<h2>コールバック関数からの呼び出し<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>可能</p>
+</div>
+<div class="section" id="id8">
+<h2>ヒストリ<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer3.00で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">arms_get_rs_url()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">引数</a></li>
+<li><a class="reference internal" href="#id6">返り値</a></li>
+<li><a class="reference internal" href="#id7">コールバック関数からの呼び出し</a></li>
+<li><a class="reference internal" href="#id8">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_get_rsinfo.html"
+                        title="前の章へ">arms_get_rsinfo()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_get_rs_tunnel_url.html"
+                        title="次の章へ">arms_get_rs_tunnel_url()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_get_rs_tunnel_url.html" title="arms_get_rs_tunnel_url()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_get_rsinfo.html" title="arms_get_rsinfo()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

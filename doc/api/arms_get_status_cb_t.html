@@ -1,0 +1,219 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>(*arms_get_status_cb_t)() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="(*arms_command_cb_t)()" href="arms_command_cb_t.html" />
+    <link rel="prev" title="(*arms_read_config_cb_t)()" href="arms_read_config_cb_t.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-get-status-cb-t">
+<h1>(*arms_get_status_cb_t)()<a class="headerlink" href="#arms-get-status-cb-t" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_get_status_cb_t">
+typedef int <tt class="descname">(*arms_get_status_cb_t)</tt><big>(</big>uint32_t<em>&nbsp;id</em>, const char<em>&nbsp;*buff</em>, size_t<em>&nbsp;buff_len</em>, char<em>&nbsp;*result_buff</em>, size_t<em>&nbsp;result_len</em>, int<em>&nbsp;*next</em>, void<em>&nbsp;*udata</em><big>)</big><a class="headerlink" href="#arms_get_status_cb_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms-&gt;アプリケーション</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>SA の動作状態を取得する。コールバックテーブルへの登録は必須ではない。</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>指定されたモジュール ID のステータス情報を取得する。</p>
+</div>
+<div class="section" id="id5">
+<h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">uint32_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">id</span></tt></dt>
+<dd>モジュールID。ID 自体は SA の機種ごとに定義される。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*buff</span></tt></dt>
+<dd>リクエストバッファ。状態取得時にRS にて指定された追加パラメータ情報が格納される
+バッファを示すポインタであり、NULL が渡される可能性はない。
+バッファの内容は文字列あるいはバイナリデータ。buff_len で
+示されるサイズ分のデータが文字列あるいはバイナリ形式で格納され、
+その直後にNUL 文字が格納される。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">size_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">buff_len</span></tt></dt>
+<dd>リクエストバッファに格納されたパラメータ情報のバイト数。0 が渡される可能性がある。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*result_buff</span></tt></dt>
+<dd>動作状態情報を格納すべきlibarms 内のバッファ。バッファとしてNULL が渡される可能性はない。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">size_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">result_len</span></tt></dt>
+<dd>バッファ長。バッファ長には0 が渡される可能性はない。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*next</span></tt></dt>
+<dd><p class="first">呼ばれたときには、ポインタが指す領域に下記の値が入っている。</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_FIRST</span></tt></dt>
+<dd>そのモジュールにおいて最初の呼び出し</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_CONTINUE</span></tt></dt>
+<dd>そのモジュールにおいて二度目以降の呼び出し</dd>
+</dl>
+</div></blockquote>
+<p>コールバック関数では、渡されたバッファ長が実際の内容を収めるには小さく、
+分割取得を利用する場合、ブロックの情報(フラグ) を書き込む必要がある。</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_FINISHED)</span></tt></dt>
+<dd>最初のブロックで、続くブロックはない</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_CONTINUE)</span></tt></dt>
+<dd>最初のブロックで、続くブロックがある</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_CONTINUE</span></tt></dt>
+<dd>最初以外のブロックで、続くブロックがある</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_FINISHED</span></tt></dt>
+<dd>続くブロックはない</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*udata</span></tt></dt>
+<dd><a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> で指定したポインタ</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>返り値<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">0</span></tt></dt>
+<dd>ステータス情報の取得が正常に終了(US-ASCII 文字列)</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_RESULT_BYTES</span></tt> (バイト数)</dt>
+<dd>ステータス情報の取得が正常に終了(格納データの有効なバイト数)</dd>
+<dt>上記以外の値</dt>
+<dd>異常終了(エラーコード)</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">バイト数を返すときに、result_len で指定されたバイト数よりも大きな値
+あるいはマイナスの値を指定した場合の動作は未定義。</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>ヒストリ<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer2.10で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">(*arms_get_status_cb_t)()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">引数</a></li>
+<li><a class="reference internal" href="#id6">返り値</a></li>
+<li><a class="reference internal" href="#id7">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_read_config_cb_t.html"
+                        title="前の章へ">(*arms_read_config_cb_t)()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_command_cb_t.html"
+                        title="次の章へ">(*arms_command_cb_t)()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_command_cb_t.html" title="(*arms_command_cb_t)()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_read_config_cb_t.html" title="(*arms_read_config_cb_t)()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

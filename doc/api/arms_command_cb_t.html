@@ -1,0 +1,267 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>(*arms_command_cb_t)() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="(*arms_state_cb_t)()" href="arms_state_cb_t.html" />
+    <link rel="prev" title="(*arms_get_status_cb_t)()" href="arms_get_status_cb_t.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-command-cb-t">
+<h1>(*arms_command_cb_t)()<a class="headerlink" href="#arms-command-cb-t" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_command_cb_t">
+typedef int <tt class="descname">(*arms_command_cb_t)</tt><big>(</big>uint32_t<em>&nbsp;id</em>, int<em>&nbsp;action</em>, const char<em>&nbsp;*buff</em>, size_t<em>&nbsp;buff_len</em>, char<em>&nbsp;*result_buff</em>, size_t<em>&nbsp;result_len</em>, int<em>&nbsp;*next</em>, void<em>&nbsp;*udata</em><big>)</big><a class="headerlink" href="#arms_command_cb_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms-&gt;アプリケーション</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>汎用のコマンド実行指示を処理する。
+コールバックテーブルへの登録は必須ではない。</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>モジュールID ごとに定義されたコマンド実行を指示する。
+処理内容があらかじめ定義されている共通アクションと、
+機器固有のコマンドを実行する汎用アクションが用意されている。</p>
+</div>
+<div class="section" id="id5">
+<h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">uint32_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">id</span></tt></dt>
+<dd><p class="first">モジュールID。ID 自体はSA の機種ごとに定義される。</p>
+<p class="last">モジュールID を使用しないaction もある。action の項で個別に記載する。</p>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">action</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>モジュールID ごとに定義されたアクション。SA の機種に依存しない共通のアクションが定義されている。値の一覧は次のとおり。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_CLEAR_STATUS</span></tt></dt>
+<dd><p class="first">モジュールの状態を初期状態に戻す。
+buff にはモジュールへの付加情報が文字列あるいはバイナリで格納される。
+必要があれば実行結果を result_buff に格納する。</p>
+<p class="last">id を使用する。指定されたモジュールに対する操作となる。</p>
+</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_PING</span></tt></dt>
+<dd><p class="first">buff で指定された対象に ICMP ECHO パケットを送信し、それに対する応答となる
+ICMP ECHO REPLY パケットを待ち、その結果を result_buff に格納する。</p>
+<p class="last">id を使用しない。0 が渡されるが無視してよい。</p>
+</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_TRACEROUTE</span></tt></dt>
+<dd><p class="first">buff で指定された対象にtraceroute 処理を実行し、その結果をresult_buff に格納する。</p>
+<p class="last">id を使用しない。0 が渡されるが無視してよい。</p>
+</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_MD_COMMAND</span></tt></dt>
+<dd><p class="first">汎用アクションを実行する。
+buff には機種依存のコマンドが文字列あるいはバイナリで格納される。
+この実行結果をresult_buff に格納する。</p>
+<p class="last">id を使用する。指定されたモジュールに対する操作となる。</p>
+</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_DUMP_DEBUG</span></tt></dt>
+<dd><p class="first">ログやコンフィグなど、デバッグ情報をresult_buff に格納する。</p>
+<p class="last">id を使用しない。0 が渡されるが無視してよい。</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*buff</span></tt></dt>
+<dd><p class="first">action ごとの個別パラメータを格納すべきlibarms 内のバッファ。
+バッファとしてNULL が渡される可能性はない。
+action が <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_CLEAR_STATUS</span></tt> の場合、
+buff はサーバから送られたリクエスト情報(テキストあるいはバイナリ) そのものとなる。
+そのとき buff_len で示されるサイズ分のデータが文字列あるいはバイナリ形式で格納され、その直後にNUL 文字が格納される。</p>
+<p>action が <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_PING</span></tt> の場合、buff を <a class="reference internal" href="struct.html#arms_ping_arg_t" title="arms_ping_arg_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_ping_arg_t</span></tt></a> * にキャストする必要がある。</p>
+<p class="last">action が <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_TRACEROUTE</span></tt> の場合、buff を <a class="reference internal" href="struct.html#arms_traceroute_arg_t" title="arms_traceroute_arg_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_traceroute_arg_t</span></tt></a> * にキャストする必要がある。</p>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">size_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">buff_len</span></tt></dt>
+<dd><p class="first">バッファ長。0 が渡されることもある。</p>
+<p class="last"><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_CLEAR_STATUS</span></tt> 以外の場合、バッファ長には0 が渡される可能性はない。
+buff に収められているデータのバイト数を表す。</p>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*result_buff</span></tt></dt>
+<dd><p class="first">action ごとの処理結果情報を格納すべきlibarms 内のバッファ。
+バッファとしてNULL が渡される可能性はない。</p>
+<p>action が <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_PING</span></tt> の場合、result_buff を <a class="reference internal" href="struct.html#arms_ping_report_t" title="arms_ping_report_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_ping_report_t</span></tt></a> * にキャストする必要がある。</p>
+<p class="last">action が <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_TRACEROUTE</span></tt> の場合、result_buff を <a class="reference internal" href="struct.html#arms_traceroute_info_t" title="arms_traceroute_info_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_traceroute_info_t</span></tt></a> * にキャストする必要がある。</p>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">size_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">result_len</span></tt></dt>
+<dd>バッファ長。
+result_buff として確保されたバッファ領域のバイト数を表す。
+バッファ長には0 が渡される可能性はない。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*next</span></tt></dt>
+<dd><p class="first">コンフィグの分割送信を利用する場合のブロックの情報(フラグ)
+渡されたバッファ長がコールバックの実行結果を収めるには小さく、実行結果の分割取得を利用する場合、ブロックの情報(フラグ) を書き込む必要がある。</p>
+<dl class="last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_FINISHED)</span></tt></dt>
+<dd>最初のブロックで、続くブロックはない</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_CONTINUE)</span></tt></dt>
+<dd>最初のブロックで、続くブロックがある</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_CONTINUE</span></tt></dt>
+<dd>最初以外のブロックで、続くブロックがある</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_FINISHED</span></tt></dt>
+<dd>続くブロックはない。
+action に <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_MD_COMMAND</span></tt> 以外が指定された場合、NULL が渡される。
+その場合分割取得は行わないため書き込み処理は不要である。</dd>
+</dl>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*udata</span></tt></dt>
+<dd><a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> で指定したポインタ</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>返り値<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">0</span></tt></dt>
+<dd>指定アクションの処理が正常に終了(result_buff は US-ASCII 文字列)</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_RESULT_BYTES</span></tt> (バイト数)</dt>
+<dd><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_MD_COMMAND</span></tt> あるいは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_DUMP_DEBUG</span></tt> が正常に終了。result_buff に格納したデータが US-ASCII 文字列でない場合に格納したバイト数を示す。</dd>
+<dt>上記以外の非0</dt>
+<dd><dl class="first last docutils">
+<dt>異常終了(エラーコード)</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ESYSTEM</span></tt></dt>
+<dd>メモリ不足など、動作環境が原因のエラーが発生した</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">バイト数を返すときに、result_len で指定されたバイト数よりも大きな値あるいはマイナスの値を指定した場合の動作は未定義。</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>ヒストリ<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer2.10で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">(*arms_command_cb_t)()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">引数</a></li>
+<li><a class="reference internal" href="#id6">返り値</a></li>
+<li><a class="reference internal" href="#id7">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_get_status_cb_t.html"
+                        title="前の章へ">(*arms_get_status_cb_t)()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_state_cb_t.html"
+                        title="次の章へ">(*arms_state_cb_t)()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_state_cb_t.html" title="(*arms_state_cb_t)()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_get_status_cb_t.html" title="(*arms_get_status_cb_t)()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>

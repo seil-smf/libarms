@@ -1,0 +1,90 @@
+
+.. _func-list-label:
+
+===========================
+使用するライブラリ関数一覧
+===========================
+
+libc
+----
+
+libcにて利用する関数の一覧を以下に示す。
+
+* accept
+* bind
+* close
+* connect
+* errno
+* exit
+* free
+* freeaddrinfo
+* getaddrinfo
+* gettimeofday
+* ioctl
+* listen
+* malloc
+* memchr
+* memcpy
+* memmove
+* memset
+* realloc
+* select
+* snprintf
+* socket
+* sprintf
+* sscanf
+* strcasecmp
+* strcat
+* strcmp
+* strcpy
+* strdup
+* strlen
+* strncasecmp
+* strncat
+* strncpy
+* strtol
+
+OpenSSL
+-------
+
+OpenSSLにて利用する関数の一覧を以下に示す。
+
+* BIO free
+* BIO new mem buf
+* DES ede3 cbc encrypt
+* DES key sched
+* ERR clear error
+* ERR get error
+* EVP PKEY free
+* PEM read bio PrivateKey
+* PEM read bio X509
+* RAND seed
+* RAND status
+* SSL CTX free
+* SSL CTX get cert store
+* SSL CTX new
+* SSL CTX set verify depth
+* SSL check private key
+* SSL connect
+* SSL free
+* SSL get error
+* SSL get verify result
+* SSL get shutdown
+* SSL library init
+* SSL load error strings
+* SSL new
+* SSL read
+* SSL set cipher list
+* SSL set fd
+* SSL set verify
+* SSL shutdown
+* SSL use PrivateKey
+* SSL use certificate
+* SSL write
+* TLSv1 client method
+* X509 NAME oneline
+* X509 STORE CTX get current cert
+* X509 STORE add cert
+* X509 free
+* X509 get subject name
+* X509 verify cert error string

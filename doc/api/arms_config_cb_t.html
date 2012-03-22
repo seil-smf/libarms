@@ -1,0 +1,343 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>(*arms_config_cb_t)() &mdash; libarms 5.01 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.01',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="api_top.html" />
+    <link rel="next" title="(*arms_line_ctrl_cb_t)()" href="arms_line_ctrl_cb_t.html" />
+    <link rel="prev" title="arms_end()" href="arms_end.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arms-config-cb-t">
+<h1>(*arms_config_cb_t)()<a class="headerlink" href="#arms-config-cb-t" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="function">
+<dt id="arms_config_cb_t">
+typedef int <tt class="descname">(*arms_config_cb_t)</tt><big>(</big>uint32_t<em>&nbsp;id</em>, const char<em>&nbsp;*version</em>, const char<em>&nbsp;*infostring</em>, int<em>&nbsp;action</em>, const char<em>&nbsp;*buff</em>, size_t<em>&nbsp;buff_len</em>, int<em>&nbsp;next</em>, void<em>&nbsp;*udata</em><big>)</big><a class="headerlink" href="#arms_config_cb_t" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>呼び出し方向<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms-&gt;アプリケーション</p>
+</div>
+<div class="section" id="id3">
+<h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>RS から受信したコンフィグをSA 固有のコンフィグ処理ルーチンへ引き渡す。
+コールバックテーブルへの登録は必須。</p>
+</div>
+<div class="section" id="id4">
+<h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>コンフィグの分割受信を行う場合、一つのコンフィグに対して複数回呼ばれることがある。
+コンフィグの妥当性判定(後述) を行う場合で、妥当ではないと判定した場合には返り値に非0 を渡すことで、SMFv2 システムにコンフィグの異常を通知できる。
+コンフィグの異常はオペレータの介入により解消することが期待できるため、
+ライブラリは異常検出後も(間隔の長い) リトライをおこなう。
+コンフィグの妥当性判定とは、</p>
+<ol class="arabic simple">
+<li>文法的な誤りがない</li>
+<li>矛盾する設定や相反する設定を含まない</li>
+</ol>
+<p>のどちらか、または両方を想定している。コンフィグの実際の動作への反映は想定していない。
+したがって、ライブラリからみてコールバック関数呼び出しの前後でSA の動作が変更された場合、以降の動作は保証できない。
+利用方法としては、以下の3 種を想定している。</p>
+<ol class="arabic simple">
+<li>validate なし、fragment = 0</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>○: 実装がとても簡単</li>
+<li>Ｘ: コンフィグがおかしくても現地調査しないと気づかない</li>
+<li>Ｘ: コンフィグのサイズ分だけライブラリ内でメモリを使う</li>
+</ul>
+<p>実装例:</p>
+<div class="highlight-python"><pre>int
+vendor_config_cb(uint32_t id, const char *version,
+      const char *infostring, int action,
+      const char *buff, size_t buff_len,
+      int next, void *udata)
+{
+    FILE *config_file;
+    config_file = fopen(PATH_CONFIG_FILE, "w");
+    fwrite(buff, buff_len, 1, config_file);
+    fclose(config_file);
+    return 0;
+}</pre>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>validate あり、fragment = 0</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>○: 実装がやや複雑</li>
+<li>○: コンフィグがおかしい場合、RS のログにより管理者が気づく</li>
+<li>Ｘ: コンフィグのサイズ分だけライブラリ内でメモリを使う</li>
+</ul>
+<p>実装例:</p>
+<div class="highlight-python"><pre>int
+vendor_config_cb(uint32_t id, const char *version,
+            const char *infostring, int action
+            const char *buff, size_t buff_len,
+            int next, void *udata)
+{
+    FILE *config_file;
+    int error;
+    if ( (error = validate_config(buff, buff_len)) != 0) {
+            log("config validation failed. error = %d", error);
+            return ERR_CODE;
+    }
+    config_file = fopen(PATH_CONFIG_FILE, "w");
+    fwrite(buff, buff_len, 1, config_file);
+    fclose(config_file);
+    return 0;
+}</pre>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>validate あり、framgment = 非0</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>Ｘ: 実装が複雑</li>
+<li>○: コンフィグがおかしい場合、RS のログやAlert で管理者が気づく</li>
+<li>○: ライブラリ内でのメモリ消費をコントロール可能</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h2>注意点<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>本関数は、RSとの通信に失敗した場合も呼ばれる場合がある。
+これは、コンフィグ情報を取得後にもプロトコルエラーが発生する可能性があるためである。
+したがって、起動処理が成功したかどうかの判定は、本関数により適切なコンフィグが得られたかどうか、および <a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> の返り値が成功を示しているかどうかの2 点により判断しなければならない。
+分割受信処理を利用する場合、コンフィグ情報の受信中にエラーが発生する可能性があるため、コンフィグ受信中のエラーへの対処が必要となる。
+この場合、エラー発生時には本関数にFINISH フラグの付いたコンフィグブロックが渡され、 <a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> はリトライ処理をおこなうか、エラーを返す。
+リトライ処理の場合、再度本関数が呼び出される。
+したがって、本関数が複数回呼び出された場合、コンフィグ受信中にエラーが発生したものとして処理する必要がある。</p>
+</div>
+<div class="section" id="id6">
+<h2>引数<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-type docutils literal"><span class="pre">uint32_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">id</span></tt></dt>
+<dd><p class="first">モジュールID。ID 自体はSA の機種ごとに定義される。
+SA 内で複数モジュールを用いてコンフィグを扱う場合に利用する。</p>
+<p class="last">モジュールIDの指定はRS が行う。複数のコンフィグをRSから受信する
+こともある。この場合、コンフィグの数だけコールバックが行われる。</p>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*version</span></tt></dt>
+<dd><p class="first">コンフィグ適用バージョンを識別する情報文字列。値はSA の機種およびコンフィグ
+種別ごとに自由に定義してよい。</p>
+<p>SA 内でコンフィグのバージョンを識別する必要がある場合に利用する。</p>
+<p class="last">コンフィグ適用バージョンの指定はRS が行う。</p>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*infostring</span></tt></dt>
+<dd>コンフィグと結びつく追加情報文字列。SA の機種、コンフィグ種別およびバージョンごとに自由に定義してよい。 追加情報文字列の指定はRS が行う。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">action</span></tt></dt>
+<dd><p class="first">コンフィグ受信に関する動作種別を示す値。次のいずれかとなる。</p>
+<dl class="last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PULL_STORE_CONFIG</span></tt></dt>
+<dd>サーバから送られてきたコンフィグがbuff に渡され、コンフィグの長さはbuff_len に渡される。
+送られてきたコンフィグを実際の動作に反映させる。
+以前の設定はバックアップとして、 <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PULL_STORE_CONFIG</span></tt> もしくは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_EXEC_STORED_CONFIG</span></tt> を指示されるまで保持しておく。
+コールバック関数は渡されたコンフィグをそのまま、あるいは内部形式に変換し保存する。 <a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> の内部処理から呼ばれる。
+動作に反映させたコンフィグは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_CONFIG_RUNNING</span></tt> として参照される。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_STORE_CONFIG</span></tt></dt>
+<dd>サーバから送られてきたコンフィグがbuff に渡され、コンフィグの長さはbuff_len に渡される。
+コールバック関数は渡されたコンフィグをそのまま、あるいは内部形式に変換し保存する。
+実際の動作への反映は <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_EXEC_STORED_CONFIG</span></tt> で行う。 <a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> の内部処理から呼ばれる。
+このコンフィグは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_CONFIG_CANDIDATE</span></tt> として参照される。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_EXEC_STORED_CONFIG</span></tt></dt>
+<dd>一回のPush 処理においてすべてのコンフィグを受信完了したあとに、
+コンフィグが複数の場合でも一度だけ呼ばれる。
+送り込んだコンフィグの設定を実際の動作に反映させる。
+複数のコンフィグの間で反映の依存関係がある場合はコールバック関数側で適切な順序で反映させること。
+以前の設定はバックアップとして、再び <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_EXEC_STORED_CONFIG</span></tt> を指示されるまで保持しておく。
+このアクションではbuff およびbuff_len を使用しない。
+<a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> の内部処理から呼ばれる。
+動作に反映させたコンフィグは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_CONFIG_RUNNING</span></tt> として参照される。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_REVERT_CONFIG</span></tt></dt>
+<dd><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PUSH_EXEC_STORED_CONFIG</span></tt> によって実際の動作に反映された後に libarms がサーバとの通信を確認し、失敗したときに呼ばれる。
+バックアップとして保持しておいたコンフィグの内容を反映させ、新しい設定を破棄する。
+<a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> の内部処理から呼ばれる。
+このアクションではbuff およびbuff_len を使用しない。
+バックアップしたコンフィグは <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_CONFIG_BACKUP</span></tt> として参照される。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_REMOVE_MODULE</span></tt></dt>
+<dd>該当する機能を停止する際に呼ばれる。必要に応じて機能の停止処理を行う。
+<a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> の内部処理から呼ばれる。
+このアクションではbuff およびbuff_len を使用しない。</dd>
+</dl>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*buff</span></tt></dt>
+<dd>コンフィグを格納しているlibarms のバッファ。
+バッファとしてNULL が渡される可能性もある。
+これは、コンフィグの取得を行ったが、サーバにコンフィグが登録されていない場合や、分割受信処理で最終ブロックに入れるべきデータがなかった場合、コンフィグ受信中にエラーが発生した場合などがこのケースに相当する。
+したがって、必ずNULL チェックをおこなう必要がある。
+バッファとしてNULL が渡されても必ずしもエラーを意味するわけではない。
+NULL でない場合、buff_len で示されるサイズ分のデータが文字列あるいはバイナリ形式で格納され、その直後にNUL 文字が格納される。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">size_t</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">buff_len</span></tt></dt>
+<dd>バッファ内のデータサイズ。buff に収められたデータのバイト数。
+バッファ長には0 が渡される可能性もある。</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">next</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>コンフィグの分割送信を利用する場合のブロックの情報(フラグ)。</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_FINISHED)</span></tt></dt>
+<dd>最初のブロックで、続くブロックはない。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_CONTINUE)</span></tt></dt>
+<dd>最初のブロックで、続くブロックがある。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_CONTINUE</span></tt></dt>
+<dd>最初以外のブロックで、続くブロックがある。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_FINISHED</span></tt></dt>
+<dd>続くブロックはない。
+<a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> でfragment に0 を指定した場合は常に <tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_FINISHED)</span></tt> となる。</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><tt class="xref c c-type docutils literal"><span class="pre">void</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*udata</span></tt></dt>
+<dd><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> あるいは <a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> で指定したポインタ。</dd>
+</dl>
+</div>
+<div class="section" id="id7">
+<h2>返り値<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">0</span></tt></dt>
+<dd>コンフィグの受信が正常に終了</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">非0</span></tt></dt>
+<dd><dl class="first last docutils">
+<dt>異常終了(エラーコード)</dt>
+<dd><dl class="first last docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">-1</span></tt></dt>
+<dd>コンフィグが受け付けられない</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="id8">
+<h2>ヒストリ<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>このAPIはVer1.00で追加された。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">(*arms_config_cb_t)()</a><ul>
+<li><a class="reference internal" href="#id1">関数</a></li>
+<li><a class="reference internal" href="#id2">呼び出し方向</a></li>
+<li><a class="reference internal" href="#id3">目的</a></li>
+<li><a class="reference internal" href="#id4">説明</a></li>
+<li><a class="reference internal" href="#id5">注意点</a></li>
+<li><a class="reference internal" href="#id6">引数</a></li>
+<li><a class="reference internal" href="#id7">返り値</a></li>
+<li><a class="reference internal" href="#id8">ヒストリ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="arms_end.html"
+                        title="前の章へ">arms_end()</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="arms_line_ctrl_cb_t.html"
+                        title="次の章へ">(*arms_line_ctrl_cb_t)()</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="arms_line_ctrl_cb_t.html" title="(*arms_line_ctrl_cb_t)()"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="arms_end.html" title="arms_end()"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+          <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+
+  </body>
+</html>
