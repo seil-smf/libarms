@@ -1,4 +1,4 @@
-/*	$Id: libarms.c 20956 2012-01-31 04:04:25Z m-oki $	*/
+/*	$Id: libarms.c 22687 2012-08-13 06:36:52Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -57,46 +57,6 @@
 
 #include "compat.h"
 
-#if 0
-static void
-print_openssl_ciphers(void)
-{
-	SSL_CTX*	ctx;
-
-	printf("OPENSSL_VERSION_TEXT: %s\n", OPENSSL_VERSION_TEXT);
-
-	ctx = SSL_CTX_new(TLSv1_server_method());
-	if (ctx) {
-		SSL*	ssl;
-
-		ssl = SSL_new(ctx);
-		if (ssl) {
-			int	i;
-			const char *ciphers;
-			STACK_OF(SSL_CIPHER) *sk;
-
-			printf("SSL_version: %x\n", SSL_version(ssl));
-			for (i = 0; (ciphers = SSL_get_cipher_list(ssl, i)) != NULL; i ++) {
-				printf("SSL_get_cipher_list[%d]: %s\n", i, ciphers);
-			}
-			printf("SSL_get_ciphers:\n");
-			sk = SSL_get_ciphers(ssl);
-			for (i = 0; i < sk_SSL_CIPHER_num(sk); i++) {
-				char buf[512];
-
-				printf("%s\n", SSL_CIPHER_description(sk_SSL_CIPHER_value(sk, i), buf, sizeof(buf)));
-				}
-SSL_free(ssl);
-		} else {
-			printf("SSL_version: Error: unknown\n");
-		}
-		SSL_CTX_free(ctx);
-	} else {
-		fprintf(stderr, "Error: SSL_CTX_new()\n");
-	}
-}
-#endif
-
 void
 arms_sleep(unsigned int sec)
 {
@@ -139,8 +99,7 @@ arms_init(distribution_id_t *distid, arms_context_t **ctxp)
 		return ARMS_ESYSTEM;
 	}
 
-	SSL_load_error_strings();
-	SSL_library_init();
+	arms_ssl_init();
 
 	rand_seed.distid = *distid;
 	gettimeofday(&rand_seed.tv, NULL);
@@ -248,6 +207,8 @@ arms_load_config(arms_context_t *res, const char *encrypted_config, size_t len)
 	acmi_set_lltimeout(res->acmi, ACMI_CONFIG_RSSOL, LLTIMEOUT);
 	acmi_set_anonpppoe(res->acmi, ACMI_CONFIG_RSSOL,
 			   res->lsconf->anonid, res->lsconf->anonpass);
+	acmi_set_anonpppoe_ipv6(res->acmi, ACMI_CONFIG_RSSOL,
+			   res->lsconf->v6anonid, res->lsconf->v6anonpass);
 	acmi_set_anonmobile(res->acmi, ACMI_CONFIG_RSSOL,
 			    res->lsconf->telno, res->lsconf->cid,
 			    res->lsconf->apn, res->lsconf->pdp_type,
@@ -625,10 +586,7 @@ arms_end(arms_context_t *res)
 	arms_escape(NULL);
 
 	/* OpenSSL cleanup */
-	CRYPTO_cleanup_all_ex_data();
-	ERR_free_strings();
-	ERR_remove_state(0);
-	EVP_cleanup();
+	arms_ssl_cleanup();
 
 	if (res != NULL) {
 		arms_hb_end(&res->hb_ctx);

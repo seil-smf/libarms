@@ -1,4 +1,4 @@
-/*	$Id: ssltunnel.c 20894 2012-01-25 12:47:57Z m-oki $	*/
+/*	$Id: ssltunnel.c 22684 2012-08-13 00:35:54Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -47,6 +47,7 @@
 #include <libarms/base64.h>
 #include <libarms/queue.h>
 #include <libarms/malloc.h>
+#include <libarms/sock.h>
 #include <libarms/ssl.h>
 #include <libarms/time.h>
 #include <http/http.h>
@@ -152,21 +153,21 @@ ssltunnel_setup(struct ssltunnel *tunnel, int fd, arms_context_t *res)
 	if (tunnel->ssl_ctx == NULL)
 		return -1;
 
-	store = SSL_CTX_get_cert_store(tunnel->ssl_ctx);
-	X509_STORE_add_cert(store, arms_ssl_cacert());
-	SSL_CTX_set_verify_depth(tunnel->ssl_ctx, SSL_VERIFY_DEPTH);
+	store = arms_ssl_ctx_get_cert_store(tunnel->ssl_ctx);
+	arms_x509_store_add_cert(store, arms_ssl_cacert());
+	arms_ssl_ctx_set_verify_depth(tunnel->ssl_ctx, SSL_VERIFY_DEPTH);
 	tunnel->ssl = arms_ssl_new(tunnel->ssl_ctx);
 	if (tunnel->ssl == NULL) {
 		libarms_log(ARMS_LOG_ESSL,
 		    "tunnel#%d: SSL_new failed.", tunnel->num);
 		return -1;
 	}
-	SSL_set_fd(tunnel->ssl, fd); 
+	arms_ssl_set_fd(tunnel->ssl, fd); 
 
 	mycert = arms_ssl_mycert();
 	mykey =  arms_ssl_mykey();
 	if (mycert) {
-		if (SSL_use_certificate(tunnel->ssl, mycert) != 1) {
+		if (arms_ssl_use_certificate(tunnel->ssl, mycert) != 1) {
 			libarms_log(ARMS_LOG_ESSL,
 			    "tunnel#%d: SSL_use_certificate failed.",
 			    tunnel->num);
@@ -174,19 +175,19 @@ ssltunnel_setup(struct ssltunnel *tunnel, int fd, arms_context_t *res)
 		}
 	}
 	if (mykey) {
-		if (SSL_use_PrivateKey(tunnel->ssl, mykey) != 1) {
+		if (arms_ssl_use_privatekey(tunnel->ssl, mykey) != 1) {
 			libarms_log(ARMS_LOG_ESSL,
 			    "tunnel#%d: SSL_use_PrivateKey failed.",
 			    tunnel->num);
 			return -1;
 		}
-		if (SSL_check_private_key(tunnel->ssl) != 1) {
+		if (arms_ssl_check_private_key(tunnel->ssl) != 1) {
 			return -1;
 		}
 	}
-	SSL_set_ex_data(tunnel->ssl, 0, NULL);
-	SSL_set_verify(tunnel->ssl, SSL_VERIFY_PEER,
-		       arms_ssl_servercert_verify_cb);
+	arms_ssl_set_ex_data(tunnel->ssl, 0, NULL);
+	arms_ssl_set_verify(tunnel->ssl, SSL_VERIFY_PEER,
+	    arms_ssl_servercert_verify_cb);
 
 	return 0;
 }
@@ -490,7 +491,7 @@ ssltunnel_connect(struct arms_schedule *obj, int event)
 	libarms_log(ARMS_LOG_DEBUG,
 	    "tunnel#%d: try to connect %s:%s",
 	    tunnel->num, tunnel->host, tunnel->port);
-	s = socket(re->ai_family, re->ai_socktype, re->ai_protocol);
+	s = arms_socket(re->ai_family, re->ai_socktype, re->ai_protocol);
 	if (s == -1) {
 		/* fatal. */
 		libarms_log(ARMS_LOG_ESOCKET,
@@ -505,7 +506,7 @@ ssltunnel_connect(struct arms_schedule *obj, int event)
 	obj->fd = s;
 	libarms_log(ARMS_LOG_DEBUG,
 		    "tunnel#%d: socket prepared. connecting...", tunnel->num);
-	r = connect(obj->fd, re->ai_addr, re->ai_addrlen);
+	r = arms_connect(obj->fd, re->ai_addr, re->ai_addrlen);
 	if (res->proxy_is_available && proxy_re != NULL)
 		freeaddrinfo(proxy_re);
 	if (dst_re != NULL)
@@ -590,7 +591,7 @@ ssltunnel_proxy_connect(struct arms_schedule *obj, int event)
 	}
 
 	optlen = sizeof(rv);
-	if (getsockopt(obj->fd, SOL_SOCKET, SO_ERROR, &rv, &optlen) != 0) {
+	if (arms_getsockopt(obj->fd, SOL_SOCKET, SO_ERROR, &rv, &optlen) != 0) {
 		return ssltunnel_retry(obj, tunnel);
 	}
 	if (rv != 0) {
@@ -630,7 +631,7 @@ ssltunnel_proxy_connect(struct arms_schedule *obj, int event)
 		tunnel->rp = tunnel->rbuf;
 	}
 	do {
-		rv = write(obj->fd, tunnel->rp, tunnel->rlen);
+		rv = arms_write(obj->fd, tunnel->rp, tunnel->rlen);
 		if (rv > 0) {
 			arms_get_time_remaining(&obj->timeout, 30);
 			tunnel->rp += rv;
@@ -683,7 +684,8 @@ ssltunnel_proxy_response(struct arms_schedule *obj, int event)
 		break;
 	}
 
-	tunnel->rlen = read(obj->fd, tunnel->rbuf, sizeof(tunnel->rbuf) - 1);
+	tunnel->rlen = arms_read(obj->fd, tunnel->rbuf,
+	    sizeof(tunnel->rbuf) - 1);
 	if (tunnel->rlen > 0) {
 		int n, major, minor, result;
 
@@ -1314,7 +1316,7 @@ rerun_s:
 		switch (rv) {
 		case TR_WANT_READ:
 			/* if read data is partially, continue this. */
-			if (SSL_pending(tunnel->ssl) > 0)
+			if (arms_ssl_pending(tunnel->ssl) > 0)
 				goto rerun_s;
 			arms_get_time_remaining(&obj->timeout, 30);
 			return SCHED_CONTINUE_THIS;
@@ -1372,7 +1374,7 @@ rerun_d:
 		switch (rv) {
 		case TR_WANT_READ:
 			/* if read data is partially, continue this. */
-			if (SSL_pending(tunnel->ssl) > 0)
+			if (arms_ssl_pending(tunnel->ssl) > 0)
 				goto rerun_d;
 			return SCHED_CONTINUE_THIS;
 
@@ -1580,7 +1582,7 @@ rerun:
 		break;
 
 	case TR_WANT_READ:
-		if (SSL_pending(tunnel->ssl) > 0)
+		if (arms_ssl_pending(tunnel->ssl) > 0)
 			goto rerun;
 	default:
 		break;

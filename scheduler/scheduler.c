@@ -1,4 +1,4 @@
-/*	$Id: scheduler.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: scheduler.c 22684 2012-08-13 00:35:54Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -36,6 +36,7 @@
 #include <sys/select.h>
 #include <libarms/queue.h>
 
+#include <libarms/sock.h>
 #include <libarms/time.h>
 #include <libarms/malloc.h>
 #include <scheduler/scheduler.h>
@@ -278,7 +279,8 @@ arms_scheduler(void)
 		FD_ZERO(&wfds);
 		maxfd = io_fdset(&rfds, &wfds);
 		to = min_timeout(&timo);
-		fd = select(maxfd + 1, &rfds, &wfds, NULL, to ? &timo : NULL);
+		fd = arms_select(maxfd + 1, &rfds, &wfds, NULL,
+		    to ? &timo : NULL);
 		if (fd > 0) {
 			/* I/O detected or timeout*/
 			call_io_method(&rfds, &wfds);

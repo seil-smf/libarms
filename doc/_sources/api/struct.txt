@@ -151,6 +151,12 @@ arms_line_desc_t
        :c:macro:`ARMS_LINE_PPPOE`
            PPPoE回線を利用する。
            line_conf には :c:type:`arms_line_conf_pppoe_t` を指定する。
+       :c:macro:`ARMS_LINE_ANONPPPOE_IPV6`
+           匿名PPPoE回線(IPv6接続)を利用する。IIJから提供された専用libarmsに限り利用可能。
+           line_conf には :c:type:`arms_line_conf_anonpppoe_t` を指定する。
+       :c:macro:`ARMS_LINE_PPPOE_IPV6`
+           PPPoE回線(IPv6接続)を利用する。
+           line_conf には :c:type:`arms_line_conf_pppoe_t` を指定する。
        :c:macro:`ARMS_LINE_DHCP`
            DHCP回線を利用する。
            line_conf には :c:type:`arms_line_conf_dhcp_t` を指定する。
@@ -192,12 +198,12 @@ arms_line_conf_anonpppoe_t
   い。制御コールバックを呼ぶ時点で自動的にセットされる。制御コールバッ
   クが呼ばれる際のパラメータは以下の通り::
   
-    line_type = ARMS_LINE_PPPOE
+    line_type = ARMS_LINE_PPPOE あるいは ARMS_LINE_PPPOE_IPV6
     line_conf.ifindex = 指定したifindex
     line_conf.id = 匿名アカウント用ID
     line_conf.pass = 匿名アカウント用Passphrase
 
-  制御コールバックが、ARMS_LINE_ANONPPPOE で呼ばれることはない。
+  制御コールバックが、ARMS_LINE_ANONPPPOE や ARMS_LINE_ANONPPPOE_IPV6 で呼ばれることはない。
 
 arms_line_conf_pppoe_t
 ----------------------

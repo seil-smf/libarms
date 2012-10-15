@@ -1,4 +1,4 @@
-/*	$Id: lsconfig.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: lsconfig.c 21546 2012-03-08 04:26:16Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -58,6 +58,8 @@
  * (optional lines)
  *	pppoe_id\n	foobar@example.jp	(anonymous)
  *	pppoe_pass\n	pass1234
+ *	pppoev6_id\n	foobar@example.jp	(anonymous)
+ *	pppoev6_pass\n	pass1234
  *	\n
  *	tel_no\n	09012345678		(anonymous)
  *	cid		1
@@ -152,6 +154,19 @@ linebuf_read(char **bufp, size_t *len)
 	delete_nl(line);\
 	ls_conf->member = line
 
+#define READ_OPTIONAL_LINE_OR_NEWLINE(member) \
+	line = linebuf_read(&bufp, &len);\
+	if (line == NULL) {\
+		/* no more line, no exist optional config */\
+		return ls_conf;\
+	}\
+	if (line[0] == '\n') {\
+		free(line);\
+		line = NULL;\
+	}\
+	delete_nl(line);\
+	ls_conf->member = line
+
 ls_config_t *
 parse_lsconfig(char *buf, size_t len)
 {
@@ -212,9 +227,16 @@ parse_lsconfig(char *buf, size_t len)
 	READ_OPTIONAL_LINE(anonid);
 	/* anonpass */
 	READ_OPTIONAL_LINE(anonpass);
+	/* annonid for ipv6 or delimiter (optional) */
+	READ_OPTIONAL_LINE_OR_NEWLINE(v6anonid);
+	if (line != NULL) {
+		/* anonpass for ipv6 */
+		READ_OPTIONAL_LINE(v6anonpass);
+		/* check delimiter */
+		READ_OPTIONAL_NEWLINE();
+	}
 
 	/* mobile configuration, optional. */
-	READ_OPTIONAL_NEWLINE();
 	/* telno */
 	READ_OPTIONAL_LINE(telno);
 	/* cid */
@@ -233,6 +255,7 @@ parse_lsconfig(char *buf, size_t len)
 #undef READ_INT
 #undef READ_OPTIONAL_NEWLINE
 #undef READ_OPTIONAL_LINE
+#undef READ_OPTIONAL_LINE_OR_NEWLINE
 
 #define FREEM(member) if (ls_conf->member) free(ls_conf->member)
 void
@@ -245,6 +268,8 @@ free_lsconfig(ls_config_t *ls_conf)
 	}
 	FREEM(anonid);
 	FREEM(anonpass);
+	FREEM(v6anonid);
+	FREEM(v6anonpass);
 	FREEM(telno);
 	FREEM(cid);
 	FREEM(apn);

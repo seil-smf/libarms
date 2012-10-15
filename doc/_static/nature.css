@@ -238,9 +238,9 @@ div.body h6 {
     //text-shadow: 0px 1px 0 black;
 }
  
-div.body h1 { margin-top: 0; font-size: 190%; color: #fff; background: #666 url(h1.gif) top left repeat-x; border-left:5px solid #344F87; border-right:2px solid #ccc; }
-div.body h2 { font-size: 145%; font-weight:bold; color: #fff; background: #A8C5B3 url(h2.gif) top left repeat-x; border-left:4px solid #4366AF; border-right:2px solid #ccc; }
-div.body h3 { font-size: 120%; background: #D8DEE3 url(h3.gif) top left repeat-x; border-left:4px solid #7D90B5; border-right:2px solid #ccc; }
+div.body h1 { margin-top: 0; font-size: 190%; color: #fff; background: #666 url(h1.gif) top left repeat-x; border-left:5px solid #8D4130; border-right:2px solid #ccc; }
+div.body h2 { font-size: 145%; font-weight:bold; color: #fff; background: #A8C5B3 url(h2.gif) top left repeat-x; border-left:4px solid #9D6336; border-right:2px solid #ccc; }
+div.body h3 { font-size: 120%; background: #D8DEE3 url(h3.gif) top left repeat-x; border-left:4px solid #AE896E; border-right:2px solid #ccc; }
 div.body h4 { font-size: 110%; background-color: #E0E8EF; }
 div.body h5 { font-size: 100%; background-color: #E0E8EF; }
 div.body h6 { font-size: 100%; background-color: #E0E8EF; }

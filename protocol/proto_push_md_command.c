@@ -1,4 +1,4 @@
-/*	$Id: proto_push_md_command.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: proto_push_md_command.c 22861 2012-09-05 09:40:59Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -231,6 +231,7 @@ md_command_response(transaction *tr, char *buf, int len, int *wrote)
 	case BEGIN:
 		libarms_log(ARMS_LOG_DEBUG, "Generate response to RS");
 		arg->result[0] = '\0';
+		arg->next = ARMS_FRAG_FIRST;
 		rv = res->callbacks.command_cb(
 			arg->mod_id,
 			ARMS_PUSH_MD_COMMAND,
@@ -297,7 +298,7 @@ md_command_response(transaction *tr, char *buf, int len, int *wrote)
 		return TR_WANT_WRITE;
 	case NEXT_RESULT:
 		arg->result[arg->resultlen] = '\0';
-		arg->next = 0;
+		arg->next = ARMS_FRAG_CONTINUE;
 		rv = res->callbacks.command_cb(
 			arg->mod_id,
 			ARMS_PUSH_MD_COMMAND,

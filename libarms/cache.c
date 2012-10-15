@@ -1,4 +1,4 @@
-/*	$Id: cache.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: cache.c 22146 2012-06-14 02:55:55Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -38,8 +38,13 @@
 #include <libarms_resource.h>
 #include <libarms/malloc.h>
 
-/* update version value if changed struct arms_dumped_state */
-#define ARMS_STATE_VERSION	1
+/*
+ * update version value if changed struct arms_dumped_state
+ * -: older version (check if size of struct as same)
+ * 1: initial
+ * 2: add ipv6 pppoe to line_defs[].type
+ */
+#define ARMS_STATE_VERSION	2
 
 /*
  * state (ls config cache): part of arms_res_t

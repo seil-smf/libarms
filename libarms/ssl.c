@@ -1,4 +1,4 @@
-/*	$Id: ssl.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: ssl.c 22685 2012-08-13 03:04:04Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -50,6 +50,13 @@ static X509 *ssl_cacert;
 
 static void free_certificate(void);
 static int verify_ls_cn(X509_STORE_CTX *, void *);
+
+void
+arms_ssl_init(void)
+{
+	SSL_load_error_strings();
+	SSL_library_init();
+}
 
 int
 arms_ssl_register_cacert(const char *cacert)
@@ -313,6 +320,88 @@ arms_ssl_new(SSL_CTX *ctx)
 }
 
 /*
+ * SSL_set_fd wrapper
+ */
+int
+arms_ssl_set_fd(SSL *ssl, int fd)
+{
+	return SSL_set_fd(ssl, fd);
+}
+
+/*
+ * SSL_CTX_get_cert_store wrapper
+ */
+X509_STORE *
+arms_ssl_ctx_get_cert_store(SSL_CTX *ctx)
+{
+	return SSL_CTX_get_cert_store(ctx);
+}
+
+/*
+ * X509_STORE_add_cert wrapper
+ */
+int
+arms_x509_store_add_cert(X509_STORE *store, X509 *cert)
+{
+	return X509_STORE_add_cert(store, cert);
+}
+
+/*
+ * SSL_CTX_set_verify_depth wrapper
+ */
+void
+arms_ssl_ctx_set_verify_depth(SSL_CTX *ctx, int depth)
+{
+	SSL_CTX_set_verify_depth(ctx, depth);
+}
+
+/*
+ * SSL_use_certificate wrapper
+ */
+int
+arms_ssl_use_certificate(SSL *ssl, X509 *cert)
+{
+	return SSL_use_certificate(ssl, cert);
+}
+
+/*
+ * SSL_use_PrivateKey wrapper
+ */
+int
+arms_ssl_use_privatekey(SSL *ssl, EVP_PKEY *key)
+{
+	return SSL_use_PrivateKey(ssl, key);
+}
+
+/*
+ * SSL_check_private_key wrapper
+ */
+int
+arms_ssl_check_private_key(SSL *ssl)
+{
+	return SSL_check_private_key(ssl);
+}
+
+/*
+ * SSL_set_ex_data wrapper
+ */
+int
+arms_ssl_set_ex_data(SSL *ssl, int idx, void *data)
+{
+	return SSL_set_ex_data(ssl, idx, data);
+}
+
+/*
+ * SSL_set_verify wrapper
+ */
+void
+arms_ssl_set_verify(SSL *ssl, int mode,
+    int (*callback)(int, X509_STORE_CTX *))
+{
+	SSL_set_verify(ssl, mode, callback);
+}
+
+/*
  * SSL_connect wrapper
  */
 int
@@ -342,6 +431,24 @@ arms_ssl_connect(SSL *ssl)
 		}
 	}
 	return rv;
+}
+
+/*
+ * SSL_accept wrapper
+ */
+int
+arms_ssl_accept(SSL *ssl)
+{
+	return SSL_accept(ssl);
+}
+
+/*
+ * SSL_pending wrapper
+ */
+int
+arms_ssl_pending(SSL *ssl)
+{
+	return SSL_pending(ssl);
 }
 
 /*
@@ -435,6 +542,15 @@ arms_ssl_write(SSL *ssl, const char *buf, int len)
 }
 
 /*
+ * SSL_get_error wrapper
+ */
+int
+arms_ssl_get_error(SSL *ssl, int rv)
+{
+	return SSL_get_error(ssl, rv);
+}
+
+/*
  * SSL_shutdown wrapper
  */
 void
@@ -475,4 +591,13 @@ void
 arms_ssl_ctx_free(SSL_CTX *ctx)
 {
 	SSL_CTX_free(ctx);
+}
+
+void
+arms_ssl_cleanup(void)
+{
+	CRYPTO_cleanup_all_ex_data();
+	ERR_free_strings();
+	ERR_remove_state(0);
+	EVP_cleanup();
 }

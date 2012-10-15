@@ -97,7 +97,7 @@ Pull はRS からの指示によって発生する。
 :c:type:`int` :c:data:`new_state`
   遷移後のステート
 
-:c:type:`void` :c:data:`*data`
+:c:type:`void` :c:data:`*udata`
   :c:func:`arms_pull` で指定したポインタ
 
 返り値

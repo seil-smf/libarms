@@ -1,4 +1,4 @@
-/*	$Id: scheduler.h 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: scheduler.h 22682 2012-08-12 23:36:58Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -97,14 +97,6 @@
 #define SCHED_FINISHED_SCHEDULER  3
 #define SET_NEW_METHOD(o, func)  o->method = func
 #endif
-
-/* close file descriptor and set it zero. */
-#define	CLOSE_FD(f)	do { \
-						if (f >= 0) { \
-							close(f); \
-							f = -1; \
-						} \
-					} while (0) \
 
 /*
  * schedule object

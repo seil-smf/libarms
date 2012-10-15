@@ -1,4 +1,4 @@
-/*	$Id: line.c 20818 2012-01-23 00:41:02Z m-oki $	*/
+/*	$Id: line.c 21273 2012-02-15 11:00:05Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -62,6 +62,9 @@ arms_line_type_str(int type)
 	case ARMS_LINE_PPPOE:
 		return "PPPoE";
 
+	case ARMS_LINE_PPPOE_IPV6:
+		return "PPPoE-IPv6";
+
 	case ARMS_LINE_DHCP:
 		return "DHCP";
 
@@ -114,6 +117,15 @@ arms_line_connect(arms_context_t *res, int conf, int idx, struct timeval *timo)
 		DPRINTF("line: connecting(%d): PPPoE", idx);
 #endif
 		res->line_af = AF_INET;
+		break;
+	case ARMS_LINE_PPPOE_IPV6:
+#if 0
+		DPRINTF("line: connecting(%d): PPPoE %s, %s", idx,
+		       line_conf->pppoe.id, line_conf->pppoe.pass);
+#else
+		DPRINTF("line: connecting(%d): PPPoE(IPv6)", idx);
+#endif
+		res->line_af = AF_INET6;
 		break;
 	case ARMS_LINE_DHCP:
 		DPRINTF("line: connecting(%d): DHCP", idx);
@@ -208,6 +220,9 @@ arms_line_disconnect(arms_context_t *res, int conf, int idx,
 		switch (line_type) {
 		case ARMS_LINE_PPPOE:
 			DPRINTF("line: disconnecting(%d): PPPoE", idx);
+			break;
+		case ARMS_LINE_PPPOE_IPV6:
+			DPRINTF("line: disconnecting(%d): PPPoE(IPv6)", idx);
 			break;
 		case ARMS_LINE_DHCP:
 			DPRINTF("line: disconnecting(%d): DHCP", idx);

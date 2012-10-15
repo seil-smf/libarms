@@ -32,7 +32,7 @@ libarms は :c:func:`arms_event_loop` 実行中、一定間隔で本関数を呼
   内部ステートを保持するコンテキスト構造体ポインタ。
   :c:func:`arms_init` により取得したポインタをそのまま指定する。
 
-:c:type:`void` :c:data:`*data`
+:c:type:`void` :c:data:`*udata`
    :c:func:`arms_pull` で指定したポインタ
 
 返り値

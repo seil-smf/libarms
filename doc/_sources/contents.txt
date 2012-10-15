@@ -13,6 +13,7 @@ Contents:
    impl/impl_top
    api/api_top
    appendix/appendix_top
+   armsd/armsd_top
 
 
 Indices and tables

@@ -1,4 +1,4 @@
-/*	$Id: armsd_miconf.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: armsd_miconf.c 22687 2012-08-13 06:36:52Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -661,6 +661,7 @@ acmi_set_lines(ACMI *acmi, int type, arms_line_desc_t *lines)
 				conf->anon_account, conf->anon_password);
 
 			conf->line_defs[i].type = ARMS_LINE_PPPOE;
+
 			conf->line_defs[i].conf.apppoe.ifindex =
 			    ((arms_line_conf_anonpppoe_t *)line_conf)->ifindex;
 			if (conf->anon_account)
@@ -677,8 +678,37 @@ acmi_set_lines(ACMI *acmi, int type, arms_line_desc_t *lines)
 				strlcpy(conf->line_defs[i].conf.pppoe.pass,
 					anon_account[1], MAX_PPP_PASS);
 			break;
+		case ARMS_LINE_ANONPPPOE_IPV6:
+			DPRINTF(" anonpppoev6 --> %s, %s",
+				conf->anon_account_v6, conf->anon_password_v6);
+
+			conf->line_defs[i].type = ARMS_LINE_PPPOE_IPV6;
+			conf->line_defs[i].conf.apppoe.ifindex =
+			    ((arms_line_conf_anonpppoe_t *)line_conf)->ifindex;
+			if (conf->anon_account_v6)
+				strlcpy(conf->line_defs[i].conf.pppoe.id,
+					conf->anon_account_v6, MAX_PPP_ID);
+			else
+				strlcpy(conf->line_defs[i].conf.pppoe.id,
+					anon_account[0], MAX_PPP_ID);
+
+			if (conf->anon_password_v6)
+				strlcpy(conf->line_defs[i].conf.pppoe.pass,
+					conf->anon_password_v6, MAX_PPP_PASS);
+			else
+				strlcpy(conf->line_defs[i].conf.pppoe.pass,
+					anon_account[1], MAX_PPP_PASS);
+			break;
 		case ARMS_LINE_PPPOE:
-			DPRINTF(" specified pppoe");
+		case ARMS_LINE_PPPOE_IPV6:
+			switch (ltype) {
+			case ARMS_LINE_PPPOE:
+				DPRINTF(" specified pppoe");
+				break;
+			case ARMS_LINE_PPPOE_IPV6:
+				DPRINTF(" specified pppoe(IPv6)");
+				break;
+			}
 			memcpy(&conf->line_defs[i].conf.pppoe,
 			       line_conf,
 			       sizeof(conf->line_defs[i].conf.pppoe));
@@ -890,6 +920,25 @@ acmi_set_anonpppoe(ACMI *acmi, int type, char *id, char *pass)
 }
 
 /**
+ * register Anonymous PPPoE account for IPv6
+ */
+int
+acmi_set_anonpppoe_ipv6(ACMI *acmi, int type, char *id, char *pass)
+{
+	acmi_config_t *db;
+
+	if (acmi_assert(acmi, type) < 0) {
+		return -1;
+	}
+	DPRINTF("acmi_set_anonpppoe: id %s, pass %s", id, pass);
+	db = &acmi->mi_config[type];
+	db->anon_account_v6 = id;
+	db->anon_password_v6 = pass;
+
+	return 0;
+}
+
+/**
  * register Anonymous mobile account
  */
 int
@@ -902,7 +951,7 @@ acmi_set_anonmobile(ACMI *acmi, int type,
 	if (acmi_assert(acmi, type) < 0) {
 		return -1;
 	}
-	DPRINTF("acmi_set_anonpppoe: id %s, pass %s", id, pass);
+	DPRINTF("%s: id %s, pass %s", __func__, id, pass);
 	db = &acmi->mi_config[type];
 	db->m_telno = telno;
 	db->m_cid = cid;

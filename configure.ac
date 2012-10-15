@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.65])
-AC_INIT(libarms, 5.01)
+AC_INIT(libarms, 5.10)
 AM_INIT_AUTOMAKE
 
 AC_CONFIG_SRCDIR([http/url.c])

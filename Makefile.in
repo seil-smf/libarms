@@ -15,7 +15,7 @@
 
 @SET_MAKE@
 
-#	$Id: Makefile.am 20958 2012-01-31 04:23:29Z m-oki $
+#	$Id: Makefile.am 22867 2012-09-06 06:30:55Z m-oki $
 
 # current:revision:age
 # current: increment if interface change.
@@ -90,17 +90,17 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libarms_la_LIBADD =
 am__objects_1 = arms_context.lo arms_pull.lo cache.lo \
 	arms_push_method_query.lo arms_event_loop.lo malloc.lo \
-	proxy.lo time.lo libarms.lo lsconfig.lo log.lo ssl.lo \
-	version.lo
-am__objects_2 = getaddrinfo.lo getnameinfo.lo strtok_r.lo strlcpy.lo
-am__objects_3 = armsd_miconf.lo armsd_conf_parse.lo \
+	proxy.lo time.lo libarms.lo lsconfig.lo log.lo version.lo
+am__objects_2 = sock.lo ssl.lo
+am__objects_3 = getaddrinfo.lo getnameinfo.lo strtok_r.lo strlcpy.lo
+am__objects_4 = armsd_miconf.lo armsd_conf_parse.lo \
 	armsd_miconf_binary.lo
-am__objects_4 = module_db_mi.lo
-am__objects_5 = scheduler.lo
-am__objects_6 = server.lo
-am__objects_7 = transaction.lo state.lo retry.lo line.lo echo.lo \
+am__objects_5 = module_db_mi.lo
+am__objects_6 = scheduler.lo
+am__objects_7 = server.lo
+am__objects_8 = transaction.lo state.lo retry.lo line.lo echo.lo \
 	tunnel_chunk.lo ssltunnel.lo
-am__objects_8 = arms_methods.lo arms_req_builder.lo arms_req_parser.lo \
+am__objects_9 = arms_methods.lo arms_req_builder.lo arms_req_parser.lo \
 	arms_res_builder.lo arms_res_parser.lo proto_error.lo \
 	proto_pull_ls.lo proto_pull_rs.lo proto_push_ready.lo \
 	proto_push_check_transaction.lo proto_push_clear_status.lo \
@@ -111,15 +111,15 @@ am__objects_8 = arms_methods.lo arms_req_builder.lo arms_req_parser.lo \
 	proto_push_read_status.lo proto_push_read_storage.lo \
 	proto_push_reboot.lo proto_push_traceroute.lo util.lo \
 	arms_xml_tag.lo
-am__objects_9 = axp.lo handler.lo
-am__objects_10 = chunk.lo base64.lo http_parser.lo http_builder.lo \
+am__objects_10 = axp.lo handler.lo
+am__objects_11 = chunk.lo base64.lo http_parser.lo http_builder.lo \
 	url.lo
-am__objects_11 = hb_api.lo hb_routine.lo
-am__objects_12 = $(am__objects_1) $(am__objects_2) $(am__objects_3) \
+am__objects_12 = hb_api.lo hb_routine.lo
+am__objects_13 = $(am__objects_1) $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4) $(am__objects_5) $(am__objects_6) \
 	$(am__objects_7) $(am__objects_8) $(am__objects_9) \
-	$(am__objects_10) $(am__objects_11)
-am_libarms_la_OBJECTS = $(am__objects_12)
+	$(am__objects_10) $(am__objects_11) $(am__objects_12)
+am_libarms_la_OBJECTS = $(am__objects_13)
 libarms_la_OBJECTS = $(am_libarms_la_OBJECTS)
 libarms_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -270,13 +270,13 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-libarms_la_LDFLAGS = -version-info 0:1:0
+libarms_la_LDFLAGS = -version-info 0:2:0
 ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = -Wall
 lib_LTLIBRARIES = libarms.la
 libarms_la_SOURCES = $(LIBARMS_SRCS)
 include_HEADERS = include/libarms.h
-LIBARMS_SRCS = ${LIB_SRCS} ${COMPAT_SRCS} ${MICONF_SRCS} \
+LIBARMS_SRCS = ${LIB_SRCS} ${WRAPPER_SRCS} ${COMPAT_SRCS} ${MICONF_SRCS} \
 		${MODULE_SRCS} ${SCHED_SRCS} ${SERVER_SRCS} ${TRANS_SRCS} \
 		${PROTOCOL_SRCS} ${XML_SRCS} ${HTTP_SRCS} ${PORT_SRCS} \
 		${HB_SRCS}
@@ -292,8 +292,10 @@ LIB_SRCS = libarms/arms_context.c \
 		libarms/libarms.c \
 		libarms/lsconfig.c \
 		libarms/log.c \
-		libarms/ssl.c \
 		libarms/version.c
+
+WRAPPER_SRCS = libarms/sock.c \
+		libarms/ssl.c
 
 COMPAT_SRCS = compat/getaddrinfo.c \
 		compat/getnameinfo.c \
@@ -370,6 +372,7 @@ http/http.h \
 libarms/base64.h \
 libarms/malloc.h \
 libarms/queue.h \
+libarms/sock.h \
 libarms/ssl.h \
 libarms/time.h \
 miconf/armsd_conf_parse.h \
@@ -380,12 +383,12 @@ server/server.h \
 transaction/ssltunnel.h \
 transaction/transaction.h \
 xml/axp_internal.h \
-armsd/Makefile \
-armsd/cacert.pem \
-armsd/callback.c \
-armsd/callback.h \
-armsd/lines.h \
-armsd/main.c
+simple-armsd/Makefile \
+simple-armsd/cacert.pem \
+simple-armsd/callback.c \
+simple-armsd/callback.h \
+simple-armsd/lines.h \
+simple-armsd/main.c
 
 nobase_dist_doc_DATA = \
 doc/api/api_top.html \
@@ -434,6 +437,7 @@ doc/api/arms_size_of_state.html \
 doc/api/arms_state_cb_t.html \
 doc/api/error_code.html \
 doc/api/struct.html \
+doc/armsd/armsd_top.html \
 doc/_sources/api/api_top.txt \
 doc/_sources/api/arms_app_event_cb_t.txt \
 doc/_sources/api/arms_command_cb_t.txt \
@@ -521,6 +525,8 @@ doc/search.html \
 doc/_images/libarms-push.png \
 doc/_images/libarms-system.png \
 doc/_images/libarms-pull.png \
+doc/_images/armsd-push.png \
+doc/_images/armsd-pull.png \
 doc/_static/pygments.css \
 doc/_static/basic.css \
 doc/_static/doctools.js \
@@ -696,6 +702,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/retry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scheduler.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ssl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ssltunnel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/state.Plo@am__quote@
@@ -806,19 +813,26 @@ log.lo: libarms/log.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o log.lo `test -f 'libarms/log.c' || echo '$(srcdir)/'`libarms/log.c
 
-ssl.lo: libarms/ssl.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ssl.lo -MD -MP -MF $(DEPDIR)/ssl.Tpo -c -o ssl.lo `test -f 'libarms/ssl.c' || echo '$(srcdir)/'`libarms/ssl.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ssl.Tpo $(DEPDIR)/ssl.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='libarms/ssl.c' object='ssl.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ssl.lo `test -f 'libarms/ssl.c' || echo '$(srcdir)/'`libarms/ssl.c
-
 version.lo: libarms/version.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT version.lo -MD -MP -MF $(DEPDIR)/version.Tpo -c -o version.lo `test -f 'libarms/version.c' || echo '$(srcdir)/'`libarms/version.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/version.Tpo $(DEPDIR)/version.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='libarms/version.c' object='version.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o version.lo `test -f 'libarms/version.c' || echo '$(srcdir)/'`libarms/version.c
+
+sock.lo: libarms/sock.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sock.lo -MD -MP -MF $(DEPDIR)/sock.Tpo -c -o sock.lo `test -f 'libarms/sock.c' || echo '$(srcdir)/'`libarms/sock.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/sock.Tpo $(DEPDIR)/sock.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='libarms/sock.c' object='sock.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sock.lo `test -f 'libarms/sock.c' || echo '$(srcdir)/'`libarms/sock.c
+
+ssl.lo: libarms/ssl.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ssl.lo -MD -MP -MF $(DEPDIR)/ssl.Tpo -c -o ssl.lo `test -f 'libarms/ssl.c' || echo '$(srcdir)/'`libarms/ssl.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ssl.Tpo $(DEPDIR)/ssl.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='libarms/ssl.c' object='ssl.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ssl.lo `test -f 'libarms/ssl.c' || echo '$(srcdir)/'`libarms/ssl.c
 
 getaddrinfo.lo: compat/getaddrinfo.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT getaddrinfo.lo -MD -MP -MF $(DEPDIR)/getaddrinfo.Tpo -c -o getaddrinfo.lo `test -f 'compat/getaddrinfo.c' || echo '$(srcdir)/'`compat/getaddrinfo.c

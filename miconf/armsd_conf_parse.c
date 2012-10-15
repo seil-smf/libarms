@@ -1,4 +1,4 @@
-/*	$Id: armsd_conf_parse.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: armsd_conf_parse.c 22136 2012-06-13 06:32:51Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -213,6 +213,9 @@ tok2num(char *tok)
 	else if (cmp_token("line-pppoe", tok) == 0) {
 		return TOK_LPPPOE;
 	}
+	else if (cmp_token("line-pppoe-ipv6", tok) == 0) {
+		return TOK_LPPPOE_IPV6;
+	}
 	else if (cmp_token("line-mobile", tok) == 0) {
 		return TOK_LMOBILE;
 	}
@@ -285,6 +288,20 @@ parse_tokens(acmi_config_t *config, int idx, enum miconf_parse_st *st, char *tok
 			if (idx == 0) {
 				config->line_defs[config->num_line].type = 
 					ARMS_LINE_PPPOE;
+				*st = ST_LINE;
+			}
+			break;
+		case TOK_APPPOE_IPV6:
+			if (idx == 0) {
+				config->line_defs[config->num_line].type = 
+					ARMS_LINE_ANONPPPOE_IPV6;
+				*st = ST_LINE;
+			}
+			break;
+		case TOK_LPPPOE_IPV6:
+			if (idx == 0) {
+				config->line_defs[config->num_line].type = 
+					ARMS_LINE_PPPOE_IPV6;
 				*st = ST_LINE;
 			}
 			break;
@@ -375,14 +392,14 @@ parse_tokens(acmi_config_t *config, int idx, enum miconf_parse_st *st, char *tok
 		*st = ST_LINE;
 		break;
 	case ST_LINE_ACCOUNT:
-		if (TYPEIS(PPPOE))
+		if (TYPEIS(PPPOE) || TYPEIS(PPPOE_IPV6))
 			strlcpy(pppoeconf->id, tok, MAX_PPP_ID);
 		if (TYPEIS(MOBILE))
 			strlcpy(mobileconf->id, tok, MAX_MOBILE_PPP_ID);
 		*st = ST_LINE;
 		break;
 	case ST_LINE_PASSWD:
-		if (TYPEIS(PPPOE))
+		if (TYPEIS(PPPOE) || TYPEIS(PPPOE_IPV6))
 			strlcpy(pppoeconf->pass, tok, MAX_PPP_PASS);
 		if (TYPEIS(MOBILE))
 			strlcpy(mobileconf->pass, tok, MAX_MOBILE_PPP_PASS);

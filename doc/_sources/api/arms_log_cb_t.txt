@@ -32,7 +32,7 @@ libarms 内で発生したイベントのログを通知する。ログコード
    ログ文字列(NULL終端)
    ARMS標準のログ文字列
 
-:c:type:`void` :c:data:`*data`
+:c:type:`void` :c:data:`*udata`
    :c:func:`arms_pull` で指定したポインタ
 
 返り値

@@ -1,4 +1,4 @@
-/*	$Id: transaction.h 20856 2012-01-23 12:06:27Z m-oki $	*/
+/*	$Id: transaction.h 22682 2012-08-12 23:36:58Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -247,6 +247,15 @@ struct tr_list *get_tr_list(void);
 #define sockaddr_storage sockaddr_in
 #define ss_family sin_family
 #endif
+
+/* close file descriptor and set it zero. */
+#define	CLOSE_FD(f) \
+	do {							  \
+		if (f >= 0) {					  \
+			arms_close(f);				  \
+			f = -1;					  \
+		}						  \
+	} while (0)						  \
 
 int arms_line_connect(arms_context_t *, int, int, struct timeval *);
 int arms_line_disconnect(arms_context_t *, int, int, struct timeval *);

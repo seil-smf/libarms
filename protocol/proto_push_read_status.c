@@ -1,4 +1,4 @@
-/*	$Id: proto_push_read_status.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: proto_push_read_status.c 22870 2012-09-06 08:27:16Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -297,9 +297,7 @@ read_status_done(transaction *tr, char *buf, int len, int *wrote)
 		     ARMS_RV_DATA_MASK(rv) > sizeof(arg->result))) {
 			/* callback error */
 			*wrote = snprintf(buf, len,
-			    "<status-report id=\"%d\" result=\"402\">"
-			    "%s"
-			    "</status-report>",
+			    "<status-report id=\"%d\" result=\"402\">%s",
 			    arg->status_list[arg->i].id,
 			    arms_escape(arg->result));
 		} else if (ARMS_RESULT_IS_BYTES(rv)) {

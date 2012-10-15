@@ -1,5 +1,5 @@
 /*
- * :$Id: armsd_conf.h 12208 2008-12-19 03:10:35Z m-oki $
+ * :$Id: armsd_conf.h 22796 2012-08-27 11:00:02Z m-oki $
  * ARMS Client Daemon
  * (c) 2005 Internet Initiative Japan, Inc. All rights reserved.
  */
@@ -103,6 +103,7 @@ int acmi_get_lltimeout(ACMI *, int);
 
 /* set/get anonymous pppoe account */
 int acmi_set_anonpppoe(ACMI *, int, char *, char *);
+int acmi_set_anonpppoe_ipv6(ACMI *, int, char *, char *);
 int acmi_set_anonmobile(ACMI *, int, char *, char *, char *, char *, char *, char *);
 char *acmi_get_anon_id(ACMI *, int);
 char *acmi_get_anon_pass(ACMI *, int);

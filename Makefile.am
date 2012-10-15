@@ -1,11 +1,11 @@
-#	$Id: Makefile.am 20958 2012-01-31 04:23:29Z m-oki $
+#	$Id: Makefile.am 22867 2012-09-06 06:30:55Z m-oki $
 
 # current:revision:age
 # current: increment if interface change.
 # revision: increment if source change.
 # age: increment if function add.
 
-libarms_la_LDFLAGS= -version-info 0:1:0
+libarms_la_LDFLAGS= -version-info 0:2:0
 
 ACLOCAL_AMFLAGS=-I m4
 AM_CPPFLAGS= -Wall
@@ -14,7 +14,7 @@ lib_LTLIBRARIES=libarms.la
 libarms_la_SOURCES=$(LIBARMS_SRCS)
 include_HEADERS=include/libarms.h
 
-LIBARMS_SRCS=	${LIB_SRCS} ${COMPAT_SRCS} ${MICONF_SRCS} \
+LIBARMS_SRCS=	${LIB_SRCS} ${WRAPPER_SRCS} ${COMPAT_SRCS} ${MICONF_SRCS} \
 		${MODULE_SRCS} ${SCHED_SRCS} ${SERVER_SRCS} ${TRANS_SRCS} \
 		${PROTOCOL_SRCS} ${XML_SRCS} ${HTTP_SRCS} ${PORT_SRCS} \
 		${HB_SRCS}
@@ -30,8 +30,10 @@ LIB_SRCS=	libarms/arms_context.c \
 		libarms/libarms.c \
 		libarms/lsconfig.c \
 		libarms/log.c \
-		libarms/ssl.c \
 		libarms/version.c
+
+WRAPPER_SRCS=	libarms/sock.c \
+		libarms/ssl.c
 
 COMPAT_SRCS=	compat/getaddrinfo.c \
 		compat/getnameinfo.c \
@@ -111,6 +113,7 @@ http/http.h \
 libarms/base64.h \
 libarms/malloc.h \
 libarms/queue.h \
+libarms/sock.h \
 libarms/ssl.h \
 libarms/time.h \
 miconf/armsd_conf_parse.h \
@@ -121,12 +124,12 @@ server/server.h \
 transaction/ssltunnel.h \
 transaction/transaction.h \
 xml/axp_internal.h \
-armsd/Makefile \
-armsd/cacert.pem \
-armsd/callback.c \
-armsd/callback.h \
-armsd/lines.h \
-armsd/main.c
+simple-armsd/Makefile \
+simple-armsd/cacert.pem \
+simple-armsd/callback.c \
+simple-armsd/callback.h \
+simple-armsd/lines.h \
+simple-armsd/main.c
 
 nobase_dist_doc_DATA= \
 doc/api/api_top.html \
@@ -175,6 +178,7 @@ doc/api/arms_size_of_state.html \
 doc/api/arms_state_cb_t.html \
 doc/api/error_code.html \
 doc/api/struct.html \
+doc/armsd/armsd_top.html \
 doc/_sources/api/api_top.txt \
 doc/_sources/api/arms_app_event_cb_t.txt \
 doc/_sources/api/arms_command_cb_t.txt \
@@ -262,6 +266,8 @@ doc/search.html \
 doc/_images/libarms-push.png \
 doc/_images/libarms-system.png \
 doc/_images/libarms-pull.png \
+doc/_images/armsd-push.png \
+doc/_images/armsd-pull.png \
 doc/_static/pygments.css \
 doc/_static/basic.css \
 doc/_static/doctools.js \

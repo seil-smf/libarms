@@ -1,4 +1,4 @@
-/*	$Id: armsd_conf_parse.h 22136 2012-06-13 06:32:51Z m-oki $	*/
+/*	$Id$	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -27,54 +27,24 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __ARMSD_CONF_PARSE_H__
-#define __ARMSD_CONF_PARSE_H__
-enum miconf_tokens {
-	TOK_INVAL = 0,
-	TOK_APPPOE, /* line-apppoe */
-	TOK_LPPPOE, /* line-pppoe */
-	TOK_APPPOE_IPV6, /* line-apppoe-ipv6 */
-	TOK_LPPPOE_IPV6, /* line-pppoe-ipv6 */
-	TOK_LDHCP,  /* line-dhcp */
-	TOK_AMOBILE,/* line-amobile */
-	TOK_LMOBILE,/* line-mobile */
-	TOK_LSTATIC,/* line-static */
-	TOK_LRA,    /* line-ra */
+#ifndef __LIBARMS_SOCK_H__
+#define __LIBARMS_SOCK_H__
 
-	TOK_IFINDEX, /* ifindex */
-	TOK_ACCOUNT, /* account */
-	TOK_PASSWD, /* password */
+#include <sys/socket.h>
 
-	TOK_TELNO,  /* tel number */
-	TOK_CID,    /* cid */
-	TOK_APN,    /* apn */
-	TOK_PDP,    /* PDP type */
-	TOK_IPADDR, /* IP address */
+int arms_socket(int, int, int);
+int arms_connect(int, const struct sockaddr *, socklen_t);
+int arms_accept(int, struct sockaddr *, socklen_t *);
+int arms_getsockname(int, struct sockaddr *, socklen_t *);
+int arms_getsockopt(int, int, int, void *, socklen_t *);
+int arms_setsockopt(int, int, int, const void *, socklen_t);
+int arms_select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
+int arms_bind(int, const struct sockaddr *, socklen_t);
+int arms_listen(int, int);
+ssize_t arms_read(int, void *, size_t);
+ssize_t arms_write(int, const void *, size_t);
+int arms_close(int);
+int arms_fcntl(int, int, int);
+int arms_ioctl(int, unsigned long, void *);
 
-	TOK_RSCERT, /* rs-certificate */
-
-	TOK_OC, /* { */
-	TOK_CC, /* } */
-	TOK_SC, /* ; */
-
-	TOK_BEGIN_CERT, /* -----BEGIN */
-	TOK_END_CERT, /* -----END */
-	TOK_CERT, /* CERTIFICATE----- */
-};
-
-enum miconf_parse_st {
-	ST_INITIAL = 0,
-	ST_LINE,
-	ST_LINE_IFINDEX,
-	ST_LINE_ACCOUNT,
-	ST_LINE_PASSWD,
-	ST_LINE_TELNO,
-	ST_LINE_CID,
-	ST_LINE_APN,
-	ST_LINE_PDP,
-	ST_LINE_IPADDR,
-	ST_RSCERT,
-};
-
-int text_config_parse(ACMI *acmi, int idx, char *src, int len);
-#endif /* __ARMSD_CONF_PARSE_H__ */
+#endif

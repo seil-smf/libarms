@@ -63,7 +63,7 @@ Location-Config で提供される情報は、以下の通りである。
 
 回線情報は、以下の4種類のうちいずれか1つとなる。
 
-PPPoE::
+PPPoE(IPv4)::
 
   line-pppoe {
       ifindex <n>;
@@ -101,6 +101,14 @@ RA::
   line-static {
       ifindex <n>;
       ipaddress <ipaddress>;
+  };
+
+PPPoE(IPv6)::
+
+  line-pppoe-ipv6 {
+      ifindex <n>;
+      account <account>;
+      password <password>;
   };
 
 ifindex はSA のインタフェースを識別するために利用する。

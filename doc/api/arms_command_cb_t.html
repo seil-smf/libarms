@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>(*arms_command_cb_t)() &mdash; libarms 5.01 documentation</title>
+    <title>(*arms_command_cb_t)() &mdash; libarms 5.10 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.01',
+        VERSION:     '5.10',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
     <script type="text/javascript" src="../_static/scroll.js"></script>
-    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="top" title="libarms 5.10 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="api_top.html" />
     <link rel="next" title="(*arms_state_cb_t)()" href="arms_state_cb_t.html" />
     <link rel="prev" title="(*arms_get_status_cb_t)()" href="arms_get_status_cb_t.html" /> 
@@ -146,8 +146,16 @@ buff に収められているデータのバイト数を表す。</p>
 result_buff として確保されたバッファ領域のバイト数を表す。
 バッファ長には0 が渡される可能性はない。</dd>
 <dt><tt class="xref c c-type docutils literal"><span class="pre">int</span></tt> <tt class="xref c c-data docutils literal"><span class="pre">*next</span></tt></dt>
-<dd><p class="first">コンフィグの分割送信を利用する場合のブロックの情報(フラグ)
-渡されたバッファ長がコールバックの実行結果を収めるには小さく、実行結果の分割取得を利用する場合、ブロックの情報(フラグ) を書き込む必要がある。</p>
+<dd><p class="first">呼ばれたときには、ポインタが指す領域に下記の値が入っている。</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_FIRST</span></tt></dt>
+<dd>そのモジュールにおいて最初の呼び出し</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_FRAG_CONTINUE</span></tt></dt>
+<dd>そのモジュールにおいて二度目以降の呼び出し</dd>
+</dl>
+</div></blockquote>
+<p>渡されたバッファ長がコールバックの実行結果を収めるには小さく、実行結果の分割取得を利用する場合、ブロックの情報(フラグ) を書き込む必要がある。</p>
 <dl class="last docutils">
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">(ARMS_FRAG_FIRST</span> <span class="pre">|</span> <span class="pre">ARMS_FRAG_FINISHED)</span></tt></dt>
 <dd>最初のブロックで、続くブロックはない</dd>
@@ -236,6 +244,8 @@ action に <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PU
 <ul>
 <li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
 <li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+<li><a href="/">SMF Developerサイト</a></li>
+<li><a href="/sacm/order.php">libarms動作検証用SACM利用申請</a></li>
 </ul>
         </div>
       </div>
@@ -253,7 +263,7 @@ action に <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PU
         <li class="right" >
           <a href="arms_get_status_cb_t.html" title="(*arms_get_status_cb_t)()"
              accesskey="P">前へ</a> |</li>
-        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+        <li><a href="../contents.html">libarms 5.10 documentation</a> &raquo;</li>
           <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -262,6 +272,29 @@ action に <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_PU
   このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
   <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
 </div>
+<script type="text/javascript">
+var pkBaseURL = "https://p.seil.jp/analytics/";
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+	var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
+	piwikTracker.trackPageView();
+	piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="https://p.seil.jp/analytics/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
+
+<script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-20473995-2']);
+ _gaq.push(['_trackPageview']);
+
+ (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
+
 
   </body>
 </html>

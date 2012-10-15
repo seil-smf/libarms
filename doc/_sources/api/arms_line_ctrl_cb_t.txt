@@ -50,6 +50,12 @@ line_actionで指定された処理をアプリケーション側で実行し、
    :c:macro:`ARMS_LINE_PPPOE`
        PPPoE回線を利用する。
        line_conf には :c:type:`arms_line_conf_pppoe_t` を指定する。
+   :c:macro:`ARMS_LINE_ANONPPPOE_IPV6`
+       匿名PPPoE回線(IPv6接続)を利用する。IIJから提供された専用libarmsに限り利用可能。
+       line_conf には :c:type:`arms_line_conf_anonpppoe_t` を指定する。
+   :c:macro:`ARMS_LINE_PPPOE_IPV6`
+       PPPoE回線(IPv6接続)を利用する。
+       line_conf には :c:type:`arms_line_conf_pppoe_t` を指定する。
    :c:macro:`ARMS_LINE_DHCP`
        DHCP回線を利用する。
        line_conf には :c:type:`arms_line_conf_dhcp_t` を指定する。
@@ -66,7 +72,7 @@ line_actionで指定された処理をアプリケーション側で実行し、
        Router Advertisement (RA)回線を利用する。
        line_conf には :c:type:`arms_line_conf_ra_t` を指定する。
 
-:c:type:`void` :c:data:`line_conf`
+:c:type:`void` :c:data:`*line_conf`
   line_typeに対する回線設定。回線種別毎に、上記に従ってキャストして利用する。ステータス調査( :c:macro:`ARMS_LINE_ACT_STATUS` )の場合はNULL。
 :c:type:`void` :c:data:`*udata`
   :c:func:`arms_pull` あるいは :c:func:`arms_event_loop` で指定したポインタ
@@ -90,3 +96,4 @@ line_actionで指定された処理をアプリケーション側で実行し、
 ヒストリ
 --------
 このAPIはVer1.00で追加された。
+:c:macro:`ARMS_LINE_ANONPPPOE_IPV6` および :c:macro:`ARMS_LINE_PPPOE_IPV6` はVer5.10で追加された。

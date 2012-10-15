@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>libarms データ構造リファレンス &mdash; libarms 5.01 documentation</title>
+    <title>libarms データ構造リファレンス &mdash; libarms 5.10 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.01',
+        VERSION:     '5.10',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
     <script type="text/javascript" src="../_static/scroll.js"></script>
-    <link rel="top" title="libarms 5.01 documentation" href="../index.html" />
+    <link rel="top" title="libarms 5.10 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="api_top.html" />
     <link rel="next" title="エラーコード/ログコード体系" href="error_code.html" />
     <link rel="prev" title="arms_hb_is_running()" href="arms_hb_is_running.html" /> 
@@ -252,6 +252,12 @@ line_conf には <a class="reference internal" href="#arms_line_conf_anonpppoe_t
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_PPPOE</span></tt></dt>
 <dd>PPPoE回線を利用する。
 line_conf には <a class="reference internal" href="#arms_line_conf_pppoe_t" title="arms_line_conf_pppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_pppoe_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_ANONPPPOE_IPV6</span></tt></dt>
+<dd>匿名PPPoE回線(IPv6接続)を利用する。IIJから提供された専用libarmsに限り利用可能。
+line_conf には <a class="reference internal" href="#arms_line_conf_anonpppoe_t" title="arms_line_conf_anonpppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_anonpppoe_t</span></tt></a> を指定する。</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_PPPOE_IPV6</span></tt></dt>
+<dd>PPPoE回線(IPv6接続)を利用する。
+line_conf には <a class="reference internal" href="#arms_line_conf_pppoe_t" title="arms_line_conf_pppoe_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_pppoe_t</span></tt></a> を指定する。</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LINE_DHCP</span></tt></dt>
 <dd>DHCP回線を利用する。
 line_conf には <a class="reference internal" href="#arms_line_conf_dhcp_t" title="arms_line_conf_dhcp_t"><tt class="xref c c-type docutils literal"><span class="pre">arms_line_conf_dhcp_t</span></tt></a> を指定する。</dd>
@@ -299,12 +305,12 @@ int <tt class="descname">ifindex</tt><a class="headerlink" href="#arms_line_conf
 PPPoE のアカウント情報はライブラリ内で保持しており、指定する必要はな
 い。制御コールバックを呼ぶ時点で自動的にセットされる。制御コールバッ
 クが呼ばれる際のパラメータは以下の通り:</p>
-<div class="highlight-python"><pre>line_type = ARMS_LINE_PPPOE
+<div class="highlight-python"><pre>line_type = ARMS_LINE_PPPOE あるいは ARMS_LINE_PPPOE_IPV6
 line_conf.ifindex = 指定したifindex
 line_conf.id = 匿名アカウント用ID
 line_conf.pass = 匿名アカウント用Passphrase</pre>
 </div>
-<p>制御コールバックが、ARMS_LINE_ANONPPPOE で呼ばれることはない。</p>
+<p>制御コールバックが、ARMS_LINE_ANONPPPOE や ARMS_LINE_ANONPPPOE_IPV6 で呼ばれることはない。</p>
 </dd></dl>
 
 </div>
@@ -851,6 +857,8 @@ int <tt class="descname">hop</tt><a class="headerlink" href="#arms_traceroute_in
 <ul>
 <li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
 <li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+<li><a href="/">SMF Developerサイト</a></li>
+<li><a href="/sacm/order.php">libarms動作検証用SACM利用申請</a></li>
 </ul>
         </div>
       </div>
@@ -868,7 +876,7 @@ int <tt class="descname">hop</tt><a class="headerlink" href="#arms_traceroute_in
         <li class="right" >
           <a href="arms_hb_is_running.html" title="arms_hb_is_running()"
              accesskey="P">前へ</a> |</li>
-        <li><a href="../contents.html">libarms 5.01 documentation</a> &raquo;</li>
+        <li><a href="../contents.html">libarms 5.10 documentation</a> &raquo;</li>
           <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>
@@ -877,6 +885,29 @@ int <tt class="descname">hop</tt><a class="headerlink" href="#arms_traceroute_in
   このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
   <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
 </div>
+<script type="text/javascript">
+var pkBaseURL = "https://p.seil.jp/analytics/";
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+	var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
+	piwikTracker.trackPageView();
+	piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="https://p.seil.jp/analytics/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
+
+<script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-20473995-2']);
+ _gaq.push(['_trackPageview']);
+
+ (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
+
 
   </body>
 </html>

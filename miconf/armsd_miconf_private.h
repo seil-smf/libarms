@@ -1,4 +1,4 @@
-/*	$Id: armsd_miconf_private.h 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: armsd_miconf_private.h 22687 2012-08-13 06:36:52Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -41,6 +41,10 @@ typedef struct armsd_mi_config {
 	/* Hidden Anonymous PPPoE Configuration */
 	char *anon_account;
 	char *anon_password;
+
+	/* Hidden Anonymous PPPoE Configuration for IPv6 */
+	char *anon_account_v6;
+	char *anon_password_v6;
 
 	/* Hidden Anonymous Mobile Configuration */
 	char *m_telno;

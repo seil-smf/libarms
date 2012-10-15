@@ -1,4 +1,4 @@
-/*	$Id: libarms.h 20975 2012-02-01 05:29:20Z m-oki $	*/
+/*	$Id: libarms.h 22930 2012-09-24 10:43:33Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -56,7 +56,7 @@ extern "C" {
  * library version
  */
 #define ARMS_LIB_VERSION_MAJOR		5
-#define ARMS_LIB_VERSION_MINOR		01
+#define ARMS_LIB_VERSION_MINOR		10
 #define ARMS_LIB_VERSION_DESC		"Release"
 
 /*
@@ -359,6 +359,8 @@ enum arms_line_types {
 	ARMS_LINE_MOBILE,
 	ARMS_LINE_STATIC,
 	ARMS_LINE_RA,
+	ARMS_LINE_PPPOE_IPV6,
+	ARMS_LINE_ANONPPPOE_IPV6,
 
 	ARMS_LINE_LAST
 };

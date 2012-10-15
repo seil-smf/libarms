@@ -1,4 +1,4 @@
-/*	$Id: lsconfig.h 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: lsconfig.h 21274 2012-02-15 11:11:37Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -38,6 +38,8 @@ typedef struct ls_config {
 	int retry_max;
 	char *anonid;
 	char *anonpass;
+	char *v6anonid;
+	char *v6anonpass;
 	char *telno;
 	char *cid;
 	char *apn;

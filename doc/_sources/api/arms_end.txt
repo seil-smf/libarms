@@ -5,7 +5,7 @@ arms_end()
 関数
 ----
 
-.. c:function:: int arms_end(arms_context_t **ctx)
+.. c:function:: void arms_end(arms_context_t *ctx)
 
 呼び出し方向
 ------------
@@ -28,8 +28,9 @@ arms_end()
 引数
 ----
 
-:c:type:`arms_context_t` :c:data:`**ctx`
-  内部ステートを保持するコンテキスト構造体ポインタの格納アドレス。
+:c:type:`arms_context_t` :c:data:`*ctx`
+  内部ステートを保持するコンテキスト構造体ポインタ。
+  :c:func:`arms_init` により取得したポインタをそのまま指定する。
 
 返り値
 ------

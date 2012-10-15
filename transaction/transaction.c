@@ -1,4 +1,4 @@
-/*	$Id: transaction.c 20918 2012-01-27 04:31:58Z m-oki $	*/
+/*	$Id: transaction.c 22684 2012-08-13 00:35:54Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -51,6 +51,7 @@
 #include <axp_extern.h>
 #include <libarms/malloc.h>
 #include <libarms/time.h>
+#include <libarms/sock.h>
 #include <libarms/ssl.h>
 #include <armsd_conf.h>
 #include <libarms_log.h>
@@ -138,42 +139,42 @@ ssl_setup(transaction *tr, int fd, arms_context_t *res)
 		return -1;
 	}
 
-	store = SSL_CTX_get_cert_store(tr->ssl_ctx);
+	store = arms_ssl_ctx_get_cert_store(tr->ssl_ctx);
 	if (TR_TYPE(tr->state) == TR_LSPULL) {
 		arms_ssl_register_cacert(res->root_ca_cert);
 	} else {
 		arms_ssl_register_cacert(
 			acmi_get_cert_idx(res->acmi, ACMI_CONFIG_CONFSOL, 0));
 	}
-	X509_STORE_add_cert(store, arms_ssl_cacert());
-	SSL_CTX_set_verify_depth(tr->ssl_ctx, SSL_VERIFY_DEPTH);
+	arms_x509_store_add_cert(store, arms_ssl_cacert());
+	arms_ssl_ctx_set_verify_depth(tr->ssl_ctx, SSL_VERIFY_DEPTH);
 	tr->ssl = arms_ssl_new(tr->ssl_ctx);
 	if (tr->ssl == NULL) {
 		libarms_log(ARMS_LOG_DEBUG, "SSL_new failed.");
 		return -1;
 	}
-	SSL_set_fd(tr->ssl, fd); 
+	arms_ssl_set_fd(tr->ssl, fd); 
 
 	mycert = arms_ssl_mycert();
 	mykey =  arms_ssl_mykey();
 	if (mycert) {
-		if (SSL_use_certificate(tr->ssl, mycert) != 1) {
+		if (arms_ssl_use_certificate(tr->ssl, mycert) != 1) {
 			libarms_log(ARMS_LOG_DEBUG, "SSL_use_certificate failed.");
 			return -1;
 		}
 	}
 	if (mykey) {
-		if (SSL_use_PrivateKey(tr->ssl, mykey) != 1) {
+		if (arms_ssl_use_privatekey(tr->ssl, mykey) != 1) {
 			libarms_log(ARMS_LOG_DEBUG, "SSL_use_PrivateKey failed.");
 			return -1;
 		}
-		if (SSL_check_private_key(tr->ssl) != 1) {
+		if (arms_ssl_check_private_key(tr->ssl) != 1) {
 			return -1;
 		}
 	}
-	SSL_set_ex_data(tr->ssl, 0, tr);
-	SSL_set_verify(tr->ssl, SSL_VERIFY_PEER,
-		       arms_ssl_servercert_verify_cb);
+	arms_ssl_set_ex_data(tr->ssl, 0, tr);
+	arms_ssl_set_verify(tr->ssl, SSL_VERIFY_PEER,
+	    arms_ssl_servercert_verify_cb);
 
 	memset(&ss, 0, sizeof(ss));
 #if defined(HAVE_STRUCT_SOCKADDR_SA_LEN) && !defined(__OpenBSD__)
@@ -181,7 +182,7 @@ ssl_setup(transaction *tr, int fd, arms_context_t *res)
 #else
 	ss_len = sizeof(ss);
 #endif
-	if (getsockname(fd, (struct sockaddr *)&ss, &ss_len) == 0) {
+	if (arms_getsockname(fd, (struct sockaddr *)&ss, &ss_len) == 0) {
 		if (getnameinfo((struct sockaddr *)&ss, ss_len,
 				hostname, sizeof(hostname), NULL, 0,
 				NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
@@ -746,9 +747,9 @@ ssl_req_accept(struct arms_schedule *obj, int event)
 			return SCHED_FINISHED_THIS;
 		}
 	}
-	rv = SSL_accept(tr->ssl);
+	rv = arms_ssl_accept(tr->ssl);
 	if (rv <= 0) {
-		switch (SSL_get_error(tr->ssl, rv)) {
+		switch (arms_ssl_get_error(tr->ssl, rv)) {
 		case SSL_ERROR_WANT_READ:
 		case SSL_ERROR_WANT_WRITE:
 			return SCHED_CONTINUE_THIS;
@@ -843,7 +844,7 @@ tr_send_response:
 			return SCHED_CONTINUE_THIS;
 
 		case TR_WANT_READ:
-			if (SSL_pending(tr->ssl) > 0)
+			if (arms_ssl_pending(tr->ssl) > 0)
 				goto rerun;
 			return SCHED_CONTINUE_THIS;
 
@@ -1162,7 +1163,7 @@ ssl_req_connect(struct arms_schedule *obj, int event)
 		re = dst_re;
 	}
 
-	s = socket(re->ai_family, re->ai_socktype, re->ai_protocol);
+	s = arms_socket(re->ai_family, re->ai_socktype, re->ai_protocol);
 	if (s == -1) {
 		/* fatal. */
 		libarms_log(ARMS_LOG_ESOCKET, "socket(2) failed.");
@@ -1170,14 +1171,14 @@ ssl_req_connect(struct arms_schedule *obj, int event)
 		goto err;
 	}
 #ifdef HAVE_FCNTL
-	fcntl(s, F_SETFD, FD_CLOEXEC);
+	arms_fcntl(s, F_SETFD, FD_CLOEXEC);
 #endif
 	on = 1;
-	ioctl(s, FIONBIO, &on);
+	arms_ioctl(s, FIONBIO, &on);
 	obj->fd = s;
 	libarms_log(ARMS_LOG_DEBUG,
 	    "%s: socket prepared. connecting...", tr_rsstr(tr));
-	r = connect(obj->fd, re->ai_addr, re->ai_addrlen);
+	r = arms_connect(obj->fd, re->ai_addr, re->ai_addrlen);
 	if (res->proxy_is_available && proxy_re != NULL)
 		freeaddrinfo(proxy_re);
 	freeaddrinfo(dst_re);
@@ -1284,7 +1285,7 @@ ssl_req_proxy_connect(struct arms_schedule *obj, int event)
 	}
 
 	optlen = sizeof(rv);
-	if (getsockopt(obj->fd, SOL_SOCKET, SO_ERROR, &rv, &optlen) != 0) {
+	if (arms_getsockopt(obj->fd, SOL_SOCKET, SO_ERROR, &rv, &optlen) != 0) {
 		return ssl_client_retry(obj, tr);
 	}
 	if (rv != 0) {
@@ -1523,15 +1524,15 @@ ssl_client_retry(struct arms_schedule *obj, transaction *tr)
 		}
 	}
 	tr->state = TR_TYPE(tr->state) | TR_REQUEST;
-	tr->cur_uri++;
 	if (tr->nuri > 1) {
 		/* shift RS index only if multiple URLs are available. */
 		tr->num = tr->num + 1 % tr->nuri;
 	}
 	tr_shift(tr);
-	if (tr->cur_uri < tr->nuri &&
+	if (tr->cur_uri + 1 < tr->nuri &&
 	    tr->uriinfo[tr->cur_uri] != NULL) {
 		/* try next server immediately */
+		tr->cur_uri++;
 		arms_get_time_remaining(&obj->timeout, 0);
 		obj->type = SCHED_TYPE_EXEC;
 		SET_NEW_METHOD(obj, ssl_req_connect);
@@ -1721,7 +1722,7 @@ rerun:
 			/* no error. */
 			return SCHED_CONTINUE_THIS;
 		}
-		switch (SSL_get_error(tr->ssl, rv)) {
+		switch (arms_ssl_get_error(tr->ssl, rv)) {
 		case SSL_ERROR_NONE:
 		case SSL_ERROR_WANT_WRITE:
 		case SSL_ERROR_WANT_READ:
@@ -1787,7 +1788,7 @@ rerun:
 		/* read partly.  call parser. */
 		switch (tr->parser(tr, tr->buf, tr->len)) {
 		case TR_WANT_READ:
-			if (SSL_pending(tr->ssl) > 0)
+			if (arms_ssl_pending(tr->ssl) > 0)
 				goto rerun;
 			return SCHED_CONTINUE_THIS;
 

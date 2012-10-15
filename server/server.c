@@ -1,4 +1,4 @@
-/*	$Id: server.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: server.c 22684 2012-08-13 00:35:54Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -46,6 +46,7 @@
 #include <libarms_log.h>
 
 #include <libarms/malloc.h>
+#include <libarms/sock.h>
 #include <libarms/time.h>
 #include <scheduler/scheduler.h>
 #include <transaction/transaction.h>
@@ -95,7 +96,7 @@ accept_fd(struct arms_schedule *obj, int event)
 	case EVENT_TYPE_READ:
 	case EVENT_TYPE_WRITE:
 		len = sizeof(ss);
-		s = accept(obj->fd, (struct sockaddr *)&ss, &len);
+		s = arms_accept(obj->fd, (struct sockaddr *)&ss, &len);
 		if (s == -1)
 			return SCHED_CONTINUE_THIS;
 		/* new session */
@@ -146,22 +147,22 @@ new_arms_server(int af, int port, const char *user, const char *passwd)
 		goto eret;
 	}
 
-	fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	fd = arms_socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (fd == -1) {
 		libarms_log(ARMS_LOG_ESOCKET, "socket(2) failed.");
 		result = ARMS_ESYSTEM;
 		goto eret;
 	}
 #ifdef HAVE_FCNTL
-	fcntl(fd, F_SETFD, FD_CLOEXEC);
+	arms_fcntl(fd, F_SETFD, FD_CLOEXEC);
 #endif
 	on = 1;
-	ioctl(fd, FIONBIO, &on);
+	arms_ioctl(fd, FIONBIO, &on);
 #ifdef HAVE_SETSOCKOPT
-	setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	arms_setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 #ifdef IPV6_V6ONLY
 	if (res->ai_family == AF_INET6 &&
-	    setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, &on, sizeof(on)) < 0) {
+	    arms_setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, &on, sizeof(on)) < 0) {
 		libarms_log(ARMS_LOG_ESOCKET,
 		            "setsockopt(IPV6_V6ONLY) failed");
 		goto eret;
@@ -170,7 +171,7 @@ new_arms_server(int af, int port, const char *user, const char *passwd)
 #endif
 
 	retry = 0;
-	while (bind(fd, res->ai_addr, res->ai_addrlen) < 0) {
+	while (arms_bind(fd, res->ai_addr, res->ai_addrlen) < 0) {
 		if (retry++ > 6) {
 			/* failed 1+6 times.  fallback to Pull. */
 			libarms_log(ARMS_LOG_ESOCKET,
@@ -183,7 +184,7 @@ new_arms_server(int af, int port, const char *user, const char *passwd)
 			    retry);
 		arms_sleep(60);
 	}
-	if (listen(fd, 5) == -1) {
+	if (arms_listen(fd, 5) == -1) {
 		libarms_log(ARMS_LOG_ESOCKET,
 			    "listen(2) failed.");
 		result = ARMS_ESYSTEM;

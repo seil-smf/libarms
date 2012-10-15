@@ -1,0 +1,419 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>クライアント実装 &mdash; libarms 5.10 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="../_static/scroll.js"></script>
+    <link rel="top" title="libarms 5.10 documentation" href="../index.html" />
+    <link rel="prev" title="使用するライブラリ関数一覧" href="../appendix/appendix_top.html" /> 
+  </head>
+  <body>
+<div id="header">
+  <a href=" ../."><img src= "../_static/logo.png"  /></a>
+</div>
+
+<div class="related">
+<ul>
+<li>
+  <a href= " ../.">TOP</a> |
+</li>
+<li>
+  <a href=" ../download.html">ダウンロード</a> |
+</li>
+<li>
+  <a href=" ../contents.html">ドキュメント</a>
+</li>
+</ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>クライアント実装<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>このドキュメントでは libarms を実装した armsd の動作について解説する。</p>
+<div class="section" id="id2">
+<h2>動作環境<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>Linux(CentOS, Debian), NetBSD, OpenBSD, MacOSX 等の POSIX 系オペレーティングシステム</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>動作<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="pull">
+<h3>Pull オペレーション<a class="headerlink" href="#pull" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>LS スキップのキャッシュができる</li>
+<li>RS から与えられたモジュールそれぞれについて &#8220;script-start&#8221; が呼ばれる</li>
+</ul>
+</div>
+<div class="section" id="push">
+<h3>Push オペレーション<a class="headerlink" href="#push" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt>コマンド実行 (md-command)</dt>
+<dd>実行可能。&#8221;script-command&#8221; が返す出力をそのまま返す。</dd>
+<dt>コンフィグ再取得 (pull-config)</dt>
+<dd>実行可能。いったん利用中のすべてのモジュールに対して &#8220;script-stop&#8221; を呼んだ後、Pull オペレーションをやり直す。</dd>
+<dt>コンフィグ参照 (read-storage)</dt>
+<dd>動作コンフィグ、バックアップコンフィグとも参照可能。コールバックスクリプトは無い。
+$armsd/*-config/* として保持しているコンフィグを返す</dd>
+<dt>コンフィグ反映 (configure)</dt>
+<dd>動作コンフィグの変更。&#8221;script-reconfig&#8221; が呼ばれる。</dd>
+<dt>デバッグ情報取得 (dump-debug)</dt>
+<dd>実行可能。&#8221;script-debug&#8221; が呼ばれ、その出力を返す。</dd>
+<dt>トランザクション一覧 (check-transaction)</dt>
+<dd>実行可能。コールバックスクリプトは無い。</dd>
+<dt>モジュール一覧 (read-module-list)</dt>
+<dd>実行可能。コールバックスクリプトは無い。</dd>
+<dt>ステータス参照 (read-status)</dt>
+<dd><ul class="first last simple">
+<li>実行可能。&#8221;script-status&#8221; が返す出力をそのまま返す。</li>
+<li>注意: &#8220;script-status&#8221; が無い場合、しばらく Push 不能になるため実行しない方が良い。</li>
+</ul>
+</dd>
+<dt>ステータス初期化 (clear-status)</dt>
+<dd>実行可能。&#8221;script-clear&#8221; が呼ばれる。</dd>
+<dt>再起動 (reboot)</dt>
+<dd>armsd を終了する。終了前にすべてのモジュールについて &#8220;script-stop&#8221; が呼ばれる。</dd>
+<dt>Ping (ping)</dt>
+<dd><ul class="first last simple">
+<li>実行可能。IPv4/IPv6 両方に対応。</li>
+<li>スクリプトのタイムアウト秒数(コンフィグ変数の &#8220;timeout&#8221;)より長い時間がかかるような ping は実行できないことに注意。</li>
+</ul>
+</dd>
+<dt>Traceroute (traceroute)</dt>
+<dd><ul class="first last simple">
+<li>実行可能。IPv4/IPv6 両方に対応。</li>
+<li>スクリプトのタイムアウト秒数(コンフィグ変数の &#8220;timeout&#8221;)より長い時間がかかると打ち切られることに注意。</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="heartbeat">
+<h3>Heartbeat監視<a class="headerlink" href="#heartbeat" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>Heartbeatパケットを送信できる<ul>
+<li>送信間隔は RS から指定された値に従う</li>
+</ul>
+</li>
+<li>CPU利用率、メモリ使用量、ディスク使用率、トラフィック量パラメータを送信する<ul>
+<li>どれか一つのパラメータの値の取得に失敗しても、他のパラメータの取得や、Heartbeat パケットの送信自体を取り止めたりはしない</li>
+</ul>
+</li>
+</ul>
+<dl class="docutils">
+<dt>CPU利用率</dt>
+<dd>前回の送信タイミングから今回送信時までの平均値を送信する。Heartbeat の1回目の送信時には CPU 利用率は含まない。
+CPU 番号は 0 固定。
+他の値は、&#8221;/proc/stat&#8221; の &#8220;cpu&#8221; 行の各値を x[i] で表したとき、idle=x[3], interrupt=x[5]+x[6], user=x[0]+x[1], system=x[2], other=x[4]+x[7]。</dd>
+<dt>メモリ使用量</dt>
+<dd>メモリ番号は 0 固定。used と free の値は &#8220;/proc/meminfo&#8221; から作る。free = MemFree+Buffers+Cached、used = MemTotal - free。
+used/free の値は free(1) に合わせた</dd>
+<dt>ディスク使用率</dt>
+<dd>&#8220;/&#8221; (ルート) ディレクトリを含むディスクの利用率を送信する。statvfs(2) から得られる値を用いる。used は全ディスク容量から root が使える量を引いた値(fs.f_blocks - fs.f_bfree)。free は、一般ユーザが使えるディスク容量(fs.f_bavail)。</dd>
+<dt>トラフィック量</dt>
+<dd>eth0, eth1, eth2 インタフェースの in/out それぞれのパケット数/バイト数/エラー数の、前回の送信タイミングから現在までのレートを送信する。Heartbeat の1回目の送信時にはトラフィック量は含まない。存在しないインタフェースについては送信しない。</dd>
+</dl>
+</div>
+<div class="section" id="id4">
+<h3>処理シーケンス<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>起動からコンフィグ取得までのシーケンス。一部簡略化。</p>
+<img alt="../_images/armsd-pull.png" src="../_images/armsd-pull.png" />
+<p>Push待ち受け開始以後</p>
+<img alt="../_images/armsd-push.png" src="../_images/armsd-push.png" />
+</div>
+</div>
+<div class="section" id="id5">
+<h2>起動<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id6">
+<h3>コマンドラインオプション<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>-b &lt;dir&gt; : ユーザコンフィグファイルを書き出すディレクトリを &lt;dir&gt; に変更する。</li>
+<li>-d : デバッグオプション。ログがたくさん出る。デーモン化しない(バックグランドジョブにならない)。PIDファイルを書き出さない。</li>
+<li>-f &lt;configfile&gt; : armsd.conf のパスを指定する。無指定時のデフォルトは /etc/armsd/armsd.conf</li>
+<li>-h : usage を表示して終了する。</li>
+<li>-i &lt;distid&gt; : distribution-id を指定する。コンフィグファイル中の指定より優先する。</li>
+<li>-l &lt;logfile&gt; : ログを syslog の代わりにファイル logfile に書き出す。相対パスでの指定も可能。</li>
+<li>-p &lt;port&gt; : シンプル接続の時に、Push用の TLS 接続を待ち受けるポート番号を指定する。無指定時は libarms のデフォルト。</li>
+<li>-V : armsd のバージョン情報を表示して終了します。</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>その他<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>起動時に PID を /var/run/armsd.pid またはコンフィグ変数 &#8220;path-pid&#8221; で指定されたファイルに書き出す<ul>
+<li>パーミションが無いなどのエラーで書けない場合、無視して動作を継続する</li>
+</ul>
+</li>
+<li>起動時に armsd 自身のバージョンと、リンクしている libarms と libhb のバージョンをログに書き出す</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>コンフィグファイルの書式<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>&#8220;&lt;name&gt; : &lt;value&gt;&#8221; とパラメータ名とその値を &#8221;:&#8221; で区切って一行に記述します。</p>
+<div class="section" id="id9">
+<h3>コンフィグパラメータ<a class="headerlink" href="#id9" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="docutils">
+<dt>path-pid</dt>
+<dd>PIDファイルのパス名。</dd>
+<dt>path-root-ca</dt>
+<dd>ARMS Root CA の証明書ファイル。省略可能でその場合は armsd 自体に組み込まれた証明書を使う。</dd>
+<dt>distribution-id</dt>
+<dd>Distribution ID</dd>
+<dt>ls-sa-key</dt>
+<dd>LS-SA Key</dd>
+<dt>https-proxy-url</dt>
+<dd>HTTP Proxy の URL。省略された場合は proxy を介さず直接通信する。</dd>
+<dt>https-proxy-url-ls</dt>
+<dd>LS にアクセスする際に利用する HTTP Proxy の URL。https-proxy-url の指定に優先する。省略された場合は https-proxy-url の設定に従う。</dd>
+<dt>https-proxy-url-rs</dt>
+<dd>RS にアクセスする際に利用する HTTP Proxy の URL。https-proxy-url の指定に優先する。省略された場合は https-proxy-url の設定に従う。</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>コールバックスクリプト<a class="headerlink" href="#id10" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>start &lt;id&gt; &lt;version&gt; &lt;info&gt; &lt;configfile&gt;</li>
+<li>reconfig &lt;id&gt; &lt;version&gt; &lt;info&gt; &lt;configfile&gt;</li>
+<li>stop &lt;id&gt;</li>
+<li>status &lt;id&gt; &lt;requestfile&gt; &lt;resultfile&gt;</li>
+<li>command &lt;id&gt; &lt;requestfile&gt; &lt;resultfile&gt;</li>
+<li>debug &lt;resultfile&gt;</li>
+<li>line &lt;action&gt; &lt;line-type&gt; &lt;ifindex&gt; [&lt;id&gt; &lt;password&gt; [&lt;cid&gt; &lt;apn&gt; &lt;pdp&gt;]]</li>
+<li>state-changed &lt;old-status&gt; &lt;new-status&gt;</li>
+</ul>
+<div class="section" id="id11">
+<h3>スクリプト一般<a class="headerlink" href="#id11" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>コールバックスクリプトが標準出力に書き出すと、armsd の標準出力にそのまま書き出される</li>
+<li>コールバックスクリプトが標準エラー出力に書き出した文字列は、1000バイトを上限としてログに出力される</li>
+<li>スクリプトがコンフィグパラメータ &#8220;timeout&#8221; で指定した秒数以上たっても終了しなかった場合、タイムアウトでエラーとなる</li>
+<li>「スクリプト」は、ELFバイナリ実行形式など exec(3) で実行できるファイルであればどのような形式でも良い。</li>
+<li>スクリプトは以下の環境変数を参照できる:<ul>
+<li>ARMS_DISTRIBUTION_ID = armsd の distribution-id</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id12">
+<h2>ファイル<a class="headerlink" href="#id12" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>ファイル一覧</p>
+<ul class="simple">
+<li>/usr/sbin/armsd<ul>
+<li>armsd 本体。バイナリはこれだけ</li>
+</ul>
+</li>
+<li>/etc/armsd/armsd.conf<ul>
+<li>標準コンフィグ。-f オプションで別ファイルを指定可能。</li>
+</ul>
+</li>
+<li>/var/cache/armsd/state<ul>
+<li>LS スキップのためのキャッシュ</li>
+<li>armsd.conf の path-state-cache で変更可能</li>
+<li>書けなくても(エラーログは出しつつ)気にせず動く</li>
+</ul>
+</li>
+<li>/var/run/armsd.pid<ul>
+<li>起動中の armsd の PID ファイル</li>
+<li>いまのところ書いて終了時に消すだけで使っていない。パーミションが無いなどのエラーで書けない場合、無視して動作を継続する。</li>
+<li>armsd.conf の path-pid で変更可能</li>
+</ul>
+</li>
+</ul>
+<p>armsd は一ホストに一つのプロセスのみ起動することを基本的な利用形態として想定している。しかし、コンフィグファイルの設定により、複数の armsd プロセスを一つのホスト上で同時に起動することも可能である。</p>
+</div>
+<div class="section" id="id13">
+<h2>その他<a class="headerlink" href="#id13" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id14">
+<h3>ログ<a class="headerlink" href="#id14" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>デフォルトでは syslog の LOG_DAEMON にログを書き出す<ul>
+<li>ファシリティは変更できない</li>
+</ul>
+</li>
+<li>-l オプションを指定すると、指定したファイルにログを追記する。</li>
+</ul>
+</div>
+<div class="section" id="id15">
+<h3>ユーザコンフィグファイル<a class="headerlink" href="#id15" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>armsd は動作中に /tmp/armsd.$$ ディレクトリまたは -b オプションで指定したディレクトリ以下にいくつかのファイルを作成する。<ul>
+<li>backup-config/&lt;module-id&gt; : &lt;module-id&gt; のバックアップコンフィグ</li>
+<li>candidate-config/&lt;module-id&gt; : &lt;module-id&gt; のcandidateコンフィグ。コンフィグ変更中に一時的に使われる。</li>
+<li>running-config/&lt;module-id&gt; : &lt;module-id&gt; の現在動作中のコンフィグ。</li>
+<li>startup-config/&lt;module-id&gt; : &lt;module-id&gt; の起動時のコンフィグ</li>
+<li>tmp/&lt;files&gt; : 一時ファイル</li>
+</ul>
+</li>
+<li>すべてのファイルは、コールバックスクリプト実行中に変更されることはない<ul>
+<li>コールバックスクリプト実行中以外のタイミングでファイルの読み出しを行うと、不完全なコンフィグが読み出される可能性があることに注意すること。</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id16">
+<h3>ワーキングディレクトリ<a class="headerlink" href="#id16" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>-b オプション<ul>
+<li>指定されたディレクトリが存在しなければ作成する。作成されたディレクトリは armsd 終了時に削除される。</li>
+<li>指定されたディレクトリが既に存在していれば、終了時にも残したままとし、削除しない。ワーキングディレクトリ内のファイルもそのまま残るので、ユーザ側で削除することが期待される。</li>
+<li>-b オプションが指定されていない場合、armsd は &#8220;/tmp/armsd.NNNNN&#8221; (NNNNNはPID)というディレクトリを作成し、armsd 終了時に削除する。</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id17">
+<h3>バージョン番号<a class="headerlink" href="#id17" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>バージョン番号は A.B または A.B.C の形式とする。
+バージョン 0.1 から 0.6 までは A.B 形式であり、
+0.7.0 以降のバージョンでは A.B.C 形式である。</p>
+<p>A, B, C はそれぞれ 1桁または 2桁の非負整数値とする。
+それぞれの番号をインクリメントする条件は以下とする。</p>
+<ul class="simple">
+<li>A : 仕様に大きな変更を加えた場合にインクリメントする。後方互換性を失うような変更を含む。</li>
+<li>B : 後方互換性がほぼ保たれる程度の仕様の変更があった場合にインクリメントする。</li>
+<li>C : 仕様の変更を伴なわないリリースを行う場合にインクリメントする。原則として、互換性に影響を及ぼすような動作の変更を含まない。</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">クライアント実装</a><ul>
+<li><a class="reference internal" href="#id2">動作環境</a></li>
+<li><a class="reference internal" href="#id3">動作</a><ul>
+<li><a class="reference internal" href="#pull">Pull オペレーション</a></li>
+<li><a class="reference internal" href="#push">Push オペレーション</a></li>
+<li><a class="reference internal" href="#heartbeat">Heartbeat監視</a></li>
+<li><a class="reference internal" href="#id4">処理シーケンス</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">起動</a><ul>
+<li><a class="reference internal" href="#id6">コマンドラインオプション</a></li>
+<li><a class="reference internal" href="#id7">その他</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">コンフィグファイルの書式</a><ul>
+<li><a class="reference internal" href="#id9">コンフィグパラメータ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id10">コールバックスクリプト</a><ul>
+<li><a class="reference internal" href="#id11">スクリプト一般</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">ファイル</a></li>
+<li><a class="reference internal" href="#id13">その他</a><ul>
+<li><a class="reference internal" href="#id14">ログ</a></li>
+<li><a class="reference internal" href="#id15">ユーザコンフィグファイル</a></li>
+<li><a class="reference internal" href="#id16">ワーキングディレクトリ</a></li>
+<li><a class="reference internal" href="#id17">バージョン番号</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="../appendix/appendix_top.html"
+                        title="前の章へ">使用するライブラリ関数一覧</a></p>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    モジュール、クラス、または関数名を入力してください
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>リンク</h3>
+<ul>
+<li><a href="http://www.seil.jp/">SEIL Official Web</a></li>
+<li><a href="http://www.smf.jp/">SMF Official Web</a></li>
+<li><a href="/">SMF Developerサイト</a></li>
+<li><a href="/sacm/order.php">libarms動作検証用SACM利用申請</a></li>
+</ul>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../appendix/appendix_top.html" title="使用するライブラリ関数一覧"
+             accesskey="P">前へ</a> |</li>
+        <li><a href="../contents.html">libarms 5.10 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+  &copy; 2012 Internet Initiative Japan Inc..
+  このドキュメントは <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2 で生成しました。
+  <p class="footer-up"><a href="#header"><img src="../_static/to_top.png" width="25" height="35" /></a></p>
+</div>
+<script type="text/javascript">
+var pkBaseURL = "https://p.seil.jp/analytics/";
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+	var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
+	piwikTracker.trackPageView();
+	piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="https://p.seil.jp/analytics/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
+
+<script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-20473995-2']);
+ _gaq.push(['_trackPageview']);
+
+ (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
+
+
+  </body>
+</html>
