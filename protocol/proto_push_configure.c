@@ -1,4 +1,4 @@
-/*	$Id: proto_push_configure.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: proto_push_configure.c 23403 2013-01-31 10:16:27Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -127,6 +127,7 @@ struct configure_args {
 	int errs;
 	int commit_err;
 	int already_running;
+	int syncing;
 	int first; /* fragment */
 	char request[AXP_BUFSIZE * 3 / 4 + 2 + 1]; /* + 2: modulo bytes */
 	arms_base64_stream_t base64;
@@ -239,7 +240,11 @@ configure_exec(transaction *tr)
 	err = config_cb(arg->cur_mod_id, "", "",
 			ARMS_PUSH_EXEC_STORED_CONFIG, NULL, 0, 0,
 			res->udata);
-	if (err != 0) {
+	if (err == ARMS_EMODSYNC) {
+		arg->commit_err = 0;
+		arg->syncing = 1;
+		return 0;
+	} else if (err != 0) {
 		/* execute failure, rollback immediately */
 		err = configure_rollback(tr);
 		/*
@@ -284,6 +289,8 @@ configure_rollback(transaction *tr)
 		  ARMS_PUSH_REVERT_CONFIG, NULL, 0, 0, res->udata);
 
 	libarms_log(ARMS_LOG_DEBUG, "WAITING FOR ROLLBACK ESTABLISHED");
+	/* clear send buffer */
+	tr->len = 0;
 
 	return err;
 }
@@ -454,6 +461,9 @@ configure_done(transaction *tr, char *buf, int len, int *wrote)
 	} else if (tr->rollbacked) {
 		r = 414;
 		desc = "Rollbacked";
+	} else if (arg->syncing) {
+		r = 303;
+		desc = "Module syncing";
 	} else {
 		r = 100;
 		desc = "Success";
@@ -478,6 +488,7 @@ static int
 configure_parse(transaction *tr, const char *buf, int len)
 {
 	tr_ctx_t *tr_ctx = &tr->tr_ctx;
+	struct configure_args *arg = tr_ctx->arg;
 	arms_context_t *res = arms_get_context();
 	AXP *axp;
 	int rcode = 100;
@@ -550,6 +561,13 @@ configure_parse(transaction *tr, const char *buf, int len)
 	/* force clear rollback flag. */
 	tr->rollbacked = 0;
 
+	/*
+	 * return ARMS_EREBOOT if "Module syncing"
+	 */
+	if (arg->syncing) {
+		res->result = ARMS_EREBOOT;
+		return TR_WANT_STOP;
+	}
 	/*
 	 * after configure, send push-confirmation
 	 *  to notify new ip address.

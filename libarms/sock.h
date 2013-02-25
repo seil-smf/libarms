@@ -43,6 +43,8 @@ int arms_bind(int, const struct sockaddr *, socklen_t);
 int arms_listen(int, int);
 ssize_t arms_read(int, void *, size_t);
 ssize_t arms_write(int, const void *, size_t);
+ssize_t arms_sendto(int, const void *, size_t, int,
+     const struct sockaddr *, socklen_t);
 int arms_close(int);
 int arms_fcntl(int, int, int);
 int arms_ioctl(int, unsigned long, void *);

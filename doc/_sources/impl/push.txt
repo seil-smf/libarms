@@ -39,7 +39,7 @@ RS よりコンフィグ設定メッセージがPush されると、下記の順
 
 * libarms 内で設定メッセージ処理後に想定されるモジュール一覧を作成
 * 現在動作中のモジュール一覧と比較
-* 設定後に消去すべきモジュールID を用いて :c:func:`arms_config_cb_t` 呼び出し。アクションは ARMS_PUSH_REMOVE_MODULE。
+* 設定後に消去すべきモジュールID を用いて :c:func:`arms_config_cb_t` 呼び出し。アクションは ARMS_REMOVE_MODULE。
 * RS から渡されたコンフィグをそれぞれのID 向けに :c:func:`arms_config_cb_t` 呼び出し。アクションはARMS_PUSH_STORE_CONFIG。
 * すべてコンフィグを渡し終わると、一度だけ :c:func:`arms_config_cb_t` 呼び出し。アクションは ARMS_PUSH_EXEC_STORED_CONFIG。このときid=0 となる。
 * 上記すべてが成功すると、RS に対して処理完了通知

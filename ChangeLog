@@ -1,3 +1,9 @@
+2013-02-28  Masaru Oki  <m-oki@iij.ad.jp>
+
+	* ARMS_EMODSYNC and ARMS_EAPPEXEC support.
+
+	* don't resolve name of LS, RS and web proxy.
+	
 2012-09-27  Masaru Oki  <m-oki@iij.ad.jp>
 
 	* IPv6 PPPoE support.

@@ -1,4 +1,4 @@
-/*	$Id: util.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: util.c 23398 2013-01-31 03:19:52Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -46,6 +46,7 @@ static const struct result_data {
 	const char *string;
 } result_list[] = {
 	{ 100, "Success" },
+	{ 102, "Command Execute Error" },
 
 	{ 201, "Invalid XML" },
 	{ 202, "Invalid Message type" },
@@ -53,6 +54,7 @@ static const struct result_data {
 
 	{ 301, "Server Busy" },
 	{ 302, "SA Busy" },
+	{ 303, "Module syncing" },
 
 	{ 400, "Bad Request" },
 	{ 401, "Server Failure" },

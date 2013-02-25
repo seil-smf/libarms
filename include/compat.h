@@ -1,4 +1,4 @@
-/*	$Id: compat.h 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: compat.h 23435 2013-02-07 10:46:13Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -144,6 +144,27 @@ struct addrinfo {
  * Flag values for getaddrinfo()
  */
 #define	AI_PASSIVE	0x00000001 /* get address to use bind() */
+#define	AI_CANONNAME	0x00000002 /* fill ai_canonname */
+#define	AI_NUMERICHOST	0x00000004 /* prevent host name resolution */
+#define	AI_NUMERICSERV	0x00000008 /* prevent service name resolution */
+
+/*
+ * Error return codes from getaddrinfo()
+ */
+#define	EAI_ADDRFAMILY	 1	/*%< address family for hostname not supported */
+#define	EAI_AGAIN	 2	/*%< temporary failure in name resolution */
+#define	EAI_BADFLAGS	 3	/*%< invalid value for ai_flags */
+#define	EAI_FAIL	 4	/*%< non-recoverable failure in name resolution */
+#define	EAI_FAMILY	 5	/*%< ai_family not supported */
+#define	EAI_MEMORY	 6	/*%< memory allocation failure */
+#define	EAI_NODATA	 7	/*%< no address associated with hostname */
+#define	EAI_NONAME	 8	/*%< hostname nor servname provided, or not known */
+#define	EAI_SERVICE	 9	/*%< servname not supported for ai_socktype */
+#define	EAI_SOCKTYPE	10	/*%< ai_socktype not supported */
+#define	EAI_SYSTEM	11	/*%< system error returned in errno */
+#define	EAI_BADHINTS	12	/* invalid value for hints */
+#define	EAI_PROTOCOL	13	/* resolved protocol is unknown */
+#define	EAI_OVERFLOW	14	/* argument buffer overflow */
 
 int getaddrinfo(const char *, const char *, const struct addrinfo *,
 		struct addrinfo **);

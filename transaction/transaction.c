@@ -1,4 +1,4 @@
-/*	$Id: transaction.c 22684 2012-08-13 00:35:54Z m-oki $	*/
+/*	$Id: transaction.c 23435 2013-02-07 10:46:13Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -1095,6 +1095,7 @@ ssl_req_connect(struct arms_schedule *obj, int event)
 	hints.ai_family = AF_INET;
 #endif
 	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_NUMERICHOST;
 
 	/* get hostname and port from URL */
 
@@ -1153,6 +1154,7 @@ ssl_req_connect(struct arms_schedule *obj, int event)
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = dst_re->ai_family;
 		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_flags = AI_NUMERICHOST;
 		r = getaddrinfo(h, p, &hints, &proxy_re);
 		if (r != 0 || proxy_re == NULL) {
 			libarms_log(ARMS_LOG_DEBUG, "no web proxy available");
@@ -1671,7 +1673,7 @@ ssl_send_req(struct arms_schedule *obj, int event)
 		break;
 	}
 	if (tr->builder == NULL) {
-		/* response builder is nothing.  umm, bug? */
+		/* request builder is nothing.  umm, bug? */
 		goto err;
 	}
 

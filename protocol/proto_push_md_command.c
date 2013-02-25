@@ -1,4 +1,4 @@
-/*	$Id: proto_push_md_command.c 22861 2012-09-05 09:40:59Z m-oki $	*/
+/*	$Id: proto_push_md_command.c 23398 2013-01-31 03:19:52Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -241,6 +241,11 @@ md_command_response(transaction *tr, char *buf, int len, int *wrote)
 			res->udata);
 		arg->encoding = ARMS_DATA_TEXT;
 		if (ARMS_RESULT_IS_ERROR(rv)) {
+			if (rv != ARMS_EAPPEXEC) {
+				tr_ctx->result = 402;/*system error*/
+				arg->state = END;
+				return TR_WANT_WRITE;
+			}
 			tr_ctx->result = 102;/*exec error*/
 			arg->state = ERROR_RESULT;
 		} else {

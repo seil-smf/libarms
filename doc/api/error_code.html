@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>エラーコード/ログコード体系 &mdash; libarms 5.10 documentation</title>
+    <title>エラーコード/ログコード体系 &mdash; libarms 5.20 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.10',
+        VERSION:     '5.20',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
     <script type="text/javascript" src="../_static/scroll.js"></script>
-    <link rel="top" title="libarms 5.10 documentation" href="../index.html" />
+    <link rel="top" title="libarms 5.20 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="api_top.html" />
     <link rel="next" title="使用するライブラリ関数一覧" href="../appendix/appendix_top.html" />
     <link rel="prev" title="libarms データ構造リファレンス" href="struct.html" /> 
@@ -110,6 +110,10 @@ Type はログ出力やデバッグなどの目的に利用することができ
 <dd>コールバック関数でエラーが発生した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ESYSTEM</span></tt></dt>
 <dd>メモリ不足など、動作環境が原因のエラーが発生した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EMODSYNC</span></tt></dt>
+<dd>モジュールの同期が必要な状態となった</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EAPPEXEC</span></tt></dt>
+<dd>コマンド実行エラーが発生した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EINVAL</span></tt></dt>
 <dd>不正な引数を指定された</dd>
 </dl>
@@ -169,24 +173,7 @@ Type はログの種別を意味する。</p>
 </dl>
 </div>
 <div class="section" id="id7">
-<h3>タイプ一覧<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
-<dl class="docutils">
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_FAILURE</span></tt></dt>
-<dd>プロトコルエラーを検出した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_FALLBACK</span></tt></dt>
-<dd>一つ前の状態へ戻った</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_LS_ACCESSS</span></tt></dt>
-<dd>LS へのアクセスを開始した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_LS_ERROR</span></tt></dt>
-<dd>LS との通信に失敗した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_RS_ACCESS</span></tt></dt>
-<dd>RS へのアクセスを開始した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_RS_ERROR</span></tt></dt>
-<dd>RS との通信に失敗した</dd>
-</dl>
-</div>
-<div class="section" id="id8">
-<h3>ログコード一覧<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<h3>ログコード一覧<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_EFALLBACK</span></tt></dt>
 <dd>異常を検知し、一つ前の状態へ戻った</dd>
@@ -194,26 +181,22 @@ Type はログの種別を意味する。</p>
 <dd>LSへのアクセスを開始した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILS_ACCESS_END</span></tt></dt>
 <dd>LSへのアクセスが正常に終了した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILS_ACCESS_FAIL</span></tt></dt>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ELS_ACCESS_FAIL</span></tt></dt>
 <dd>LSへのアクセスに失敗した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IRS_ACCESS_START</span></tt></dt>
 <dd>RSへのアクセスを開始した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IRS_ACCESS_END</span></tt></dt>
 <dd>RSへのアクセスが正常に終了した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IRS_ACCESS_FAIL</span></tt></dt>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ERS_ACCESS_FAIL</span></tt></dt>
 <dd>RSへのアクセスに失敗した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_CONNECT_START</span></tt></dt>
-<dd>回線の接続を開始した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_CONNECT_END</span></tt></dt>
-<dd>回線の接続が正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_CONNECTED</span></tt></dt>
+<dd>回線の接続が完了した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ELINE_AUTH_FAIL</span></tt></dt>
 <dd>回線接続処理中に認証エラーが発生</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ELINE_TIMEOUT</span></tt></dt>
 <dd>回線接続処理中にタイムアウトが発生</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_DISCONNECT_START</span></tt></dt>
-<dd>回線の切断を開始した</dd>
-<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_DISCONNECT_END</span></tt></dt>
-<dd>回線の切断が正常に終了した</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_ILINE_DISCONNECTED</span></tt></dt>
+<dd>回線の切断が完了した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_CONNECT_START</span></tt></dt>
 <dd>コンフィグの取得を開始した</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_LOG_IHTTP_CONNECT_END</span></tt></dt>
@@ -277,8 +260,7 @@ Type はログの種別を意味する。</p>
 </li>
 <li><a class="reference internal" href="#log-code-label">ログコード体系</a><ul>
 <li><a class="reference internal" href="#id6">状態一覧</a></li>
-<li><a class="reference internal" href="#id7">タイプ一覧</a></li>
-<li><a class="reference internal" href="#id8">ログコード一覧</a></li>
+<li><a class="reference internal" href="#id7">ログコード一覧</a></li>
 </ul>
 </li>
 </ul>
@@ -326,7 +308,7 @@ Type はログの種別を意味する。</p>
         <li class="right" >
           <a href="struct.html" title="libarms データ構造リファレンス"
              accesskey="P">前へ</a> |</li>
-        <li><a href="../contents.html">libarms 5.10 documentation</a> &raquo;</li>
+        <li><a href="../contents.html">libarms 5.20 documentation</a> &raquo;</li>
           <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>

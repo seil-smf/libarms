@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Push動作における通信 &mdash; libarms 5.10 documentation</title>
+    <title>Push動作における通信 &mdash; libarms 5.20 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.10',
+        VERSION:     '5.20',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
     <script type="text/javascript" src="../_static/scroll.js"></script>
-    <link rel="top" title="libarms 5.10 documentation" href="../index.html" />
+    <link rel="top" title="libarms 5.20 documentation" href="../index.html" />
     <link rel="up" title="アーキテクチャ" href="arch_top.html" />
     <link rel="next" title="Heartbeat通信" href="heartbeat.html" />
     <link rel="prev" title="Pull動作における通信" href="pull.html" /> 
@@ -107,6 +107,11 @@ libarms とRS 間で自動的に合意が取られる。その手順は以下の
 <li>SA は、RS が提示してきた通信手段と優先順位に従って、push-confirmation メッセージを用いてPush が実行可能かどうか確認を行う。最終的にpush-confirmation が成功した通信手段が最終的な合意手順となる。なお、この合意手順は、 <a class="reference internal" href="../api/arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> の実行時に行われる。</li>
 </ol>
 </div>
+<div class="section" id="ipv6">
+<h2>IPv6 対応<a class="headerlink" href="#ipv6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>libarms - RS 間は IPv4/IPv6 どちらか片方のみ使用する。これは通信手段の合意手順において push-method-query に成功したプロトコルが選択される。
+push-method-query は <a class="reference internal" href="../api/arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> 実行前に一度だけ行われるため、IPv4/IPv6 の切り替えは再 Pull が必要である。</p>
+</div>
 <div class="section" id="https-tunnel">
 <h2>https-tunnel モードでの動作<a class="headerlink" href="#https-tunnel" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <p>https-tunnelモードは、HTTPの&#8221;Transfer-Encoding: chunked&#8221;を用いて通信を行うモードである(以後、&#8221;tunnel connection&#8221;と表記する)。</p>
@@ -178,6 +183,7 @@ RS アドレスのリストが2 台で、リトライ回数が5 回だとする�
   <ul>
 <li><a class="reference internal" href="#">Push動作における通信</a><ul>
 <li><a class="reference internal" href="#id1">通信手段の合意手順</a></li>
+<li><a class="reference internal" href="#ipv6">IPv6 対応</a></li>
 <li><a class="reference internal" href="#https-tunnel">https-tunnel モードでの動作</a></li>
 <li><a class="reference internal" href="#id2">冗長化への対応</a></li>
 <li><a class="reference internal" href="#id3">リトライ動作</a></li>
@@ -226,7 +232,7 @@ RS アドレスのリストが2 台で、リトライ回数が5 回だとする�
         <li class="right" >
           <a href="pull.html" title="Pull動作における通信"
              accesskey="P">前へ</a> |</li>
-        <li><a href="../contents.html">libarms 5.10 documentation</a> &raquo;</li>
+        <li><a href="../contents.html">libarms 5.20 documentation</a> &raquo;</li>
           <li><a href="arch_top.html" accesskey="U">アーキテクチャ</a> &raquo;</li> 
       </ul>
     </div>

@@ -113,6 +113,13 @@ arms_write(int d, const void *buf, size_t nbytes)
 	return write(d, buf, nbytes);
 }
 
+ssize_t
+arms_sendto(int s, const void *msg, size_t len, int flags,
+    const struct sockaddr *to, socklen_t tolen)
+{
+	return sendto(s, msg, len, flags, to, tolen);
+}
+
 int
 arms_close(int d)
 {

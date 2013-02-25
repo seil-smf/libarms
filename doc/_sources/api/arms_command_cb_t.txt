@@ -117,6 +117,8 @@ libarms->アプリケーション
   :c:macro:`ARMS_PUSH_MD_COMMAND` あるいは :c:macro:`ARMS_PUSH_DUMP_DEBUG` が正常に終了。result_buff に格納したデータが US-ASCII 文字列でない場合に格納したバイト数を示す。
 上記以外の非0
   異常終了(エラーコード)
+    :c:macro:`ARMS_EAPPEXEC`
+      コマンドが存在しない、コマンドのパラメータエラーなど、アプリケーションレベルでのエラーが発生した
     :c:macro:`ARMS_ESYSTEM`
       メモリ不足など、動作環境が原因のエラーが発生した
 

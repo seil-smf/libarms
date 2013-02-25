@@ -1,4 +1,4 @@
-/*	$Id: libarms.c 22687 2012-08-13 06:36:52Z m-oki $	*/
+/*	$Id: libarms.c 23138 2012-11-01 00:30:19Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -75,8 +75,10 @@ arms_init(distribution_id_t *distid, arms_context_t **ctxp)
 	static const char *ls_urls[] = {
 		"https://202.221.49.106/arms.cgi",
 		"https://202.221.51.6/arms.cgi",
+#ifdef USE_INET6
 		"https://[2001:240:bb88::2]/arms.cgi",
 		"https://[2001:240:bb88::6]/arms.cgi",
+#endif
 		NULL
 	};
 	arms_context_t *res;

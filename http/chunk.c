@@ -1,4 +1,4 @@
-/*	$Id: chunk.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: chunk.c 23434 2013-02-07 10:39:00Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -294,7 +294,7 @@ http_chunk_builder(transaction *tr, char *buf, int len, int *wrote,
 		*wrote = snprintf(buf, len, "0\r\n\r\n");
 		if (tr->tr_ctx.write_done != TR_WANT_STOP) {
 			if (parser != NULL) {
-				SET_TR_PARSER(tr ,parser);
+				SET_TR_PARSER(tr, parser);
 			}
 			http->state = HTTP_BUILD_END;
 			return TR_WANT_WRITE;

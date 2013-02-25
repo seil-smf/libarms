@@ -1,4 +1,4 @@
-/*	$Id: module_db_mi.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: module_db_mi.c 23286 2012-12-25 00:57:26Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -68,6 +68,11 @@ module_cb_tbl_t mod_cb_tbl = {
 
 LIST_HEAD(module_storage_head, module_storage);
 
+/*
+ * current: module list.
+ * addition: hopefully added modules.
+ * new: updated module list
+ */
 struct module_storage_head new =
 	LIST_HEAD_INITIALIZER(module_storage_head);
 struct module_storage_head addition =
@@ -323,6 +328,8 @@ sync_module(void)
 	 * purge unused module (call user function)
 	 */
 	LIST_FOREACH(p, &current, chain) {
+		if (arms_module_is_added(p->id))
+			continue;
 		err = purge_module(p->id, p->pkg_name);
 		if (err) {
 			failed = 1;
@@ -335,6 +342,8 @@ sync_module(void)
 	 * note: list is not modified
 	 */
 	LIST_FOREACH(p, &addition, chain) {
+		if (arms_module_is_exist(p->id))
+			continue;
 		err = get_module(p->url);
 		if (err) {
 			failed = 1;

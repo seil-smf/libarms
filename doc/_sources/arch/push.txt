@@ -58,6 +58,12 @@ libarms とRS 間で自動的に合意が取られる。その手順は以下の
 
 3. SA は、RS が提示してきた通信手段と優先順位に従って、push-confirmation メッセージを用いてPush が実行可能かどうか確認を行う。最終的にpush-confirmation が成功した通信手段が最終的な合意手順となる。なお、この合意手順は、 :c:func:`arms_event_loop` の実行時に行われる。
 
+IPv6 対応
+---------
+
+libarms - RS 間は IPv4/IPv6 どちらか片方のみ使用する。これは通信手段の合意手順において push-method-query に成功したプロトコルが選択される。
+push-method-query は :c:func:`arms_event_loop` 実行前に一度だけ行われるため、IPv4/IPv6 の切り替えは再 Pull が必要である。
+
 https-tunnel モードでの動作
 ----------------------------
 

@@ -1,4 +1,4 @@
-/*	$Id: arms_event_loop.c 20955 2012-01-31 04:03:18Z m-oki $	*/
+/*	$Id: arms_event_loop.c 23138 2012-11-01 00:30:19Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -263,10 +263,12 @@ arms_https_simple_loop(arms_context_t *res, int port)
 		}
 	}
 	/* register server if https-simple */
+#ifdef USE_INET6
 	if (res->sa_af == AF_INET6)
 		snprintf(res->push_endpoint, sizeof(res->push_endpoint),
 		         "https://[%s]:%d/", res->sa_address, port);
 	else
+#endif
 		snprintf(res->push_endpoint, sizeof(res->push_endpoint),
 		         "https://%s:%d/", res->sa_address, port);
 	res->result = new_arms_server(res->sa_af, port,

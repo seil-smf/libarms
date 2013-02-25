@@ -1,4 +1,4 @@
-/*$Id: hb_api.c 20842 2012-01-23 06:50:17Z m-oki $*/
+/*$Id: hb_api.c 23530 2013-02-28 02:15:12Z m-oki $*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -28,7 +28,6 @@
  */
 
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
@@ -41,6 +40,7 @@
 #include "libarms_resource.h"
 #include "hb_routine.h"
 #include "errcode.h"
+#include "libarms/sock.h"
 
 /*
  * internal routines
@@ -241,10 +241,11 @@ arms_hb_send(hb_context_t *ctx, int af, hb_send_result_t *result)
 		set_hmac(ctx, i);
 
 		memset(&in, 0, sizeof(in));
-		if (af == AF_INET || af == AF_INET6)
-			in.ai_family = af;
-		else
-			in.ai_family = AF_UNSPEC;
+#ifdef USE_INET6
+		in.ai_family = AF_UNSPEC;
+#else
+		in.ai_family = AF_INET;
+#endif
 		in.ai_socktype = SOCK_DGRAM;
 		snprintf(portbuf, sizeof(portbuf), "%u", ctx->server[i].port);
 
@@ -258,27 +259,33 @@ arms_hb_send(hb_context_t *ctx, int af, hb_send_result_t *result)
 			err_count++;
 			continue;
 		}
-		sock = socket(out->ai_family, out->ai_socktype,
-			      out->ai_protocol);
+		if (af != out->ai_family) {
+			/* address family mismatch, not error */
+			result->server[i].stage = HB_ESEND_GAI;
+			result->server[i].code = EAI_FAMILY;
+			continue;
+		}
+		sock = arms_socket(out->ai_family, out->ai_socktype,
+		    out->ai_protocol);
 		if (sock < 0) {
 			if (result != NULL) {
 				result->err_count++;
 				result->server[i].stage = HB_ESEND_SOCK;
 				result->server[i].code = errno;
 			}
-			close(sock);
+			arms_close(sock);
 			freeaddrinfo(out);
 			err_count++;
 			continue;
 		}
-		if (sendto(sock, ctx->msgbuf, ctx->freeptr, 0,
+		if (arms_sendto(sock, ctx->msgbuf, ctx->freeptr, 0,
 			   out->ai_addr, out->ai_addrlen) < 0) {
 			if (result != NULL) {
 				result->err_count++;
 				result->server[i].stage = HB_ESEND_SENDTO;
 				result->server[i].code = errno;
 			}
-			close(sock);
+			arms_close(sock);
 			freeaddrinfo(out);
 			err_count++;
 			continue;
@@ -288,7 +295,7 @@ arms_hb_send(hb_context_t *ctx, int af, hb_send_result_t *result)
 				result->server[i].code = 0;
 			}
 		}
-		close(sock);
+		arms_close(sock);
 		freeaddrinfo(out);
 	}
 	if (err_count) {

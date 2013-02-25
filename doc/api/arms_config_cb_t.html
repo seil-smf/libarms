@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>(*arms_config_cb_t)() &mdash; libarms 5.10 documentation</title>
+    <title>(*arms_config_cb_t)() &mdash; libarms 5.20 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.10',
+        VERSION:     '5.20',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
     <script type="text/javascript" src="../_static/scroll.js"></script>
-    <link rel="top" title="libarms 5.10 documentation" href="../index.html" />
+    <link rel="top" title="libarms 5.20 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="api_top.html" />
     <link rel="next" title="(*arms_line_ctrl_cb_t)()" href="arms_line_ctrl_cb_t.html" />
     <link rel="prev" title="arms_end()" href="arms_end.html" /> 
@@ -251,6 +251,8 @@ NULL でない場合、buff_len で示されるサイズ分のデータが文字
 <dl class="docutils">
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">0</span></tt></dt>
 <dd>コンフィグの受信が正常に終了</dd>
+<dt><tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EMODSYNC</span></tt></dt>
+<dd>コンフィグの取得が正常に終了したがモジュールの同期が必要</dd>
 <dt><tt class="xref c c-macro docutils literal"><span class="pre">非0</span></tt></dt>
 <dd><dl class="first last docutils">
 <dt>異常終了(エラーコード)</dt>
@@ -262,6 +264,15 @@ NULL でない場合、buff_len で示されるサイズ分のデータが文字
 </dl>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<ul class="last simple">
+<li><tt class="xref c c-data docutils literal"><span class="pre">*version</span></tt> の不一致を検出することで、
+ファームウェアのバージョンアップに伴う再起動が必要な場合に
+<tt class="xref c c-macro docutils literal"><span class="pre">ARMS_EMODSYNC</span></tt> を返す。これを受けるとlibarmsは
+<a class="reference internal" href="arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> を終了しアプリケーションに制御を戻す。</li>
+</ul>
+</div>
 </div>
 <div class="section" id="id8">
 <h2>ヒストリ<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
@@ -331,7 +342,7 @@ NULL でない場合、buff_len で示されるサイズ分のデータが文字
         <li class="right" >
           <a href="arms_end.html" title="arms_end()"
              accesskey="P">前へ</a> |</li>
-        <li><a href="../contents.html">libarms 5.10 documentation</a> &raquo;</li>
+        <li><a href="../contents.html">libarms 5.20 documentation</a> &raquo;</li>
           <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>

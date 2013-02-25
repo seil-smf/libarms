@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.65])
-AC_INIT(libarms, 5.10)
+AC_INIT(libarms, 5.20)
 AM_INIT_AUTOMAKE
 
 AC_CONFIG_SRCDIR([http/url.c])
@@ -11,6 +11,33 @@ AC_CONFIG_HEADERS([config.h])
 # libtool
 LT_INIT
 AC_CONFIG_MACRO_DIR([m4])
+
+## Check version.
+#save_CC=$CC
+#CC=cc
+#save_cross_compiling=$cross_compiling
+#cross_compiling=no
+#AC_RUN_IFELSE(
+#  [AC_LANG_PROGRAM(
+#[#include <stdio.h>
+##include <stdlib.h>
+##include <unistd.h>
+##include <inttypes.h>
+##include "./include/libarms.h"],
+#[char ver[[128]], verdesc[[128]];
+#FILE *fp;
+#snprintf(ver, sizeof(ver), "%d.%02d",
+# ARMS_LIB_VERSION_MAJOR, ARMS_LIB_VERSION_MINOR);
+#snprintf(verdesc, sizeof(verdesc), "%s-%s", ver, ARMS_LIB_VERSION_DESC);
+#if (!strcmp(ver, PACKAGE_VERSION) && !strcmp(ARMS_LIB_VERSION_DESC, "Release"))
+# return 0;
+#if (strcmp(verdesc, PACKAGE_VERSION) != 0)
+# return -1;]
+#)],
+#[],
+#[AC_MSG_FAILURE([version mismatch.  check configure.ac and libarms.h.])])
+#CC=$save_CC
+#cross_compiling=$save_cross_compiling
 
 # Checks for programs.
 AC_PROG_YACC

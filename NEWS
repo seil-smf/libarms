@@ -1,5 +1,11 @@
 NEWS -- history of user-visible changes.
 
+Version 5.20 - Feb 28, 2013
+
+* don't resolve name of LS, RS and web proxy. 
+
+* add return value of md-command and configure callback function.
+
 Version 5.10 - Oct 15, 2012
 
 * IPv6 PPPoE support.

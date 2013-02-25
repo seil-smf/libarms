@@ -52,6 +52,10 @@ Type はログ出力やデバッグなどの目的に利用することができ
  コールバック関数でエラーが発生した
 :c:macro:`ARMS_ESYSTEM`
  メモリ不足など、動作環境が原因のエラーが発生した
+:c:macro:`ARMS_EMODSYNC`
+ モジュールの同期が必要な状態となった
+:c:macro:`ARMS_EAPPEXEC`
+ コマンド実行エラーが発生した
 :c:macro:`ARMS_EINVAL`
  不正な引数を指定された
 
@@ -103,23 +107,6 @@ Type はログの種別を意味する。
 :c:macro:`ARMS_ST_PUSH_REBOOT`
   RS からreboot を指示された
 
-タイプ一覧
------------
-
-:c:macro:`ARMS_LOG_FAILURE`
-  プロトコルエラーを検出した
-:c:macro:`ARMS_LOG_FALLBACK`
-  一つ前の状態へ戻った
-:c:macro:`ARMS_LOG_LS_ACCESSS`
-  LS へのアクセスを開始した
-:c:macro:`ARMS_LOG_LS_ERROR`
-  LS との通信に失敗した
-:c:macro:`ARMS_LOG_RS_ACCESS`
-  RS へのアクセスを開始した
-:c:macro:`ARMS_LOG_RS_ERROR`
-  RS との通信に失敗した
-
-
 ログコード一覧
 --------------
 
@@ -129,26 +116,22 @@ Type はログの種別を意味する。
   LSへのアクセスを開始した
 :c:macro:`ARMS_LOG_ILS_ACCESS_END`
   LSへのアクセスが正常に終了した
-:c:macro:`ARMS_LOG_ILS_ACCESS_FAIL`
+:c:macro:`ARMS_LOG_ELS_ACCESS_FAIL`
   LSへのアクセスに失敗した
 :c:macro:`ARMS_LOG_IRS_ACCESS_START`
   RSへのアクセスを開始した
 :c:macro:`ARMS_LOG_IRS_ACCESS_END`
   RSへのアクセスが正常に終了した
-:c:macro:`ARMS_LOG_IRS_ACCESS_FAIL`
+:c:macro:`ARMS_LOG_ERS_ACCESS_FAIL`
   RSへのアクセスに失敗した
-:c:macro:`ARMS_LOG_ILINE_CONNECT_START`
-  回線の接続を開始した
-:c:macro:`ARMS_LOG_ILINE_CONNECT_END`
-  回線の接続が正常に終了した
+:c:macro:`ARMS_LOG_ILINE_CONNECTED`
+  回線の接続が完了した
 :c:macro:`ARMS_LOG_ELINE_AUTH_FAIL`
   回線接続処理中に認証エラーが発生
 :c:macro:`ARMS_LOG_ELINE_TIMEOUT`
   回線接続処理中にタイムアウトが発生
-:c:macro:`ARMS_LOG_ILINE_DISCONNECT_START`
-  回線の切断を開始した
-:c:macro:`ARMS_LOG_ILINE_DISCONNECT_END`
-  回線の切断が正常に終了した
+:c:macro:`ARMS_LOG_ILINE_DISCONNECTED`
+  回線の切断が完了した
 :c:macro:`ARMS_LOG_IHTTP_CONNECT_START`
   コンフィグの取得を開始した
 :c:macro:`ARMS_LOG_IHTTP_CONNECT_END`

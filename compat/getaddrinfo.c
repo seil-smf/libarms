@@ -1,4 +1,4 @@
-/*	$Id: getaddrinfo.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: getaddrinfo.c 23153 2012-11-12 10:13:46Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -55,12 +55,12 @@ getaddrinfo(const char *host, const char *port,
 
 	re = *res = CALLOC(1, sizeof(struct addrinfo));
 	if (re == NULL)
-		return -1;
+		return EAI_MEMORY;
 	re->ai_addr = CALLOC(1, sizeof(struct sockaddr_in));
 	if (re->ai_addr == NULL) {
 		FREE(re);
 		*res = NULL;
-		return -1;
+		return EAI_MEMORY;
 	}
 	s = (struct sockaddr_in *)re->ai_addr;
 
@@ -72,6 +72,11 @@ getaddrinfo(const char *host, const char *port,
 	s->sin_port = htons(atoi(port));
 	if (host != NULL)
 		s->sin_addr.s_addr = inet_addr(host);
+	if (s->sin_addr.s_addr == INADDR_NONE)
+		FREE(ai->ai_addr);
+		FREE(re);
+		*res = NULL;
+		return EAI_NODATA;
 	return 0;
 }
 

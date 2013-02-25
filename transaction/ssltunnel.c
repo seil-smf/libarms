@@ -1,4 +1,4 @@
-/*	$Id: ssltunnel.c 22684 2012-08-13 00:35:54Z m-oki $	*/
+/*	$Id: ssltunnel.c 23435 2013-02-07 10:46:13Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -216,6 +216,7 @@ ssltunnel_finish_tr_but_configure(struct ssltunnel *tunnel)
 			case TR_DONE_REQUEST:
 			case TR_DONE_RESPONSE:
 				/* reset to send configure-done request */
+				tr->len = 0;
 				tr->state = TR_DONE_REQUEST;
 				tr->tr_ctx.write_done = TR_WANT_WRITE;
 				SET_TR_BUILDER(tr, arms_req_builder);
@@ -455,6 +456,7 @@ ssltunnel_connect(struct arms_schedule *obj, int event)
 	hints.ai_family = AF_INET;
 #endif
 	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_NUMERICHOST;
 	r = getaddrinfo(tunnel->host, tunnel->port, &hints, &dst_re);
 	if (r != 0 || dst_re == NULL) {
 		libarms_log(ARMS_LOG_EHOST,
@@ -478,6 +480,7 @@ ssltunnel_connect(struct arms_schedule *obj, int event)
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = dst_re->ai_family;
 		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_flags = AI_NUMERICHOST;
 		r = getaddrinfo(host, port, &hints, &proxy_re);
 		if (r != 0 || proxy_re == NULL) {
 			libarms_log(ARMS_LOG_DEBUG,
@@ -1658,6 +1661,7 @@ ssltunnel_post_write(struct arms_schedule *obj, transaction *tr)
 	/*
 	 * prepare for done-req.
 	 */
+	tr->len = 0;
 	tr->state = TR_DONE_REQUEST;
 	tr->tr_ctx.write_done = TR_WANT_WRITE;
 	SET_TR_BUILDER(tr, arms_req_builder);

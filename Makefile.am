@@ -1,11 +1,11 @@
-#	$Id: Makefile.am 22867 2012-09-06 06:30:55Z m-oki $
+#	$Id: Makefile.am 23291 2012-12-25 02:25:28Z m-oki $
 
 # current:revision:age
 # current: increment if interface change.
 # revision: increment if source change.
 # age: increment if function add.
 
-libarms_la_LDFLAGS= -version-info 0:2:0
+libarms_la_LDFLAGS= -version-info 0:3:0
 
 ACLOCAL_AMFLAGS=-I m4
 AM_CPPFLAGS= -Wall
