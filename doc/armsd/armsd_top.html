@@ -85,7 +85,7 @@ $armsd/*-config/* として保持しているコンフィグを返す</dd>
 <dt>コンフィグ反映 (configure)</dt>
 <dd>動作コンフィグの変更。&#8221;script-reconfig&#8221; が呼ばれる。</dd>
 <dt>デバッグ情報取得 (dump-debug)</dt>
-<dd>実行可能。&#8221;script-debug&#8221; が呼ばれ、その出力を返す。</dd>
+<dd>実行可能。libarms の状態を返す</dd>
 <dt>トランザクション一覧 (check-transaction)</dt>
 <dd>実行可能。コールバックスクリプトは無い。</dd>
 <dt>モジュール一覧 (read-module-list)</dt>
@@ -154,13 +154,16 @@ used/free の値は free(1) に合わせた</dd>
 <h3>コマンドラインオプション<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
 <ul class="simple">
 <li>-b &lt;dir&gt; : ユーザコンフィグファイルを書き出すディレクトリを &lt;dir&gt; に変更する。</li>
-<li>-d : デバッグオプション。ログがたくさん出る。デーモン化しない(バックグランドジョブにならない)。PIDファイルを書き出さない。</li>
+<li>-d : デバッグオプション。ログがたくさん出る。デーモン化しない(バックグランドジョブにならない)。PIDファイルを書き出さない。廃止予定。</li>
+<li>-D : デーモン化しない。PIDファイルを書き出さない。</li>
 <li>-f &lt;configfile&gt; : armsd.conf のパスを指定する。無指定時のデフォルトは /etc/armsd/armsd.conf</li>
 <li>-h : usage を表示して終了する。</li>
 <li>-i &lt;distid&gt; : distribution-id を指定する。コンフィグファイル中の指定より優先する。</li>
 <li>-l &lt;logfile&gt; : ログを syslog の代わりにファイル logfile に書き出す。相対パスでの指定も可能。</li>
 <li>-p &lt;port&gt; : シンプル接続の時に、Push用の TLS 接続を待ち受けるポート番号を指定する。無指定時は libarms のデフォルト。</li>
+<li>-v : ログ出力を冗長にする。</li>
 <li>-V : armsd のバージョン情報を表示して終了します。</li>
+<li>-w : Pull 完了後にデーモン化する</li>
 </ul>
 </div>
 <div class="section" id="id7">
@@ -194,6 +197,10 @@ used/free の値は free(1) に合わせた</dd>
 <dd>LS にアクセスする際に利用する HTTP Proxy の URL。https-proxy-url の指定に優先する。省略された場合は https-proxy-url の設定に従う。</dd>
 <dt>https-proxy-url-rs</dt>
 <dd>RS にアクセスする際に利用する HTTP Proxy の URL。https-proxy-url の指定に優先する。省略された場合は https-proxy-url の設定に従う。</dd>
+<dt>hb-disk-usage[012]</dt>
+<dd>heartbeat のディスク使用率を取得するパスを指定する</dd>
+<dt>hb-traffic-if[0123]</dt>
+<dd>heartbeat のトラフィック量を取得するインターフェースを指定する</dd>
 </dl>
 </div>
 </div>
@@ -205,9 +212,10 @@ used/free の値は free(1) に合わせた</dd>
 <li>stop &lt;id&gt;</li>
 <li>status &lt;id&gt; &lt;requestfile&gt; &lt;resultfile&gt;</li>
 <li>command &lt;id&gt; &lt;requestfile&gt; &lt;resultfile&gt;</li>
-<li>debug &lt;resultfile&gt;</li>
 <li>line &lt;action&gt; &lt;line-type&gt; &lt;ifindex&gt; [&lt;id&gt; &lt;password&gt; [&lt;cid&gt; &lt;apn&gt; &lt;pdp&gt;]]</li>
 <li>state-changed &lt;old-status&gt; &lt;new-status&gt;</li>
+<li>app-event</li>
+<li>post-pull</li>
 </ul>
 <div class="section" id="id11">
 <h3>スクリプト一般<a class="headerlink" href="#id11" title="このヘッドラインへのパーマリンク">¶</a></h3>
@@ -304,6 +312,19 @@ used/free の値は free(1) に合わせた</dd>
 </ul>
 </div>
 </div>
+<div class="section" id="id18">
+<h2>変更履歴<a class="headerlink" href="#id18" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id19">
+<h3>0.9.0<a class="headerlink" href="#id19" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>libarms-5.20 に対応</li>
+<li>-D, -v, -w を追加, -d を非推奨</li>
+<li>armsd.conf のパラメータを変更</li>
+<li>ログ出力の見直し</li>
+<li>いくつかの不具合修正</li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -342,6 +363,10 @@ used/free の値は free(1) に合わせた</dd>
 <li><a class="reference internal" href="#id15">ユーザコンフィグファイル</a></li>
 <li><a class="reference internal" href="#id16">ワーキングディレクトリ</a></li>
 <li><a class="reference internal" href="#id17">バージョン番号</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id18">変更履歴</a><ul>
+<li><a class="reference internal" href="#id19">0.9.0</a></li>
 </ul>
 </li>
 </ul>

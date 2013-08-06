@@ -1,9 +1,27 @@
+2013-07-03 Akihiro Yamazaki <yamazaki@iij.ad.jp>
+
+	* don't resolve name of heartbeat server
+
+	* improved stability in Linux-x86_64
+
+	* bugfix: fix fragment parameter of config_cb
+
+2013-05-20  Akihiro Yamazaki <yamazaki@iij.ad.jp>
+
+	* keep PUSH_WAIT status after push-confirmation succeeded
+
+	* add arms_get_ls_url()
+
+	* disconnect tunnel connection after configure-start
+
+	* include version string in conf-sol message
+
 2013-02-28  Masaru Oki  <m-oki@iij.ad.jp>
 
 	* ARMS_EMODSYNC and ARMS_EAPPEXEC support.
 
 	* don't resolve name of LS, RS and web proxy.
-	
+
 2012-09-27  Masaru Oki  <m-oki@iij.ad.jp>
 
 	* IPv6 PPPoE support.

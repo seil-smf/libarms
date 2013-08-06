@@ -168,6 +168,7 @@ RS アドレスのリストが2 台で、リトライ回数が5 回だとする�
 <p>https-tunnel モードの際は、tunnel 接続が切断されると、そのtunnel に関する再接続を行うが、他の正常なtunnel はそのまま維持される。
 利用可能なtunnel が全て切断されると、push-confirmation を最初からやり直す。
 このpush-confirmation も(リトライを含めて) 全て失敗すると、 <a class="reference internal" href="../api/arms_event_loop.html#arms_event_loop" title="arms_event_loop"><tt class="xref c c-func docutils literal"><span class="pre">arms_event_loop()</span></tt></a> が失敗となって <tt class="xref c c-macro docutils literal"><span class="pre">ARMS_ETIMEOUT</span></tt> を返り値として終了する。</p>
+<p>Push 待ち受け動作開始後、 <a class="reference internal" href="../api/arms_app_event_cb_t.html#arms_app_event_cb_t" title="arms_app_event_cb_t"><tt class="xref c c-func docutils literal"><span class="pre">arms_app_event_cb_t()</span></tt></a> によるアドレス変更検知および tunnel 全切断による push-confirmation のリトライは、合意が取れるまで終了しない (libarms 5.30 以降)。</p>
 </li>
 </ul>
 </div>

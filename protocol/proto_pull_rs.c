@@ -1,4 +1,4 @@
-/*	$Id: proto_pull_rs.c 20894 2012-01-25 12:47:57Z m-oki $	*/
+/*	$Id: proto_pull_rs.c 24214 2013-05-31 03:02:27Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -240,6 +240,8 @@ typedef struct rspull_context {
 	arms_hbt_info_t hbt_info[MAX_HBT_INFO];
 	rspull_data_t data;
 	arms_base64_stream_t base64;
+	char *catbuf;
+	int catlen;
 } rspull_context_t;
 
 /*
@@ -377,12 +379,7 @@ store_tag(AXP *axp, int when, int type, int tag,
 			ctx->data.first_fragment = 1;
 			return 0;
 		}
-		/* CONTENT or END */
-		flag = 0;
-		if (ctx->data.first_fragment == 1) {
-			flag |= ARMS_FRAG_FIRST;
-			ctx->data.first_fragment = 0;
-		}
+
 		/* chained to md-config storage */
 		mod_id = get_module_id(axp, ARMS_TAG_MDCONF);
 		if (!arms_module_is_exist(mod_id)) {
@@ -413,6 +410,38 @@ store_tag(AXP *axp, int when, int type, int tag,
 			decbuf[len] = '\0';
 			buf = decbuf;
 		}
+		/*
+		 * buf, len is prepared.
+		 * if res->fragment == 0 and AXP_PARSE_CONTENT,
+		 * buffered part of config.
+		 */
+		if (res->fragment == 0) {
+			ctx->catbuf = REALLOC(ctx->catbuf, ctx->catlen + len);
+			if (ctx->catbuf == NULL) {
+				/*Resource Exhausted*/
+				tr_ctx->result = 413;
+				return -1;
+			}
+			memcpy(ctx->catbuf + ctx->catlen, buf, len);
+			ctx->catlen += len;
+			if (when == AXP_PARSE_CONTENT) {
+				/* wait for next data */
+				return 0;
+			}
+			/* AXP_PARSE_END */
+			buf = ctx->catbuf;
+			len = ctx->catlen;
+		}
+		/* CONTENT or END */
+		flag = 0;
+		if (ctx->data.first_fragment == 1) {
+			flag |= ARMS_FRAG_FIRST;
+			ctx->data.first_fragment = 0;
+		}
+		/* continued' config */
+		if (when == AXP_PARSE_CONTENT) {
+			flag |= ARMS_FRAG_CONTINUE;
+		}
 		/* callback it */
 		do {
 			int slen;
@@ -442,7 +471,12 @@ store_tag(AXP *axp, int when, int type, int tag,
 			flag &= ~ARMS_FRAG_FIRST;
 			flag |= ARMS_FRAG_CONTINUE;
 		} while(len > 0);
-
+		if (ctx->catbuf != NULL) {
+			/* reset for next module id */
+			FREE(ctx->catbuf);
+			ctx->catbuf = NULL;
+			ctx->catlen = 0;
+		}
 		break;
 	case ARMS_TAG_PUSH_ADDRESS:
 		if (when != AXP_PARSE_END)
@@ -523,6 +557,9 @@ rspull_release(tr_ctx_t *tr_ctx)
 			for (a = 0; a < hbp->numalg; a++) {
 				FREE((void *)hbp->algorithm[a]);
 			}
+		}
+		if (ctx->catbuf != NULL) {
+			FREE(ctx->catbuf);
 		}
 		FREE(tr_ctx->arg);
 		tr_ctx->arg = NULL;

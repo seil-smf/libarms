@@ -1,4 +1,4 @@
-/*	$Id: arms_event_loop.c 23138 2012-11-01 00:30:19Z m-oki $	*/
+/*	$Id: arms_event_loop.c 24401 2013-06-25 09:12:17Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -221,6 +221,20 @@ arms_heartbeat_event(struct arms_schedule *obj, int event)
 	return SCHED_CONTINUE_THIS;
 }
 
+void
+arms_update_push_endpoint(arms_context_t *res)
+{
+#ifdef USE_INET6
+	if (res->sa_af == AF_INET6)
+		snprintf(res->push_endpoint, sizeof(res->push_endpoint),
+		         "https://[%s]:%d/", res->sa_address, res->server_port);
+	else
+#endif
+		snprintf(res->push_endpoint, sizeof(res->push_endpoint),
+		         "https://%s:%d/", res->sa_address, res->server_port);
+	
+}
+
 static void
 arms_https_simple_loop(arms_context_t *res, int port)
 {
@@ -263,14 +277,7 @@ arms_https_simple_loop(arms_context_t *res, int port)
 		}
 	}
 	/* register server if https-simple */
-#ifdef USE_INET6
-	if (res->sa_af == AF_INET6)
-		snprintf(res->push_endpoint, sizeof(res->push_endpoint),
-		         "https://[%s]:%d/", res->sa_address, port);
-	else
-#endif
-		snprintf(res->push_endpoint, sizeof(res->push_endpoint),
-		         "https://%s:%d/", res->sa_address, port);
+	arms_update_push_endpoint(res);
 	res->result = new_arms_server(res->sa_af, port,
 				      strdistid(&res->dist_id),
 				      res->rs_preshared_key);
@@ -316,6 +323,7 @@ arms_hb_start_loop(arms_context_t *res)
 			    res->hbt_info[0].interval);
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = res->sa_af;
+		hints.ai_flags = AI_NUMERICHOST;
 		for (i = 0; i < res->num_of_hbt; i++) {
 			if (getaddrinfo(res->hbt_info[i].host,
 					NULL, &hints, &re) == 0) {
@@ -385,6 +393,8 @@ arms_event_loop(arms_context_t *res, int port, size_t fragment,
 		return ARMS_EPULL;
 	}
 
+	res->retry_inf = 0;
+
 	do {
 		res->result = 0;
 
@@ -393,6 +403,7 @@ arms_event_loop(arms_context_t *res, int port, size_t fragment,
 
 		/* try accepted method */
 		for (m = 0; m < res->nmethods; m++) {
+retry_with_cur_method:
 			/* register app_event timer if available */
 			if (res->callbacks.app_event_cb != NULL) {
 				arms_get_timeval_remaining(&timo,
@@ -411,7 +422,14 @@ arms_event_loop(arms_context_t *res, int port, size_t fragment,
 				}
 				libarms_log(ARMS_LOG_IPUSH_METHOD_SIMPLE,
 					    "Push method: simple");
-				arms_https_simple_loop(res, port);
+				do {
+					arms_https_simple_loop(res, port);
+				} while (res->result == ARMS_ETIMEOUT &&
+					 res->retry_inf &&
+					 !arms_is_running_configure(res) &&
+					 (libarms_log(ARMS_LOG_DEBUG,
+					              "continue to connect by simple") ||
+					  1));
 				break;
 			case ARMS_PUSH_METHOD_TUNNEL:
 				libarms_log(ARMS_LOG_IPUSH_METHOD_TUNNEL,
@@ -430,12 +448,26 @@ arms_event_loop(arms_context_t *res, int port, size_t fragment,
 					res->result = ARMS_ETIMEOUT;
 					continue;/* try next method */
 				}
-				arms_ssltunnel_loop(res, n, res->rs_tunnel_url);
+				do {
+					arms_ssltunnel_loop(res, n, res->rs_tunnel_url);
+				} while (res->result == ARMS_ETIMEOUT &&
+					 res->retry_inf &&
+					 !arms_is_running_configure(res) &&
+					 (libarms_log(ARMS_LOG_DEBUG,
+					              "continue to connect by tunnel") ||
+					  1));
 				break;
 			default:
 				break;
 			}
-			if (res->result != ARMS_ETIMEOUT) {
+
+			if (res->result == ARMS_EPUSH &&
+			    res->retry_inf &&
+			    !arms_is_running_configure(res)) {
+				libarms_log(ARMS_LOG_DEBUG,
+				    "continue to connect by current method");
+				goto retry_with_cur_method;
+			} else if (res->result != ARMS_ETIMEOUT) {
 				break;
 			}
 			/* timeout: try next method */

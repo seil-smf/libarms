@@ -1,4 +1,4 @@
-/*	$Id: proto_push_clear_status.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: proto_push_clear_status.c 24213 2013-05-30 08:46:26Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -140,7 +140,8 @@ clear_status_context(tr_ctx_t *tr_ctx)
 	if (arg != NULL) {
 		arg->state = BEGIN;
 		arg->maxindex = 16;
-		arg->status_list = CALLOC(arg->maxindex + 1, sizeof(int));
+		arg->status_list = CALLOC(arg->maxindex + 1,
+		    sizeof(*arg->status_list));
 		if (arg->status_list == NULL) {
 			FREE(arg);
 			arg = NULL;

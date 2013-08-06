@@ -1,4 +1,4 @@
-/*	$Id: libarms.h 23453 2013-02-14 09:18:54Z m-oki $	*/
+/*	$Id: libarms.h 24455 2013-07-02 07:31:54Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -36,6 +36,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#include <sys/time.h>
+
 /* ARMS Global Parameters: Only for reference, DON'T CHANGE */
 
 /*
@@ -56,7 +58,7 @@ extern "C" {
  * library version
  */
 #define ARMS_LIB_VERSION_MAJOR		5
-#define ARMS_LIB_VERSION_MINOR		20
+#define ARMS_LIB_VERSION_MINOR		31
 #define ARMS_LIB_VERSION_DESC		"Release"
 
 /*
@@ -283,6 +285,8 @@ extern "C" {
 #define ARMS_LOG_IPUSH_METHOD_SIMPLE	90 /* push method: simple */
 #define ARMS_LOG_IPUSH_METHOD_TUNNEL	91 /* push method: tunnel */
 
+#define ARMS_LOG_IPUSH_ENDPOINT_CHANGED	92 /* push endpoint changed */
+
 /* Errors (old_st = 0, new_st = 0, level = high) */
 #define ARMS_LOG_EURL			100 /* Invalid URL */
 #define ARMS_LOG_EHOST			101 /* Unknown host */
@@ -498,6 +502,7 @@ typedef struct arms_hbt_info {
 	const char *algorithm[MAX_HBT_ALGORITHMS];
 } arms_hbt_info_t;
 
+#define MAX_LS_INFO	5
 #define MAX_RS_INFO	5
 typedef struct arms_rs_info {
 	const char *host;
@@ -573,6 +578,7 @@ int arms_get_hbtinfo(arms_context_t *, arms_hbt_info_t *, int);
 int arms_get_rsinfo(arms_context_t *, arms_rs_info_t *, int);
 int arms_get_proposed_push_port(arms_context_t *);
 int arms_get_proposed_push_timeout(arms_context_t *);
+int arms_get_ls_url(arms_context_t *, arms_url_t *, int);
 int arms_get_rs_url(arms_context_t *, arms_url_t *, int);
 int arms_get_rs_tunnel_url(arms_context_t *, arms_url_t *, int);
 int arms_get_connection_info(arms_context_t *, arms_connection_info_t *, int);

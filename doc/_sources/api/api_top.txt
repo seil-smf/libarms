@@ -45,6 +45,7 @@ Info API
 .. toctree::
    :maxdepth: 1
 
+   arms_get_ls_url
    arms_get_rsinfo
    arms_get_rs_url
    arms_get_rs_tunnel_url

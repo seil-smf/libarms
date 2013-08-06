@@ -1,4 +1,4 @@
-/*	$Id: axp.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: axp.c 24212 2013-05-30 08:46:22Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -232,7 +232,10 @@ axp_refer(AXP *obj, int tagtype, void *valp)
 	struct axp_val_storage *p;
 	p = axp_find_var(obj, tagtype);
 	if (p) {
-		*(void **)valp = p->value;
+		if (p->type == AXP_TYPE_INT)
+			*(int *)valp = (int)p->value;
+		else
+			*(void **)valp = p->value;
 		return 0;
 	} else {
 		return -1;

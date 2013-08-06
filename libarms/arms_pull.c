@@ -1,4 +1,4 @@
-/*	$Id: arms_pull.c 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: arms_pull.c 24391 2013-06-25 00:21:10Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -302,6 +302,7 @@ arms_pull(arms_context_t *res,
 	res->udata = udata;
 	if (res->trigger == NULL)
 		res->trigger = "power on boot";
+	res->retry_inf = 0;
 	arms_scheduler_init();
 
 #ifdef HAVE_SIGNAL

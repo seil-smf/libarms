@@ -1,4 +1,4 @@
-/*	$Id: libarms_resource.h 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: libarms_resource.h 24043 2013-05-18 15:34:03Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -123,6 +123,8 @@ typedef struct arms_context {
 	char *trigger;			/* Trigger inrfomation */
 	int result;			/* Result information */
 	struct timeval app_timeout;	/* app_event_cb timeout value */
+	int retry_inf;			/* 1 if retry infinity */
+	int keep_wait;			/* 1 if keep push-wait state */
 
 	size_t bufsiz[1];
 } libarms_res_t;
@@ -154,5 +156,10 @@ int arms_rs_pull(arms_context_t *, const char *, struct timeval *);
 int arms_is_running_configure(arms_context_t *);
 
 void arms_hb_start_loop(arms_context_t *);
+
+int arms_keep_push_wait(arms_context_t *);
+int arms_set_keep_push_wait(arms_context_t *, int);
+
+void arms_update_push_endpoint(arms_context_t *);
 
 #endif /* __LIBARMS_RESOURCE_H__ */

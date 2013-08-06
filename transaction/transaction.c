@@ -1,4 +1,4 @@
-/*	$Id: transaction.c 23435 2013-02-07 10:46:13Z m-oki $	*/
+/*	$Id: transaction.c 24213 2013-05-30 08:46:26Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -1203,6 +1203,16 @@ ssl_req_connect(struct arms_schedule *obj, int event)
 				res->sa_af = tr->sa_af;
 				strlcpy(res->sa_address, tr->sa_address,
 				        sizeof(res->sa_address));
+			} else if (res->retry_inf &&
+			    res->cur_method == ARMS_PUSH_METHOD_SIMPLE &&
+			    tr->tr_ctx.pm->pm_type == ARMS_TR_CONFIRM_START &&
+			    strcmp(res->sa_address, tr->sa_address) != 0) {
+				libarms_log(ARMS_LOG_IPUSH_ENDPOINT_CHANGED,
+				    "push endpoint changed from %s to %s",
+				    res->sa_address, tr->sa_address);
+				strlcpy(res->sa_address, tr->sa_address,
+				    sizeof(res->sa_address));
+				arms_update_push_endpoint(res);
 			}
 			return obj->method(obj, EVENT_TYPE_EXEC);
 		} else {
@@ -1584,11 +1594,19 @@ ssl_client_retry(struct arms_schedule *obj, transaction *tr)
 	}
 
 	/* retry? */
-	if (++(tr->retry) <= tr->retry_max) {
-		libarms_log(ARMS_LOG_ITRANSACTION_RETRY,
-		    "retry %s (%d/%d), wait %d sec.",
-		    tr_msgstr(tr),
-		    tr->retry, tr->retry_max, arms_retry_wait(tr));
+	if ((res->retry_inf && !arms_is_running_configure(res)) ||
+	    ++(tr->retry) <= tr->retry_max) {
+		if (res->retry_inf && !arms_is_running_configure(res)) {
+			libarms_log(ARMS_LOG_ITRANSACTION_RETRY,
+			    "retry %s, wait %d sec.",
+			    tr_msgstr(tr),
+			    arms_retry_wait(tr));
+		} else {
+			libarms_log(ARMS_LOG_ITRANSACTION_RETRY,
+			    "retry %s (%d/%d), wait %d sec.",
+			    tr_msgstr(tr),
+			    tr->retry, tr->retry_max, arms_retry_wait(tr));
+		}
 		arms_get_time_remaining(&obj->timeout,
 					arms_retry_wait(tr));
 		obj->type = SCHED_TYPE_EXEC;
@@ -1758,13 +1776,14 @@ ssl_recv_res(struct arms_schedule *obj, int event)
 {
 	transaction *tr = obj->userdata;
 	arms_context_t *res = arms_get_context();
-	tr_ctx_t *tr_ctx = &tr->tr_ctx;
+	tr_ctx_t *tr_ctx;
 	int nrs;
 
 	if (tr == NULL) {
 		CLOSE_FD(obj->fd);
 		return SCHED_FINISHED_THIS;
-	}
+	} else
+		tr_ctx = &tr->tr_ctx;
 
 	switch (event) {
 	case EVENT_TYPE_READ:

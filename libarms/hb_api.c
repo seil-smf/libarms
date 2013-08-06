@@ -1,4 +1,4 @@
-/*$Id: hb_api.c 23530 2013-02-28 02:15:12Z m-oki $*/
+/*$Id: hb_api.c 24401 2013-06-25 09:12:17Z yamazaki $*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -247,6 +247,7 @@ arms_hb_send(hb_context_t *ctx, int af, hb_send_result_t *result)
 		in.ai_family = AF_INET;
 #endif
 		in.ai_socktype = SOCK_DGRAM;
+		in.ai_flags = AI_NUMERICHOST;
 		snprintf(portbuf, sizeof(portbuf), "%u", ctx->server[i].port);
 
 		error = getaddrinfo(ctx->server[i].host, portbuf, &in, &out);

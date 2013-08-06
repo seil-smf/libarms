@@ -1,4 +1,4 @@
-/*	$Id: util.c 23398 2013-01-31 03:19:52Z m-oki $	*/
+/*	$Id: util.c 24211 2013-05-29 08:43:46Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -111,16 +111,9 @@ arms_get_result_str(int result)
  * utility string function
  */
 
-/*
- * escape character for XML.
- *
- * WARNINIG: arms_escape() returns a pointer to statically allocated
- * buffer.  another call will change the content!
- */
-const char *
-arms_escape(const char *text)
+static char *
+arms_escape_buf(const char *text, char *out)
 {
-	static char *out = NULL;	/* not allocated at startup */
 	static int outlen;
 	char *p, ch;
 	int remaining, size;
@@ -188,6 +181,22 @@ arms_escape(const char *text)
 	return out;
 }
 
+/*
+ * escape character for XML.
+ *
+ * WARNINIG: arms_escape() returns a pointer to statically allocated
+ * buffer.  another call will change the content!
+ */
+const char *
+arms_escape(const char *text)
+{
+	static char *out = NULL;	/* not allocated at startup */
+
+	out = arms_escape_buf(text, out);
+
+	return out;
+}
+
 #define REQ 1
 #define RES 2
 static inline int
@@ -227,12 +236,33 @@ static inline const char *
 arms_get_transaction_id(tr_ctx_t *tr_ctx)
 {
 	static char idbuf[80];
+
 	if (tr_ctx->id == 0)
 		return "";
 	snprintf(idbuf, sizeof(idbuf),
 		 "<transaction-id>%d</transaction-id>",
 		 tr_ctx->id);
 	return idbuf;
+}
+
+static inline const char *
+arms_get_firmware_info(transaction *tr)
+{
+	static char buf[ARMS_MAX_VER_LEN + 40];
+	arms_context_t *res = arms_get_context();
+
+	if (TR_TYPE(tr->state) == TR_RSPULL && res->version[0] != '\0') {
+		char *out;
+
+		out = arms_escape_buf(res->version, NULL);
+		snprintf(buf, sizeof(buf),
+		    "<firmware-info>%s</firmware-info>",
+		    out);
+		FREE(out);
+		return buf;
+	} else {
+		return "";
+	}
 }
 
 static inline const char *
@@ -292,6 +322,7 @@ arms_write_begin_message(transaction *tr, char *buf, int len)
 				"<distribution-id>%s</distribution-id>"
 				"%s"
 				"<description>%s</description>"
+				"%s"
 				"<%s%s>",
 				tr_ctx->pm->pm_string,
 				arms_msg_way_str(tr),
@@ -299,6 +330,7 @@ arms_write_begin_message(transaction *tr, char *buf, int len)
 				arms_distid_str(tr),
 				arms_get_transaction_id(tr_ctx),
 				arms_escape(res->description),
+				arms_get_firmware_info(tr),
 				tr_ctx->pm->pm_string, arms_msg_type_str(tr));
 	case RES:
 		return snprintf(buf, len,

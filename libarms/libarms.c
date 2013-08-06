@@ -1,4 +1,4 @@
-/*	$Id: libarms.c 23138 2012-11-01 00:30:19Z m-oki $	*/
+/*	$Id: libarms.c 23863 2013-03-28 09:30:16Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -117,6 +117,7 @@ arms_init(distribution_id_t *distid, arms_context_t **ctxp)
 	res->cur_method = ARMS_PUSH_METHOD_UNKNOWN;
 	memcpy(&res->dist_id, distid, sizeof(res->dist_id));
 	res->line_af = AF_UNSPEC;
+	arms_set_keep_push_wait(res, 1);
 	arms_hb_init(&res->hb_ctx, 1024, res->dist_id);
 
 	/* Create MI Configuration Store */
@@ -423,6 +424,45 @@ arms_free_hbtinfo(arms_context_t *res)
  * API
  */
 int
+arms_get_ls_url(arms_context_t *res, arms_url_t *urlp, int size)
+{
+	int	n = 0;
+
+	if (res == (arms_context_t*)0) {
+	/* error: invalid value */
+		n = -1;
+	}
+	else if (urlp == (arms_url_t*)0) {
+	/* error: invalid value */
+		n = -1;
+	}
+	else if (size < sizeof(arms_url_t)) {
+	/* error: too small */
+		n = -1;
+	}
+	else {
+		for (n = 0; n < MAX_LS_INFO; n++) {
+
+			if (sizeof(arms_url_t) * (n + 1) > size) {
+			/* skip: no more buffer */
+				continue;
+			}
+			urlp[n].url = acmi_refer_url(res->acmi,
+			    ACMI_CONFIG_RSSOL, n);
+			if (urlp[n].url[0] == '\0')
+				urlp[n].url = NULL;
+			if (urlp[n].url == NULL)
+				break;
+		}
+	}
+
+	return n;
+}
+
+/*
+ * API
+ */
+int
 arms_get_rs_url(arms_context_t *res, arms_url_t *urlp, int size)
 {
 	int	n = 0;
@@ -575,6 +615,29 @@ arms_get_connection_info(arms_context_t *res,
 	}
 
 	return 0;
+}
+
+/*
+ * (internal)API
+ */
+int
+arms_keep_push_wait(arms_context_t *res)
+{
+	return res->keep_wait;
+}
+
+/*
+ * (internal)API
+ */
+int
+arms_set_keep_push_wait(arms_context_t *res, int onoff)
+{
+	int old;
+
+	old = res->keep_wait;
+	res->keep_wait = onoff;
+
+	return old;
 }
 
 /*

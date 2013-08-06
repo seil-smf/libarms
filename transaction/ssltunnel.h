@@ -1,4 +1,4 @@
-/*	$Id: ssltunnel.h 20800 2012-01-19 05:13:45Z m-oki $	*/
+/*	$Id: ssltunnel.h 23863 2013-03-28 09:30:16Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -68,6 +68,7 @@ struct ssltunnel {
 	struct arms_schedule *obj;
 	struct arms_schedule *echo;
 	int echo_state;
+	int retry_inf;
 };
 
 /*

@@ -1,4 +1,4 @@
-/*	$Id: proto_push_configure.c 23403 2013-01-31 10:16:27Z m-oki $	*/
+/*	$Id: proto_push_configure.c 24217 2013-05-31 03:51:24Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <inttypes.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -130,6 +131,8 @@ struct configure_args {
 	int syncing;
 	int first; /* fragment */
 	char request[AXP_BUFSIZE * 3 / 4 + 2 + 1]; /* + 2: modulo bytes */
+	char *catbuf;
+	int catlen;
 	arms_base64_stream_t base64;
 };
 
@@ -198,11 +201,14 @@ configure_release(tr_ctx_t *tr_ctx)
 {
 	struct configure_args *arg = tr_ctx->arg;
 
-	if (!arg->already_running) {
-		/* clear configure transaction lock. */
-		already_running = 0;
-	}
 	if (arg) {
+		if (!arg->already_running) {
+			/* clear configure transaction lock. */
+			already_running = 0;
+		}
+		if (arg->catbuf != NULL) {
+			FREE(arg->catbuf);
+		}
 		FREE(tr_ctx->arg);
 	}
 }
@@ -350,17 +356,6 @@ configure_cparg(AXP *axp, uint32_t pm_type, int tag,
 		}
 		break;
 	case ARMS_TAG_MDCONF:
-		/* set fragment flag */
-		flag = 0;
-		if (arg->first) {
-			flag |= ARMS_FRAG_FIRST;
-			arg->first = 0;
-		}
-		/* continued' config */
-		if (tr_ctx->parse_state == AXP_PARSE_CONTENT) {
-			flag |= ARMS_FRAG_CONTINUE;
-		}
-
 		if (module_added) {
 			/*
 			 * move module id from 'new' to 'current'
@@ -396,6 +391,39 @@ configure_cparg(AXP *axp, uint32_t pm_type, int tag,
 			arg->request[len] = '\0';
 			buf = arg->request;
 		}
+		/*
+		 * buf, len is prepared.
+		 * if res->fragment == 0 and AXP_PARSE_CONTENT,
+		 * buffered part of config.
+		 */
+		if (res->fragment == 0) {
+			arg->catbuf = REALLOC(arg->catbuf, arg->catlen + len);
+			if (arg->catbuf == NULL) {
+				/*Resource Exhausted*/
+				tr_ctx->result = 413;
+				return -1;
+			}
+			memcpy(arg->catbuf + arg->catlen, buf, len);
+			arg->catlen += len;
+			if (tr_ctx->parse_state == AXP_PARSE_CONTENT) {
+				/* wait for next data */
+				return 0;
+			}
+			/* AXP_PARSE_END */
+			buf = arg->catbuf;
+			len = arg->catlen;
+		}
+		/* set fragment flag */
+		flag = 0;
+		if (arg->first) {
+			flag |= ARMS_FRAG_FIRST;
+			arg->first = 0;
+		}
+		/* continued' config */
+		if (tr_ctx->parse_state == AXP_PARSE_CONTENT) {
+			flag |= ARMS_FRAG_CONTINUE;
+		}
+
 		/* callback it */
 		do {
 			int slen;
@@ -426,6 +454,12 @@ configure_cparg(AXP *axp, uint32_t pm_type, int tag,
 			flag &= ~ARMS_FRAG_FIRST;
 			flag |= ARMS_FRAG_CONTINUE;
 		} while(len > 0);
+		if (arg->catbuf != NULL) {
+			/* reset for next module id */
+			FREE(arg->catbuf);
+			arg->catbuf = NULL;
+			arg->catlen = 0;
+		}
 		break;
 	default:
 		break;
@@ -570,8 +604,9 @@ configure_parse(transaction *tr, const char *buf, int len)
 	}
 	/*
 	 * after configure, send push-confirmation
-	 *  to notify new ip address.
+	 *  to notify new ip address, and limit retry of push-confirmation.
 	 */
 	res->result = ARMS_EPUSH;
+	res->retry_inf = 0;
 	return TR_WANT_STOP;
 }

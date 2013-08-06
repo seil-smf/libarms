@@ -1,4 +1,4 @@
-/*	$Id: proto_push_confirmation.c 20894 2012-01-25 12:47:57Z m-oki $	*/
+/*	$Id: proto_push_confirmation.c 23863 2013-03-28 09:30:16Z m-oki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -320,6 +320,7 @@ confirm_done_release(tr_ctx_t *tr_ctx)
 	res->confirm_id = 0;
 	/* set global state */
 	arms_set_global_state(ARMS_ST_PUSH_WAIT);
+	res->retry_inf = arms_keep_push_wait(res);
 	/* start heartbeat */
 	arms_hb_start_loop(res);
 }

@@ -29,7 +29,7 @@
     <link rel="top" title="libarms 5.20 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="api_top.html" />
     <link rel="next" title="arms_get_rs_url()" href="arms_get_rs_url.html" />
-    <link rel="prev" title="arms_restore_state()" href="arms_restore_state.html" /> 
+    <link rel="prev" title="arms_get_ls_url()" href="arms_get_ls_url.html" /> 
   </head>
   <body>
 <div id="header">
@@ -72,12 +72,11 @@ int <tt class="descname">arms_get_rsinfo</tt><big>(</big>arms_context_t<em>&nbsp
 </div>
 <div class="section" id="id3">
 <h2>目的<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>アクセス対象のRS の情報を取得する。</p>
+<p>Push 接続元アドレスを取得する。</p>
 </div>
 <div class="section" id="id4">
 <h2>説明<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 実行時に RS から取得した、Push 用 RS のアドレス情報(複数) を
-取得する。</p>
+<p><a class="reference internal" href="arms_pull.html#arms_pull" title="arms_pull"><tt class="xref c c-func docutils literal"><span class="pre">arms_pull()</span></tt></a> 実行時に RS から取得した、Push 接続元アドレス(複数) を取得する。</p>
 </div>
 <div class="section" id="id5">
 <h2>引数<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
@@ -136,8 +135,8 @@ rsp が NULL、あるいは size が sizeof(arms_rs_info_t) 未満。</dd>
 </ul>
 
   <h4>前のトピックへ</h4>
-  <p class="topless"><a href="arms_restore_state.html"
-                        title="前の章へ">arms_restore_state()</a></p>
+  <p class="topless"><a href="arms_get_ls_url.html"
+                        title="前の章へ">arms_get_ls_url()</a></p>
   <h4>次のトピックへ</h4>
   <p class="topless"><a href="arms_get_rs_url.html"
                         title="次の章へ">arms_get_rs_url()</a></p>
@@ -174,7 +173,7 @@ rsp が NULL、あるいは size が sizeof(arms_rs_info_t) 未満。</dd>
           <a href="arms_get_rs_url.html" title="arms_get_rs_url()"
              accesskey="N">次へ</a> |</li>
         <li class="right" >
-          <a href="arms_restore_state.html" title="arms_restore_state()"
+          <a href="arms_get_ls_url.html" title="arms_get_ls_url()"
              accesskey="P">前へ</a> |</li>
         <li><a href="../contents.html">libarms 5.20 documentation</a> &raquo;</li>
           <li><a href="api_top.html" accesskey="U">API Reference</a> &raquo;</li> 

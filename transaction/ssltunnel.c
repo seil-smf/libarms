@@ -1,4 +1,4 @@
-/*	$Id: ssltunnel.c 23435 2013-02-07 10:46:13Z m-oki $	*/
+/*	$Id: ssltunnel.c 24211 2013-05-29 08:43:46Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -768,18 +768,26 @@ static int
 ssltunnel_retry(struct arms_schedule *obj, struct ssltunnel *tunnel)
 {
 	transaction *tr;
+	arms_context_t *res = arms_get_context();
 
 	libarms_log(ARMS_LOG_DEBUG,
 	    "tunnel#%d: closing ssl tunnel and retry.", tunnel->num);
 	ssltunnel_close(tunnel, 1);
 	CLOSE_FD(obj->fd);
-	tunnel->retry++;
-	if (tunnel->retry <= tunnel->retry_max) {
-		libarms_log(ARMS_LOG_ITUNNEL_RETRY,
-		    "tunnel#%d: retry(%d/%d), wait %d sec.",
-		    tunnel->num,
-		    tunnel->retry, tunnel->retry_max,
-		    tunnel->retry_interval);
+	if ((tunnel->retry_inf && !arms_is_running_configure(res)) ||
+	    ++tunnel->retry <= tunnel->retry_max) {
+		if (tunnel->retry_inf && !arms_is_running_configure(res)) {
+			libarms_log(ARMS_LOG_ITUNNEL_RETRY,
+			    "tunnel#%d: retry, wait %d sec.",
+			    tunnel->num,
+			    tunnel->retry_interval);
+		} else {
+			libarms_log(ARMS_LOG_ITUNNEL_RETRY,
+			    "tunnel#%d: retry(%d/%d), wait %d sec.",
+			    tunnel->num,
+			    tunnel->retry, tunnel->retry_max,
+			    tunnel->retry_interval);
+		}
 		arms_get_time_remaining(&obj->timeout, tunnel->retry_interval);
 		obj->type = SCHED_TYPE_EXEC;
 		SET_NEW_METHOD(obj, ssltunnel_connect);
@@ -811,8 +819,6 @@ ssltunnel_retry(struct arms_schedule *obj, struct ssltunnel *tunnel)
 				 * rollback failure.
 				 * fatal.  reboot.
 				 */
-				arms_context_t *res = arms_get_context();
-
 				res->trigger = "rollback failure";
 				res->result = ARMS_EPULL;
 				libarms_log(ARMS_LOG_EROLLBACK,
@@ -1456,6 +1462,8 @@ rerun_d:
 		arms_set_global_state(ARMS_ST_PUSH_WAIT);
 		libarms_log(ARMS_LOG_ITUNNEL_READY_TO_PUSH,
 		    "tunnel#%d: ready to push.", tunnel->num);
+		res->retry_inf = arms_keep_push_wait(res);
+		tunnel->retry_inf = res->retry_inf;
 		if (res->rs_tunnel_1st == -1)
 			res->rs_tunnel_1st = tunnel->num;
 		return SCHED_CONTINUE_THIS;
@@ -1643,13 +1651,19 @@ ssltunnel_post_write(struct arms_schedule *obj, transaction *tr)
 	 */
 	if (tr->tr_ctx.pm != NULL &&
 	    tr->tr_ctx.pm->pm_exec) {
+		/* disconnect tunnel before exec configure */
+		if (tr->tr_ctx.pm->pm_type == ARMS_TR_CONFIGURE) {
+			ssltunnel_close(tunnel, 1);
+			CLOSE_FD(obj->fd);
+		}
+
 		if (tr->tr_ctx.pm->pm_exec(tr) != 0) {
 			/* exec & rollback err. */
 			res->trigger = "rollback failure";
 			res->result = ARMS_EPULL;
 			libarms_log(ARMS_LOG_EROLLBACK,
 				    "rollback failure.");
-			ssltunnel_close(tunnel, 0);
+			ssltunnel_close(tunnel, 1);
 			ssltunnel_finish_transaction(tunnel);
 			LIST_REMOVE(tunnel, next);
 			FREE(tunnel);
@@ -1671,6 +1685,15 @@ ssltunnel_post_write(struct arms_schedule *obj, transaction *tr)
 	tunnel->id = 0;
 	arms_get_time_remaining(&obj->timeout,
 				res->tunnel_echo_interval);
+	if (tr->tr_ctx.pm &&
+	    tr->tr_ctx.pm->pm_type == ARMS_TR_CONFIGURE &&
+	    tr->tr_ctx.pm->pm_exec) {
+		/* connect tunnel before configure-done request */
+		arms_get_time_remaining(&obj->timeout, 1);
+		obj->type = SCHED_TYPE_EXEC;
+		SET_NEW_METHOD(obj, ssltunnel_connect);
+	}
+
 	return SCHED_CONTINUE_THIS;
 }
 
