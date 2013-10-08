@@ -12,6 +12,7 @@ Contents:
    arch/arch_top
    impl/impl_top
    api/api_top
+   version/version_top
    appendix/appendix_top
    armsd/armsd_top
 

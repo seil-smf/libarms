@@ -17,14 +17,14 @@ CentOS 6.3上で作成したRPMパッケージ、およびDebian 6.0.7 上で作
 ========================================================================= ============================================
 ファイル名                                                                MD5
 ========================================================================= ============================================
-`libarms-5.20-0.i386.rpm </dl/libarms-5.20-0.i386.rpm>`_                  `MD5 </dl/libarms-5.20-0.i386.rpm.md5>`_
-`libarms-5.20-0.x86_64.rpm </dl/libarms-5.20-0.x86_64.rpm>`_              `MD5 </dl/libarms-5.20-0.x86_64.rpm.md5>`_
-`libarms-devel-5.20-0.i386.rpm </dl/libarms-devel-5.20-0.i386.rpm>`_      `MD5 </dl/libarms-devel-5.20-0.i386.rpm.md5>`_
-`libarms-devel-5.20-0.x86_64.rpm </dl/libarms-devel-5.20-0.x86_64.rpm>`_  `MD5 </dl/libarms-devel-5.20-0.x86_64.rpm.md5>`_
-`libarms_5.20_i386.deb </dl/libarms_5.20_i386.deb>`_                      `MD5 </dl/libarms_5.20_i386.deb.md5>`_
-`libarms_5.20_amd64.deb </dl/libarms_5.20_amd64.deb>`_                    `MD5 </dl/libarms_5.20_amd64.deb.md5>`_
-`libarms-dev_5.20_i386.deb </dl/libarms-dev_5.20_i386.deb>`_              `MD5 </dl/libarms-dev_5.20_i386.deb.md5>`_
-`libarms-dev_5.20_amd64.deb </dl/libarms-dev_5.20_amd64.deb>`_            `MD5 </dl/libarms-dev_5.20_amd64.deb.md5>`_
+`libarms-5.31-0.i386.rpm </dl/libarms-5.31-0.i386.rpm>`_                  `MD5 </dl/libarms-5.31-0.i386.rpm.md5>`_
+`libarms-5.31-0.x86_64.rpm </dl/libarms-5.31-0.x86_64.rpm>`_              `MD5 </dl/libarms-5.31-0.x86_64.rpm.md5>`_
+`libarms-devel-5.31-0.i386.rpm </dl/libarms-devel-5.31-0.i386.rpm>`_      `MD5 </dl/libarms-devel-5.31-0.i386.rpm.md5>`_
+`libarms-devel-5.31-0.x86_64.rpm </dl/libarms-devel-5.31-0.x86_64.rpm>`_  `MD5 </dl/libarms-devel-5.31-0.x86_64.rpm.md5>`_
+`libarms_5.31_i386.deb </dl/libarms_5.31_i386.deb>`_                      `MD5 </dl/libarms_5.31_i386.deb.md5>`_
+`libarms_5.31_amd64.deb </dl/libarms_5.31_amd64.deb>`_                    `MD5 </dl/libarms_5.31_amd64.deb.md5>`_
+`libarms-dev_5.31_i386.deb </dl/libarms-dev_5.31_i386.deb>`_              `MD5 </dl/libarms-dev_5.31_i386.deb.md5>`_
+`libarms-dev_5.31_amd64.deb </dl/libarms-dev_5.31_amd64.deb>`_            `MD5 </dl/libarms-dev_5.31_amd64.deb.md5>`_
 ========================================================================= ============================================
 
 ソースコード
@@ -33,7 +33,7 @@ CentOS 6.3上で作成したRPMパッケージ、およびDebian 6.0.7 上で作
 ============================================================= ============================================
 ファイル名                                                    MD5
 ============================================================= ============================================
-`libarms-5.20.tar.gz </dl/libarms-5.20.tar.gz>`_              `MD5 </dl/libarms-5.20.tar.gz.md5>`_
+`libarms-5.31.tar.gz </dl/libarms-5.31.tar.gz>`_              `MD5 </dl/libarms-5.31.tar.gz.md5>`_
 ============================================================= ============================================
 
 旧バージョン
@@ -42,7 +42,8 @@ CentOS 6.3上で作成したRPMパッケージ、およびDebian 6.0.7 上で作
 =================================================== =====================================
 ファイル名                                          MD5
 =================================================== =====================================
-`libarms-5.10.tar.gz </dl/libarms-5.01.tar.gz>`_    `MD5 </dl/libarms-5.10.tar.gz.md5>`_
+`libarms-5.20.tar.gz </dl/libarms-5.20.tar.gz>`_    `MD5 </dl/libarms-5.20.tar.gz.md5>`_
+`libarms-5.10.tar.gz </dl/libarms-5.10.tar.gz>`_    `MD5 </dl/libarms-5.10.tar.gz.md5>`_
 `libarms-5.01.tar.gz </dl/libarms-5.01.tar.gz>`_    `MD5 </dl/libarms-5.01.tar.gz.md5>`_
 `libarms-5.00.tar.gz </dl/libarms-5.00.tar.gz>`_    `MD5 </dl/libarms-5.00.tar.gz.md5>`_
 =================================================== =====================================

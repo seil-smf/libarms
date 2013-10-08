@@ -1,4 +1,4 @@
-/*	$Id: arms_event_loop.c 24401 2013-06-25 09:12:17Z yamazaki $	*/
+/*	$Id: arms_event_loop.c 24527 2013-08-06 10:32:30Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -404,14 +404,6 @@ arms_event_loop(arms_context_t *res, int port, size_t fragment,
 		/* try accepted method */
 		for (m = 0; m < res->nmethods; m++) {
 retry_with_cur_method:
-			/* register app_event timer if available */
-			if (res->callbacks.app_event_cb != NULL) {
-				arms_get_timeval_remaining(&timo,
-							&res->app_timeout);
-				app_event_obj = new_arms_schedule(
-					SCHED_TYPE_TIMER, -1,
-					&timo, arms_app_event, NULL);
-			}
 			res->cur_method = res->method_info[m];
 			switch (res->cur_method) {
 			case ARMS_PUSH_METHOD_SIMPLE:
@@ -423,6 +415,14 @@ retry_with_cur_method:
 				libarms_log(ARMS_LOG_IPUSH_METHOD_SIMPLE,
 					    "Push method: simple");
 				do {
+					/* register app_event timer if available */
+					if (res->callbacks.app_event_cb != NULL) {
+						arms_get_timeval_remaining(&timo,
+							&res->app_timeout);
+						app_event_obj = new_arms_schedule(
+							SCHED_TYPE_TIMER, -1,
+							&timo, arms_app_event, NULL);
+					}
 					arms_https_simple_loop(res, port);
 				} while (res->result == ARMS_ETIMEOUT &&
 					 res->retry_inf &&
@@ -449,6 +449,14 @@ retry_with_cur_method:
 					continue;/* try next method */
 				}
 				do {
+					/* register app_event timer if available */
+					if (res->callbacks.app_event_cb != NULL) {
+						arms_get_timeval_remaining(&timo,
+							&res->app_timeout);
+						app_event_obj = new_arms_schedule(
+							SCHED_TYPE_TIMER, -1,
+							&timo, arms_app_event, NULL);
+					}
 					arms_ssltunnel_loop(res, n, res->rs_tunnel_url);
 				} while (res->result == ARMS_ETIMEOUT &&
 					 res->retry_inf &&

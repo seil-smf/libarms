@@ -1,3 +1,7 @@
+2013-08-08
+
+	* bugifx: don't stop calling app_event_cb()
+
 2013-07-03 Akihiro Yamazaki <yamazaki@iij.ad.jp>
 
 	* don't resolve name of heartbeat server
