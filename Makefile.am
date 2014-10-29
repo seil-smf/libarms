@@ -1,4 +1,4 @@
-#	$Id: Makefile.am 23291 2012-12-25 02:25:28Z m-oki $
+#	$Id: Makefile.am 25423 2014-10-24 04:54:56Z yamazaki $
 
 # current:revision:age
 # current: increment if interface change.
@@ -129,7 +129,9 @@ simple-armsd/cacert.pem \
 simple-armsd/callback.c \
 simple-armsd/callback.h \
 simple-armsd/lines.h \
-simple-armsd/main.c
+simple-armsd/main.c \
+lsconf/lsconfig_crypt.c \
+lsconf/lsconfig_crypt.h
 
 nobase_dist_doc_DATA= \
 doc/api/api_top.html \

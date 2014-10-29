@@ -1,4 +1,4 @@
-/*	$Id: libarms.h 24534 2013-08-08 08:14:02Z yamazaki $	*/
+/*	$Id: libarms.h 25425 2014-10-27 06:52:51Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -58,7 +58,7 @@ extern "C" {
  * library version
  */
 #define ARMS_LIB_VERSION_MAJOR		5
-#define ARMS_LIB_VERSION_MINOR		32
+#define ARMS_LIB_VERSION_MINOR		33
 #define ARMS_LIB_VERSION_DESC		"Release"
 
 /*

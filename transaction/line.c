@@ -1,4 +1,4 @@
-/*	$Id: line.c 21273 2012-02-15 11:00:05Z m-oki $	*/
+/*	$Id: line.c 25283 2014-06-02 08:56:04Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -291,6 +291,7 @@ line_ctrl(arms_context_t *res,
 {
 	int err = 0;
 	int i;
+	struct timeval timo, now;
 
 	if (res->callbacks.line_ctrl_cb == NULL) {
 		return err;
@@ -342,8 +343,14 @@ line_ctrl(arms_context_t *res,
 		return -1;
 	}
 
+	arms_get_time_remaining(&timo, tout);
+
 	/* Polling */
 	for (i = 0; i < tout; i++) {
+		arms_monotime(&now);
+		if (timercmp(&now , &timo, >))
+			break;
+
 		arms_sleep(POLL_INT);
 		err = res->callbacks.line_ctrl_cb(ARMS_LINE_ACT_STATUS,
 				line_type, line_conf, res->udata);

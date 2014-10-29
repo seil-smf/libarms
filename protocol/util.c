@@ -1,4 +1,4 @@
-/*	$Id: util.c 24211 2013-05-29 08:43:46Z yamazaki $	*/
+/*	$Id: util.c 25323 2014-08-28 07:07:18Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -246,26 +246,6 @@ arms_get_transaction_id(tr_ctx_t *tr_ctx)
 }
 
 static inline const char *
-arms_get_firmware_info(transaction *tr)
-{
-	static char buf[ARMS_MAX_VER_LEN + 40];
-	arms_context_t *res = arms_get_context();
-
-	if (TR_TYPE(tr->state) == TR_RSPULL && res->version[0] != '\0') {
-		char *out;
-
-		out = arms_escape_buf(res->version, NULL);
-		snprintf(buf, sizeof(buf),
-		    "<firmware-info>%s</firmware-info>",
-		    out);
-		FREE(out);
-		return buf;
-	} else {
-		return "";
-	}
-}
-
-static inline const char *
 arms_msg_way_str(transaction *tr)
 {
 	if (TR_TYPE(tr->state) == TR_START)
@@ -322,7 +302,6 @@ arms_write_begin_message(transaction *tr, char *buf, int len)
 				"<distribution-id>%s</distribution-id>"
 				"%s"
 				"<description>%s</description>"
-				"%s"
 				"<%s%s>",
 				tr_ctx->pm->pm_string,
 				arms_msg_way_str(tr),
@@ -330,7 +309,6 @@ arms_write_begin_message(transaction *tr, char *buf, int len)
 				arms_distid_str(tr),
 				arms_get_transaction_id(tr_ctx),
 				arms_escape(res->description),
-				arms_get_firmware_info(tr),
 				tr_ctx->pm->pm_string, arms_msg_type_str(tr));
 	case RES:
 		return snprintf(buf, len,

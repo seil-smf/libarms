@@ -1,4 +1,4 @@
-/*	$Id: ssltunnel.c 24211 2013-05-29 08:43:46Z yamazaki $	*/
+/*	$Id: ssltunnel.c 25322 2014-08-28 05:31:39Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -228,6 +228,7 @@ ssltunnel_finish_tr_but_configure(struct ssltunnel *tunnel)
 				arms_tr_reset_callback_state(tr);
 				arms_tr_ctx_free(&tr->tr_ctx);
 				arms_transaction_free(tr);
+				conf_tr = NULL;
 				break;
 			}
 			break;

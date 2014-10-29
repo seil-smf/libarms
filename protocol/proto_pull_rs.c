@@ -1,4 +1,4 @@
-/*	$Id: proto_pull_rs.c 24214 2013-05-31 03:02:27Z yamazaki $	*/
+/*	$Id: proto_pull_rs.c 25323 2014-08-28 07:07:18Z yamazaki $	*/
 
 /*
  * Copyright (c) 2012, Internet Initiative Japan, Inc.
@@ -606,6 +606,16 @@ rspull_request(transaction *tr, char *buf, int len, int *wrote)
 	buf += size;
 	len -= size;
 	total += size;
+
+	if (res->version[0] != '\0') {
+		size = snprintf(buf, len,
+		    "<firmware-info>%s</firmware-info>",
+		    arms_escape(res->version));
+		buf += size;
+		len -= size;
+		total += size;
+	}
+
 	total += arms_write_end_message(tr, buf, len);
 
 	tr->tr_ctx.read_done = 0;

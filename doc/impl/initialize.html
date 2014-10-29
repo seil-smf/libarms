@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>初期化処理 &mdash; libarms 5.31 documentation</title>
+    <title>初期化処理 &mdash; libarms 5.33 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.31',
+        VERSION:     '5.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
     <script type="text/javascript" src="../_static/scroll.js"></script>
-    <link rel="top" title="libarms 5.31 documentation" href="../index.html" />
+    <link rel="top" title="libarms 5.33 documentation" href="../index.html" />
     <link rel="up" title="SA実装" href="impl_top.html" />
     <link rel="next" title="Pull" href="pull.html" />
     <link rel="prev" title="SA実装" href="impl_top.html" /> 
@@ -96,10 +96,10 @@
 </div>
 <div class="section" id="initial-config">
 <h2>Initial-Config の読み込み(特定ベンダ向け)<a class="headerlink" href="#initial-config" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>LS にアクセスするために必要なアドレス情報は、予めlibarmsに組み込まれている。ただし、匿名PPPoE回線を利用する場合、IIJのフレッツアカウントオプションサービスを申し込んだ上、アカウント情報を暗号化して埋め込んだInitial-Configをlibarmsに読み込ませる必要がある。
-なお、暗号化Initial-Configはオープンソース版のlibarmsでは読み込むことができない。ベンダ毎にIIJから提供される専用のコンパイル済みlibarmsを利用しなければならない。</p>
+<p>LS にアクセスするために必要なアドレス情報は予めlibarmsに組み込まれているため、オープンソース版libarmsでは、この手順は必要ない。</p>
+<p>匿名PPPoE回線を利用する場合、IIJのフレッツアカウントオプションサービスを申し込んだ上、アカウント情報を暗号化して埋め込んだInitial-Configをlibarmsに読み込ませる必要がある。</p>
 <p>Initial-Config のロードは以下のlibarms API を用いて行うことができる。
-通常のオープンソース版libarmsでは、このAPIを使う必要はない。</p>
+また、ビルドオプションを別途指定する必要がある。</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="39%" />
@@ -175,7 +175,7 @@
         <li class="right" >
           <a href="impl_top.html" title="SA実装"
              accesskey="P">前へ</a> |</li>
-        <li><a href="../contents.html">libarms 5.31 documentation</a> &raquo;</li>
+        <li><a href="../contents.html">libarms 5.33 documentation</a> &raquo;</li>
           <li><a href="impl_top.html" accesskey="U">SA実装</a> &raquo;</li> 
       </ul>
     </div>

@@ -1,4 +1,10 @@
-2013-08-08
+2014-10-29 Akihiro Yamazaki <yamazaki@iij.ad.jp>
+
+	* bugfix: timeout of line connection
+
+	* Initial-Config support
+
+2013-08-08 Akihiro Yamazaki <yamazaki@iij.ad.jp>
 
 	* bugifx: don't stop calling app_event_cb()
 

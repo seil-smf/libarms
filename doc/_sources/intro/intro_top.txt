@@ -124,7 +124,7 @@ libarms を組みこむ際の、全体のシステム構成と動作の概要に
 * Initial-Config
 
   LS に接続するための各種情報を格納するための領域。
-  libarmsオープンソース版を用いる場合、必要な情報はlibarms自体に埋め込まれているため不要となる。匿名PPPoEアカウントを利用して接続を行う場合、専用にコンパイルされたlibarmsを用意し、IIJから提供されるInitial-Configを用いる必要がある。
+  libarmsオープンソース版を用いる場合、必要な情報はlibarms自体に埋め込まれているため不要となる。匿名PPPoEアカウントを利用して接続を行う場合、libarmsのビルドオプションを変更し、IIJから提供されるInitial-Configを用いる必要がある。
 
 * SSL 証明書/Distribution ID
 
